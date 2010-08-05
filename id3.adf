@@ -1,0 +1,12 @@
+.setorder BIGENDIAN
+.setencoding US-ASCII
+.group(header){
+	string(3)	id3Identifier
+	byte		majorVersion
+	byte		minorVersion
+	byte		flags
+	int			id3Size
+}
+
+
+END

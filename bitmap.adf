@@ -1,0 +1,71 @@
+.setorder LITTLEENDIAN
+.setencoding UTF-16LE
+ 
+.group(BitmapFileHeader) {
+short	bfType
+int		bfSize
+short	bfReserved1
+short	bfReserved2
+int		bfOffBits
+}
+
+.group(BitmapInfoHeader) {
+int		biSize
+int		biWidth
+int		biHeight
+short	biPlanes
+short	biBitCount
+int		biCompression
+int		biSizeImage
+int		biXPelsPerMeter
+int		biYPelsPerMeter
+int		biClrUsed
+int		biClrImportant
+}
+
+.if(biBitCount<=8){
+	.group(RGBQuad) {
+		.set	randomVar pow(2, biBitCount)
+		.repeat(randomVar) {
+			ubyte	rgbBlue
+			ubyte	rgbGreen
+			ubyte	rgbRed
+			ubyte	rgbReserved
+		}
+	}
+}
+
+.group(PIXELDATALIST){
+	#.if(biBitCount==1){
+		#.repeat(biSizeImage){
+			#ubyte	eightPix
+		#}
+	#}
+	
+	#.if(biBitCount==4){
+	#	.repeat(biSizeImage){
+#			ubyte	twoPix
+#		}
+#	}
+#	
+#	.if(biBitCount==8){
+#		.repeat(biSizeImage){
+#			ubyte	onePix
+#		}
+#	}
+#	
+	.if(biBitCount >= 24){  #each colour is specified
+		.repeat(biHeight){
+			.mark
+			.repeat(biWidth){
+				ubyte rgbBlue
+				ubyte rgbGreen
+				ubyte rgbRed
+			}
+
+			#Each row is zero padded to a multiple of 4
+			.skip (&rgbRed-&mark-1)%4
+		}
+	}
+}
+END
