@@ -7,7 +7,7 @@ import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.parser.ParseException;
 
-public class SetInstruction extends Instruction {
+public class SetInstruction implements Instruction {
 
 	private String varname;
 	private String expression;

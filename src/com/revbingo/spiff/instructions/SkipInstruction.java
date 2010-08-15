@@ -7,7 +7,7 @@ import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.parser.ParseException;
 
-public class SkipInstruction extends Instruction {
+public class SkipInstruction implements Instruction {
 
 	private String skipExpr;
 	

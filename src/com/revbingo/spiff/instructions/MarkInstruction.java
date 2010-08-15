@@ -6,7 +6,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 
-public class MarkInstruction extends Instruction {
+public class MarkInstruction implements Instruction {
 
 	private String name;
 	

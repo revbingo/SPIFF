@@ -45,7 +45,36 @@ public class TestCaseMethodDispatcher {
 		//the boxed type, not the primitive
 //		result = (InvokedWith) MethodDispatcher.dispatch("testMethod", receiver, 1.0f);
 //		assertThat(result, equalTo(InvokedWith.FLOAT_PRIMITIVE));
+		
 	}
+	
+	@Test
+	public void alternativeTypesForPrimitivesReturnsBoxedEquivalents() {
+		Class<?>[] alternatives = MethodDispatcher.getAlternativeTypes(byte.class, int.class, short.class, long.class, double.class, float.class, boolean.class);
+		
+		assertThat(alternatives.length, is(7));
+		
+		assertArrayEquals(new Class[] {Byte.class, Integer.class, Short.class, Long.class, Double.class, Float.class, Boolean.class}, alternatives);
+	}
+	
+	@Test
+	public void alternativeTypesForBoxedTypesReturnsPrimitiveEquivalents() {
+		Class<?>[] alternatives = MethodDispatcher.getAlternativeTypes(Byte.class, Integer.class, Short.class, Long.class, Double.class, Float.class, Boolean.class);
+		
+		assertThat(alternatives.length, is(7));
+		
+		assertArrayEquals(new Class[] {byte.class, int.class, short.class, long.class, double.class, float.class, boolean.class}, alternatives);
+	}
+	
+	@Test
+	@SuppressWarnings(value="unchecked")
+	public void getAlternativeTypesReturnsTheSameTypeForUnknownTypes() {
+		Class[] alternatives = MethodDispatcher.getAlternativeTypes(TestReceiver.class);
+		
+		assertThat(alternatives.length, is(1));
+		assertThat(alternatives[0], is(equalTo(TestReceiver.class)));
+	}
+	
 	
 	public class TestReceiver {
 		
@@ -61,8 +90,8 @@ public class TestCaseMethodDispatcher {
 			return InvokedWith.FLOAT_OBJECT;
 		}
 		
-		public InvokedWith testMethod(float f) {
-			return InvokedWith.FLOAT_PRIMITIVE;
-		}
+//		public InvokedWith testMethod(float f) {
+//			return InvokedWith.FLOAT_PRIMITIVE;
+//		}
 	}
 }

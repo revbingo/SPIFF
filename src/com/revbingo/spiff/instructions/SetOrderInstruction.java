@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.events.EventDispatcher;
 
-public class SetOrderInstruction extends Instruction {
+public class SetOrderInstruction implements Instruction {
 
 	private ByteOrder order;
 		

@@ -7,7 +7,7 @@ import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.parser.ParseException;
 
-public class PrintInstruction extends Instruction {
+public class PrintInstruction implements Instruction {
 
 	private String var;
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
@@ -15,52 +16,47 @@ import com.revbingo.spiff.parser.SpiffParser;
 
 public class BinaryParser {
 
-	private List<Instruction> instructions;
 	private EventDispatcher eventDispatcher;
 		
 	public BinaryParser(EventDispatcher ed){	
 		this.eventDispatcher = ed;
 	}
 	
-	public void parse(File adfFile, File parseFile) throws BinaryParseException, ExecutionException {
-		parseAdf(adfFile);
-		read(parseFile);
+	public void parse(File adfFile, File parseFile) throws AdfFormatException, ExecutionException {
+		List<Instruction> instructions = parseAdf(adfFile);
+		read(parseFile, instructions);
 	}
 
-	private void parseAdf(File adfFile) throws BinaryParseException { 
+	List<Instruction> parseAdf(File adfFile) throws AdfFormatException {
 		try {
-            FileInputStream fis = new FileInputStream(adfFile);
-            if(fis != null){
-                    SpiffParser parser = new SpiffParser(fis);
-                    parser.start();
-                    instructions = parser.getInstructions();
-            }else{
-                    throw new BinaryParseException("InputStream is null");
-            }
-            
+			return parseAdf(new FileInputStream(adfFile));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			throw new BinaryParseException("Error in adf file", e);
-		} 
+			throw new AdfFormatException("File " + adfFile.getAbsolutePath() + " does not exist");
+		}
 	}
-
-	private void read(File f) throws ExecutionException {
+	
+	List<Instruction> parseAdf(InputStream adf) throws AdfFormatException { 
 		try {
-			FileChannel fc = new FileInputStream(f).getChannel();
-			ByteBuffer buffer = ByteBuffer.allocate((int) f.length());			
+            SpiffParser parser = new SpiffParser(adf);
+            parser.start();
+            return parser.getInstructions();
+		} catch (ParseException e) {
+			throw new AdfFormatException("Error in adf file", e);
+		}
+	}
+	
+	void read(File binaryFile, List<Instruction> instructions) throws ExecutionException {
+		try {
+			FileChannel fc = new FileInputStream(binaryFile).getChannel();
+			ByteBuffer buffer = ByteBuffer.allocate((int) binaryFile.length());			
 			fc.read(buffer);
 			buffer.flip();
-						
+
 			for(Instruction ins : instructions){
 				ins.execute(buffer, eventDispatcher);
 			}
-		} catch (FileNotFoundException e) {
-			throw new ExecutionException("Could not find file to read", e);
 		} catch (IOException e) {
-			throw new ExecutionException("Could not read file " + f.getAbsolutePath(), e);
+			throw new ExecutionException("Could not read file " + binaryFile.getAbsolutePath(), e);
 		}
-	
 	}
-
 }

@@ -49,7 +49,7 @@ public class MethodDispatcher {
 		return result;
 	}
 	
-	private static Method findMethod(String methodName, Object receiver, Class<?>... paramTypes) throws NoSuchMethodException {
+	static Method findMethod(String methodName, Object receiver, Class<?>... paramTypes) throws NoSuchMethodException {
 		try {
 			return receiver.getClass().getMethod(methodName, paramTypes);
 		} catch (NoSuchMethodException e) {
@@ -58,7 +58,7 @@ public class MethodDispatcher {
 		}
 	}
 	
-	private static Class<?>[] getAlternativeTypes(Class<?>... paramTypes) {
+	static Class<?>[] getAlternativeTypes(Class<?>... paramTypes) {
 		Class<?>[] result = new Class<?>[paramTypes.length];
 		for(int i = 0; i < paramTypes.length; i++) {
 			if(alternativeTypes.containsKey(paramTypes[i])) {

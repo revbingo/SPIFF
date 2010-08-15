@@ -7,7 +7,7 @@ import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.parser.ParseException;
 
-public class JumpInstruction extends Instruction {
+public class JumpInstruction implements Instruction {
 
 	private String expression;
 		

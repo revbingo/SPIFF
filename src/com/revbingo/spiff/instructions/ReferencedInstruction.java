@@ -6,7 +6,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
 
-public abstract class ReferencedInstruction extends Instruction {
+public abstract class ReferencedInstruction implements Instruction {
 
 	public int address;  //address this instruction was executed
 	public String name;  //name given in map

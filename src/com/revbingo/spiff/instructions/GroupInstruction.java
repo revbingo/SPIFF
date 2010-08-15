@@ -5,9 +5,15 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.events.EventDispatcher;
 
-public class GroupInstruction extends Instruction {
+public class GroupInstruction implements Instruction {
 
 	private String groupName;
+	
+	public GroupInstruction() { super(); }
+	
+	public GroupInstruction(String name) {
+		this.setGroupName(name);
+	}
 	
 	@Override
 	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {

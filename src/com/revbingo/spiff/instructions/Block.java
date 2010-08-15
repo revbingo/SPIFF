@@ -7,7 +7,7 @@ import java.util.List;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.events.EventDispatcher;
 
-public class Block extends Instruction implements Iterable<Instruction> {
+public class Block implements Instruction, Iterable<Instruction> {
 
 	protected List<Instruction> instructions;
 	

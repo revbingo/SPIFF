@@ -27,6 +27,7 @@ import com.revbingo.spiff.instructions.ReferencedInstruction;
 
 public class TestITunesParse {
 
+	@Ignore
 	@Test
 	public void testITunesParse() throws Exception {
 		BindingEventDispatcher<SongList> ed = BindingEventDispatcher.getInstance(SongList.class);
