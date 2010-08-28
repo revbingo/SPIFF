@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -14,16 +15,15 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.internal.ExpectationBuilder;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.Instruction;
-import com.revbingo.spiff.instructions.IntegerInstruction;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
-import com.sun.jmx.snmp.Timestamp;
+import com.revbingo.spiff.parser.ParseException;
+import com.revbingo.spiff.parser.SpiffParser;
 
 @RunWith(JMock.class)
 public class TestCaseBinaryParser {
@@ -67,17 +67,19 @@ public class TestCaseBinaryParser {
 	}
 
 	@Test
-	public void parseAdfReturnsListOfInstructions() throws Exception {
-		StringWriter str = new StringWriter();
-		PrintWriter pw = new PrintWriter(str);
-		pw.println("int one");
-		pw.println("short two");
-		pw.println("long three");
-		pw.println("END");
+	public void parseAdfStartsParserAndGetsListOfInstructions() throws Exception {
+		SpiffParser mockParser = new SpiffParser(new ByteArrayInputStream("null".getBytes())) {
 
+			@Override
+			public void start() throws ParseException {	}
+
+			@Override
+			public List<Instruction> getInstructions() {
+				return Arrays.asList(new Instruction[] { new ByteInstruction("one"), new ByteInstruction("two"), new ByteInstruction("three") });
+			}
+		};
 		BinaryParser unit = new BinaryParser(null);
-		List<Instruction> instructions = unit
-				.parseAdf(new ByteArrayInputStream(str.getBuffer().toString().getBytes()));
+		List<Instruction> instructions = unit.parseAdf(mockParser);
 
 		assertThat(instructions.size(), is(3));
 	}
@@ -97,7 +99,6 @@ public class TestCaseBinaryParser {
 		
 		BinaryParser parser = new BinaryParser(eventDispatcher);
 		parser.read(File.createTempFile("samplebytes", "tmp"), instructions);
-		
 	}
 	
 }

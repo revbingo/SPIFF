@@ -41,7 +41,7 @@ public class SpiffParser implements SpiffParserConstants {
                 return a;
         }
 
-  final public void start() throws ParseException {
+  public void start() throws ParseException {
     list();
     jj_consume_token(END);
     label_1:

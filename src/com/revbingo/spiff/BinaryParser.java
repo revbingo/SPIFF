@@ -17,7 +17,7 @@ import com.revbingo.spiff.parser.SpiffParser;
 public class BinaryParser {
 
 	private EventDispatcher eventDispatcher;
-		
+	
 	public BinaryParser(EventDispatcher ed){	
 		this.eventDispatcher = ed;
 	}
@@ -29,15 +29,15 @@ public class BinaryParser {
 
 	List<Instruction> parseAdf(File adfFile) throws AdfFormatException {
 		try {
-			return parseAdf(new FileInputStream(adfFile));
+			FileInputStream fis = new FileInputStream(adfFile);
+			return parseAdf(new SpiffParser(fis));
 		} catch (FileNotFoundException e) {
 			throw new AdfFormatException("File " + adfFile.getAbsolutePath() + " does not exist");
 		}
 	}
 	
-	List<Instruction> parseAdf(InputStream adf) throws AdfFormatException { 
+	List<Instruction> parseAdf(SpiffParser parser) throws AdfFormatException { 
 		try {
-            SpiffParser parser = new SpiffParser(adf);
             parser.start();
             return parser.getInstructions();
 		} catch (ParseException e) {
