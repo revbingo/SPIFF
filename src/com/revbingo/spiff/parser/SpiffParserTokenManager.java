@@ -2,6 +2,7 @@
 package com.revbingo.spiff.parser;
 import com.revbingo.spiff.instructions.*;
 import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.parser.InstructionParser;
 import java.util.*;
 import java.nio.ByteOrder;
 

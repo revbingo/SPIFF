@@ -3,10 +3,11 @@ package com.revbingo.spiff.parser;
 
 import com.revbingo.spiff.instructions.*;
 import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.parser.InstructionParser;
 import java.util.*;
 import java.nio.ByteOrder;
 
-public class SpiffParser implements SpiffParserConstants {
+public class SpiffParser implements InstructionParser, SpiffParserConstants {
 
         List<Instruction> instructions = new ArrayList<Instruction>();
         Stack<List<Instruction>> instructionStack = new Stack<List<Instruction>>();
@@ -41,7 +42,7 @@ public class SpiffParser implements SpiffParserConstants {
                 return a;
         }
 
-  public void start() throws ParseException {
+  final public void start() throws ParseException {
     list();
     jj_consume_token(END);
     label_1:
