@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.instructions.Instruction;
+import com.revbingo.spiff.parser.InstructionParser;
 import com.revbingo.spiff.parser.ParseException;
 import com.revbingo.spiff.parser.SpiffParser;
 
@@ -36,7 +37,7 @@ public class BinaryParser {
 		}
 	}
 	
-	List<Instruction> parseAdf(SpiffParser parser) throws AdfFormatException { 
+	List<Instruction> parseAdf(InstructionParser parser) throws AdfFormatException { 
 		try {
             parser.start();
             return parser.getInstructions();

@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.Instruction;
+import com.revbingo.spiff.parser.InstructionParser;
 import com.revbingo.spiff.parser.ParseException;
 import com.revbingo.spiff.parser.SpiffParser;
 
@@ -68,16 +69,16 @@ public class TestCaseBinaryParser {
 
 	@Test
 	public void parseAdfStartsParserAndGetsListOfInstructions() throws Exception {
-		SpiffParser mockParser = new SpiffParser(new ByteArrayInputStream("null".getBytes())) {
+		context = new Mockery();
+		
+		final InstructionParser mockParser = context.mock(InstructionParser.class);
+			
+		context.checking(new Expectations(){{
+			oneOf(mockParser).start();
+			oneOf(mockParser).getInstructions();
+				will(returnValue(Arrays.asList(new ByteInstruction("one"), new ByteInstruction("two"), new ByteInstruction("three"))));
+		}});
 
-			@Override
-			public void start() throws ParseException {	}
-
-			@Override
-			public List<Instruction> getInstructions() {
-				return Arrays.asList(new Instruction[] { new ByteInstruction("one"), new ByteInstruction("two"), new ByteInstruction("three") });
-			}
-		};
 		BinaryParser unit = new BinaryParser(null);
 		List<Instruction> instructions = unit.parseAdf(mockParser);
 
