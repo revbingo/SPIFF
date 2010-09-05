@@ -29,6 +29,7 @@ public abstract class BindingWrapper {
 	}
 	
 	public BindingWrapper getBindingFor(String name) {
+		if(childBindings == null) return null;
 		return childBindings.get(name);
 	}
 	
