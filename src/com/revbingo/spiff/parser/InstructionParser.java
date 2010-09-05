@@ -6,5 +6,5 @@ import com.revbingo.spiff.instructions.Instruction;
 
 public interface InstructionParser {
 
-	public List<Instruction> start() throws ParseException;
+	public void start() throws ParseException;
 }
