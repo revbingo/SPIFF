@@ -18,19 +18,13 @@ public class Evaluator {
 	private static Object[] context;
 	private static HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
 
-	public static int cacheHit = 0;
-	public static int cacheMiss = 0;
-	
 	static {
 		Class<?>[] staticLib=new Class[1];
 		Class<?>[] dynamicLib = new Class[1];
 		Class<?>[] dotLib = new Class[0];
-		try{
-			staticLib[0] = Class.forName("java.lang.Math");
-			dynamicLib[0] = EvaluatorMap.class;
-		}catch(Exception e){
-			e.printStackTrace();
-		}	
+
+		staticLib[0] = java.lang.Math.class;
+		dynamicLib[0] = EvaluatorMap.class;
 		
 		map = new EvaluatorMap(); 
 		evaluatedExpressions = new HashSet<String>();
@@ -40,7 +34,9 @@ public class Evaluator {
 	}
 	
 	public static void addExpression(String exp){
-		if(exp.startsWith("&")) exp = exp.substring(1);
+		if(exp.startsWith("&")) {
+			exp = exp.substring(1);
+		}
 		evaluatedExpressions.add(exp);
 	}
 	
@@ -56,43 +52,16 @@ public class Evaluator {
 		map.addVariable(name, var);
 	}
 	
-	private static CompiledExpression compile(String expression) throws ParseException {
-		try {
-			CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib);
-			cExpr.put(expression, c);
-			return c;
-		} catch (CompilationException e) {
-			throw new ParseException("Cannot compile expression " + expression);
-		} catch (Exception e){
-			return null;
-		}
+	private static CompiledExpression compile(String expression) throws CompilationException {
+		CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib);
+		cExpr.put(expression, c);
+		return c;
 	}
 
-	private static CompiledExpression compile(String expression, Class<?> type) throws ParseException {
-		try {
-			CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib, type);
-			cExpr.put(expression + "@" + type.getSimpleName(), c);
-			return c;
-		} catch (CompilationException e) {
-			throw new ParseException("Cannot compile expression " + expression);
-		} catch (Exception e){
-			return null;
-		}
-	}
-	
-	public static Number evaluateNumber(String expression) throws ExecutionException {
-		Object o;
-		try {
-			CompiledExpression c = getCompiledExpression(expression);
-			o = c.evaluate(context);
-			if(o instanceof Number){
-				return (Number) o;
-			}else{
-				throw new ExecutionException("Expression resulted in non-Number");
-			}
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}		
+	private static CompiledExpression compile(String expression, Class<?> type) throws CompilationException {
+		CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib, type);
+		cExpr.put(expression + "@" + type.getSimpleName(), c);
+		return c;
 	}
 	
 	public static int evaluateInt(String expression) throws ExecutionException {
@@ -155,16 +124,7 @@ public class Evaluator {
 			return c.evaluate_float(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
-	}
-	
-	public static char evaluateChar(String expression) throws ExecutionException{
-		try {
-			CompiledExpression c = getCompiledExpression(expression);
-			return c.evaluate_char(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
 	
 	public static String evaluateString(String expression) throws ExecutionException{
@@ -191,34 +151,27 @@ public class Evaluator {
 		}				
 	}
 	
-	private static CompiledExpression getCompiledExpression(String expression, Class<?> type) throws ExecutionException {
+	static CompiledExpression getCompiledExpression(String expression, Class<?> type) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression + "@" + type.getSimpleName());
 		if(c == null){
 			try {
 				c = compile(expression, type);
-			} catch (ParseException e) {
+			} catch (CompilationException e) {
 				throw new ExecutionException("Could not compile expression " + expression, e);
-			} catch(Exception e){
-				e.printStackTrace();
 			}
 		}
 		return c;
 	}
 	
-	private static CompiledExpression getCompiledExpression(String expression) throws ExecutionException {
+	static CompiledExpression getCompiledExpression(String expression) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression);
 		
 		if(c == null){
-			cacheMiss++;
 			try {
 				c = compile(expression);
-			} catch (ParseException e) {
+			} catch (CompilationException e) {
 				throw new ExecutionException("Could not compile expression " + expression, e);
-			} catch(Exception e){
-				e.printStackTrace();
 			}
-		} else {
-			cacheHit++;
 		}
 		return c;
 	}
