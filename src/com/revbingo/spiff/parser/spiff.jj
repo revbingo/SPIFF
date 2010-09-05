@@ -150,7 +150,7 @@ void entry() : {}
 {
 	(
 		LOOKAHEAD(8)
-		fixedString()
+		string()
 	|
 		LOOKAHEAD(2)
 		fixedNumber()
@@ -186,6 +186,17 @@ void instruction() : {}
 	|
 	includeInstruction()
 	
+}
+
+void string() : {}
+{
+	(
+		LOOKAHEAD(3)
+		fixedString()
+	|
+		LOOKAHEAD(3)
+		terminatedString()
+	)	
 }
 
 void includeInstruction() : { Token t;}
@@ -416,7 +427,7 @@ void terminatedString() : { Token t2, t3; }
  	{
 	  TerminatedString ins = new TerminatedString();
 	  ins.setEncoding(defaultEncoding);
-	}	< TY_TERM_STRING >
+	}	< TY_STRING >
 	[ <OPEN_PAR > (t3 = <ENCODING>) < CLOSE_PAR > { ins.setEncoding(t3.image);	} ]
 	( t2 = < IDENTIFIER > )	
 	{

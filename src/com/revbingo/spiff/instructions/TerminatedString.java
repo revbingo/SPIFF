@@ -36,4 +36,8 @@ public class TerminatedString extends ReferencedInstruction {
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
+	
+	public String getEncoding() {
+		return encoding;
+	}
 }

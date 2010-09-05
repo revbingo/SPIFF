@@ -35,7 +35,15 @@ public class FixedLengthString extends ReferencedInstruction {
 		lengthExpr = s;
 	}
 	
+	public String getLengthExpr() {
+		return lengthExpr;
+	}
+	
 	public void setEncoding(String enc){
 		encoding = enc;
+	}
+	
+	public String getEncoding() {
+		return encoding;
 	}
 }
