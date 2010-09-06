@@ -24,4 +24,8 @@ public class GroupInstruction implements Instruction {
 		groupName = name;
 	}
 
+	public String getGroupName() {
+		return groupName;
+	}
+
 }

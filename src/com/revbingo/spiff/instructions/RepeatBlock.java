@@ -15,6 +15,10 @@ public class RepeatBlock extends Block {
 		repeatCountExpr=expr;
 	}
 	
+	public String getRepeatCountExpression() {
+		return repeatCountExpr;
+	}
+	
 	@Override
 	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
 		long repeatCount = Evaluator.evaluateLong(repeatCountExpr);

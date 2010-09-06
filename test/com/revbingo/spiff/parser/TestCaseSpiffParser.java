@@ -10,18 +10,23 @@ import java.util.List;
 
 import net.sf.cglib.transform.impl.AddDelegateTransformer;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.DoubleInstruction;
+import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthString;
 import com.revbingo.spiff.instructions.FloatInstruction;
+import com.revbingo.spiff.instructions.GroupInstruction;
+import com.revbingo.spiff.instructions.IfBlock;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
 import com.revbingo.spiff.instructions.LongInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
 import com.revbingo.spiff.instructions.PrintInstruction;
+import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.ShortInstruction;
@@ -31,6 +36,7 @@ import com.revbingo.spiff.instructions.UnsignedByteInstruction;
 import com.revbingo.spiff.instructions.UnsignedIntegerInstruction;
 import com.revbingo.spiff.instructions.UnsignedLongInstruction;
 import com.revbingo.spiff.instructions.UnsignedShortInstruction;
+import com.sun.org.apache.bcel.internal.generic.IfInstruction;
 
 public class TestCaseSpiffParser {
 
@@ -392,6 +398,179 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 		
 		assertThat(insts.size(), is(12));
+	}
+	
+	@Test
+	public void repeatTakesExpressionAndIncludesInstructionsFromTheBlock() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".repeat(x) {")
+			.add("   byte byteOne")
+			.add("   byte byteTwo")
+			.add("}")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(RepeatBlock.class));
+		
+		RepeatBlock theBlock = (RepeatBlock) insts.get(0);
+		
+		assertThat(theBlock.getInstructions().size(), is(2));
+		assertThat(theBlock.getRepeatCountExpression(), is("x"));
+	}
+	
+	@Test
+	public void repeatRequiresExpression() throws Exception { 
+		try {
+			AdfFile adf = AdfFile.start()
+				.add(".repeat {")
+				.add("}")
+				.end();
+			parse(adf);
+			fail("Should not be able to have repeat without expression");
+		} catch(ParseException e) {}
+		
+		try {
+			AdfFile adf = AdfFile.start()
+				.add(".repeat() {")
+				.add("}")
+				.end();
+			parse(adf);
+			fail("Should not be able to have repeat without expression");
+		} catch(ParseException e) {}
+		
+	}
+
+	@Test
+	public void groupGeneratesGroundAndEndGroupInstructions() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".group(groupName) {")
+			.add("}")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(2));
+		assertThat(insts.get(0), instanceOf(GroupInstruction.class));
+		assertThat(insts.get(1), instanceOf(EndGroupInstruction.class));
+		
+		assertThat(((GroupInstruction) insts.get(0)).getGroupName(), is("groupName"));
+		assertThat(((EndGroupInstruction) insts.get(1)).getGroupName(), is("groupName"));
+	}
+	
+	@Test
+	public void ifElse() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(x) {")
+			.add("   byte byteOne")
+			.add("} .else {")
+			.add("  byte byteTwo")
+			.add("}")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(IfBlock.class));
+		
+		IfBlock theBlock = (IfBlock) insts.get(0);
+		
+		assertThat(theBlock.getIfInstructions().getInstructions().size(), is(1));
+		assertThat(theBlock.getElseInstructions().getInstructions().size(), is(1));
+	}
+	
+	@Test
+	public void elseCanBeOnSeparateLine() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(x) {")
+			.add("   byte byteOne")
+			.add("}")
+			.add(".else {")
+			.add("  byte byteTwo")
+			.add("}")
+			.end();
+	
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(IfBlock.class));
+		
+		adf = AdfFile.start()
+			.add(".if(x) {")
+			.add("   byte byteOne")
+			.add("}")
+			.add(".else")
+			.add("{")
+			.add("  byte byteTwo")
+			.add("}")
+			.end();
+	
+		insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(IfBlock.class));
+	}
+	
+	@Test(expected=ParseException.class)
+	public void elseWithoutIfIsIllegal() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".else {")
+			.add("}")
+			.end();
+		
+		parse(adf);
+	}
+	
+	@Test
+	public void commentsCanBeOnSameLineAsAnInstruction() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("byte byteOne  #comment")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+	}
+	
+	@Test
+	public void commentCanBeOnItsOwnLine() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("#comment")
+			.end();
+		
+		parse(adf);
+	}
+	
+	@Test
+	public void expressionOperators() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(x+y-z/3*(j*k) != 5) {")
+			.add("  .if(a == b%3) {")
+			.add("    .if(a >= 3) {")
+			.add("      .if(b < 4) {")
+			.add("         .if(b <= 10) {")
+			.add("            .if(c > 6) {")
+			.add("}")
+			.add("}")
+			.add("}")
+			.add("}")
+			.add("}")
+			.add("}")
+			.end();
+		
+		parse(adf);
+	}
+	
+	@Ignore
+	@Test
+	public void expressionCanContainFunctions() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(abs(-2) == 2) {")
+			.add("}")
+			.end();
+		
+		parse(adf);
 	}
 	
 	private List<Instruction> parse(AdfFile adf) throws Exception {

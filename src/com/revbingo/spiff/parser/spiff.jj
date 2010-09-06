@@ -286,19 +286,22 @@ void ifInstruction() : { String s;}
 		ins.setInstructions(instructions);
 		instructions = instructionStack.pop();
 	}
-	[
-	<INS_ELSE>
-	{
-	 instructionStack.push(instructions);
-	 instructions = new ArrayList<Instruction>();
-	}
-	<OPEN_BRACE>
-	list()
-	<CLOSE_BRACE>
-	{
-		ins.setElseInstructions(instructions);
-		instructions = instructionStack.pop();
-	}
+	[ 
+		LOOKAHEAD(2)
+		[<EOL>]
+		<INS_ELSE>
+		[<EOL>]
+		{
+		 instructionStack.push(instructions);
+		 instructions = new ArrayList<Instruction>();
+		}
+		<OPEN_BRACE>
+		list()
+		<CLOSE_BRACE>
+		{
+			ins.setElseInstructions(instructions);
+			instructions = instructionStack.pop();
+		}
 	]
 	
 	{ instructions.add(ins); }
@@ -520,7 +523,7 @@ String operand() : { Token t; String ex;}
 {
 	{ StringBuffer s = new StringBuffer(); }
 	(
-	LOOKAHEAD(3)
+	LOOKAHEAD(4)
 	(ex=functionCall()) {s.append(ex);}
 	|
 	(t=<INTEGER>) { s.append(t.image);}

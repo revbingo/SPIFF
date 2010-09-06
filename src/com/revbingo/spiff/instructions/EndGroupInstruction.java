@@ -23,5 +23,9 @@ public class EndGroupInstruction implements Instruction {
 	public void setGroupName(String name){
 		groupName = name;
 	}
+	
+	public String getGroupName() {
+		return groupName;
+	}
 
 }

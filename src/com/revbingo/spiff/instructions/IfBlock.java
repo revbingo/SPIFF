@@ -32,9 +32,21 @@ public class IfBlock extends Block {
 	public void setIfExpression(String expr) throws ParseException{
 		expression = expr;
 	}
+	
+	public String getIfExpression() {
+		return expression;
+	}
 
 	public void setElseInstructions(List<Instruction> inst){
 		elseInsts = new Block(inst);
+	}
+	
+	public Block getElseInstructions() {
+		return elseInsts;
+	}
+	
+	public Block getIfInstructions() {
+		return new Block(instructions);
 	}
 	
 	public ArrayList<Instruction> getInstructions(){
