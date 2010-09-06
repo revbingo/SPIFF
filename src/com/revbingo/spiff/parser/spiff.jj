@@ -54,8 +54,7 @@ PARSER_END(SpiffParser)
 SKIP: { " " | "\t" }
 TOKEN:  	/* TYPES */ 
 { 
-< TY_STRING : "string" >
-	| < TY_TERM_STRING : "tstring" > 
+< TY_STRING : "string" > 
 	| < TY_INT : "int" >	
 	| < TY_LONG : "long" > 
 	| < TY_BYTE : "byte" > 
@@ -80,7 +79,7 @@ TOKEN:  /* LITERALS */
 	| < CLOSE_BRACE : "}" >
 	| < COMMA : "," >
 	
-} 
+}
 
 TOKEN: /* INSTRUCTIONS */
 {
@@ -393,9 +392,7 @@ void skipInstruction() : { String s;}
 void markInstruction() : { Token t; }
 {
 	<INS_MARK>
-	<OPEN_PAR>
 	(t = <IDENTIFIER>)
-	<CLOSE_PAR>
 	{
 	  MarkInstruction ins = new MarkInstruction();
 	  ins.setName(t.image);

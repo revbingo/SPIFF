@@ -56,7 +56,7 @@ int		biClrImportant
 #	
 	.if(biBitCount >= 24){  #each colour is specified
 		.repeat(biHeight){
-			.mark
+			.mark theMark
 			.repeat(biWidth){
 				ubyte rgbBlue
 				ubyte rgbGreen

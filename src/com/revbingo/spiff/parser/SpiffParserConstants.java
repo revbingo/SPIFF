@@ -13,105 +13,103 @@ public interface SpiffParserConstants {
   /** RegularExpression Id. */
   int TY_STRING = 3;
   /** RegularExpression Id. */
-  int TY_TERM_STRING = 4;
+  int TY_INT = 4;
   /** RegularExpression Id. */
-  int TY_INT = 5;
+  int TY_LONG = 5;
   /** RegularExpression Id. */
-  int TY_LONG = 6;
+  int TY_BYTE = 6;
   /** RegularExpression Id. */
-  int TY_BYTE = 7;
+  int TY_SHORT = 7;
   /** RegularExpression Id. */
-  int TY_SHORT = 8;
+  int TY_DOUBLE = 8;
   /** RegularExpression Id. */
-  int TY_DOUBLE = 9;
+  int TY_FLOAT = 9;
   /** RegularExpression Id. */
-  int TY_FLOAT = 10;
+  int TY_UBYTE = 10;
   /** RegularExpression Id. */
-  int TY_UBYTE = 11;
+  int TY_USHORT = 11;
   /** RegularExpression Id. */
-  int TY_USHORT = 12;
+  int TY_UINT = 12;
   /** RegularExpression Id. */
-  int TY_UINT = 13;
+  int TY_ULONG = 13;
   /** RegularExpression Id. */
-  int TY_ULONG = 14;
+  int EOL = 14;
   /** RegularExpression Id. */
-  int EOL = 15;
+  int BYTEORDER = 15;
   /** RegularExpression Id. */
-  int BYTEORDER = 16;
+  int ENCODING = 16;
   /** RegularExpression Id. */
-  int ENCODING = 17;
+  int END = 17;
   /** RegularExpression Id. */
-  int END = 18;
+  int OPEN_PAR = 18;
   /** RegularExpression Id. */
-  int OPEN_PAR = 19;
+  int CLOSE_PAR = 19;
   /** RegularExpression Id. */
-  int CLOSE_PAR = 20;
+  int OPEN_BRACE = 20;
   /** RegularExpression Id. */
-  int OPEN_BRACE = 21;
+  int CLOSE_BRACE = 21;
   /** RegularExpression Id. */
-  int CLOSE_BRACE = 22;
+  int COMMA = 22;
   /** RegularExpression Id. */
-  int COMMA = 23;
+  int INS_JUMP = 23;
   /** RegularExpression Id. */
-  int INS_JUMP = 24;
+  int INS_SETORDER = 24;
   /** RegularExpression Id. */
-  int INS_SETORDER = 25;
+  int INS_REPEAT = 25;
   /** RegularExpression Id. */
-  int INS_REPEAT = 26;
+  int INS_GROUP = 26;
   /** RegularExpression Id. */
-  int INS_GROUP = 27;
+  int INS_SKIP = 27;
   /** RegularExpression Id. */
-  int INS_SKIP = 28;
+  int INS_IF = 28;
   /** RegularExpression Id. */
-  int INS_IF = 29;
+  int INS_SET = 29;
   /** RegularExpression Id. */
-  int INS_SET = 30;
+  int INS_PRINT = 30;
   /** RegularExpression Id. */
-  int INS_PRINT = 31;
+  int INS_ELSE = 31;
   /** RegularExpression Id. */
-  int INS_ELSE = 32;
+  int INS_MARK = 32;
   /** RegularExpression Id. */
-  int INS_MARK = 33;
+  int INS_SETENCODING = 33;
   /** RegularExpression Id. */
-  int INS_SETENCODING = 34;
+  int INS_DEFINE = 34;
   /** RegularExpression Id. */
-  int INS_DEFINE = 35;
+  int INS_INCLUDE = 35;
   /** RegularExpression Id. */
-  int INS_INCLUDE = 36;
+  int EQUAL = 36;
   /** RegularExpression Id. */
-  int EQUAL = 37;
+  int GREATER_THAN = 37;
   /** RegularExpression Id. */
-  int GREATER_THAN = 38;
+  int LESS_THAN = 38;
   /** RegularExpression Id. */
-  int LESS_THAN = 39;
+  int NOT_EQUAL = 39;
   /** RegularExpression Id. */
-  int NOT_EQUAL = 40;
+  int GREATER_OR_EQUAL = 40;
   /** RegularExpression Id. */
-  int GREATER_OR_EQUAL = 41;
+  int LESS_OR_EQUAL = 41;
   /** RegularExpression Id. */
-  int LESS_OR_EQUAL = 42;
+  int PL_MI_OPERATOR = 42;
   /** RegularExpression Id. */
-  int PL_MI_OPERATOR = 43;
+  int MUL_DIV_OPERATOR = 43;
   /** RegularExpression Id. */
-  int MUL_DIV_OPERATOR = 44;
+  int DIGIT = 44;
   /** RegularExpression Id. */
-  int DIGIT = 45;
+  int ALPHA = 45;
   /** RegularExpression Id. */
-  int ALPHA = 46;
+  int ALPHANUM = 46;
   /** RegularExpression Id. */
-  int ALPHANUM = 47;
+  int INTEGER = 47;
   /** RegularExpression Id. */
-  int INTEGER = 48;
+  int FLOAT = 48;
   /** RegularExpression Id. */
-  int FLOAT = 49;
+  int IDENTIFIER = 49;
   /** RegularExpression Id. */
-  int IDENTIFIER = 50;
+  int ID_VALUE = 50;
   /** RegularExpression Id. */
-  int ID_VALUE = 51;
+  int ID_ADDRESS = 51;
   /** RegularExpression Id. */
-  int ID_ADDRESS = 52;
-  /** RegularExpression Id. */
-  int COMMENT = 53;
+  int COMMENT = 52;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -122,7 +120,6 @@ public interface SpiffParserConstants {
     "\" \"",
     "\"\\t\"",
     "\"string\"",
-    "\"tstring\"",
     "\"int\"",
     "\"long\"",
     "\"byte\"",

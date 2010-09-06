@@ -27,7 +27,7 @@
 
 	.if(biBitCount >= 24){  #each colour is specified
 		.repeat(biHeight){
-			.mark(rowStart)
+			.mark rowStart
 			.repeat(biWidth){
 				.group(PIXELDATA){
 					ubyte rgbBlue

@@ -16,6 +16,10 @@ public class SetOrderInstruction implements Instruction {
 		this.order = order; 
 	}
 	
+	public ByteOrder getOrder() {
+		return order;
+	}
+	
 	@Override
 	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
 		buffer.order(order);
