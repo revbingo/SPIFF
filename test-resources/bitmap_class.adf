@@ -13,7 +13,7 @@
 	.group(BITMAPINFOHEADER) {
 		int		biSize
 		int		biWidth
-		int		biHeight
+		int		biHeight 
 		short	biPlanes
 		short	biBitCount
 		int		biCompression
@@ -37,7 +37,7 @@
 			}
 
 			#Each row is zero padded to a multiple of 4
-			.skip (&rgbRed-&rowStart-1) % 4
+			.skip (&rgbRed - &rowStart - 1) % 4
 		}
 	}
 }

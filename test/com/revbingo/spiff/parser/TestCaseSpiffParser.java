@@ -588,6 +588,32 @@ public class TestCaseSpiffParser {
 		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("abs(-2)==2"));
 	}
 	
+	@Test
+	public void canReferenceValueExplicitly() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(byteOne.value == 2) {")
+			.add("}")
+			.end();
+	
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("byteOne.value==2"));
+	}
+	
+	@Test
+	public void canReferenceAddressUsingAmpersandNotation() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(&byteOne == 3) {")
+			.add("}")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("byteOne.address==3"));
+	}
+	
 	private List<Instruction> parse(AdfFile adf) throws Exception {
 		SpiffParser unit = new SpiffParser(adf.asReader());
 		unit.start();
