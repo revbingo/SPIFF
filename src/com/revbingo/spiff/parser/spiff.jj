@@ -475,6 +475,7 @@ String expression() : { String s; Token t;}
 	{StringBuffer b = new StringBuffer(); }
 		
 	(s=plusexpression()) { b.append(s);}
+	
 	[ (t=comparator())	{b.append(t.image);}
  	  (s=plusexpression()) {b.append(s);} ]
 
@@ -523,8 +524,10 @@ String operand() : { Token t; String ex;}
 {
 	{ StringBuffer s = new StringBuffer(); }
 	(
-	LOOKAHEAD(4)
+	LOOKAHEAD(2)
 	(ex=functionCall()) {s.append(ex);}
+	|
+	(t=<IDENTIFIER>){s.append(t.image); Evaluator.addExpression(t.image);}
 	|
 	(t=<INTEGER>) { s.append(t.image);}
 	|
@@ -533,17 +536,16 @@ String operand() : { Token t; String ex;}
 	(t=<ID_VALUE>) { s.append(t.image); Evaluator.addExpression(t.image); }
 	|
 	(t=<OPEN_PAR>) {s.append(t.image);} (ex=expression()) { s.append(ex);}  (t=<CLOSE_PAR>) {s.append(t.image);}
-	|
-	LOOKAHEAD(3)
-	(t=<IDENTIFIER>){s.append(t.image); Evaluator.addExpression(t.image);}
 	)
 	{ return s.toString();}
 }
 
 String functionCall(): {Token t; String ex;}
 {
-  	(t=<IDENTIFIER>) 
-  	(ex=FormalParameters()) 
+  	(t=<IDENTIFIER>)
+  	<OPEN_PAR>
+  	(ex=FormalParameters())
+  	<CLOSE_PAR> 
   	{
   		StringBuffer b = new StringBuffer();
   		b.append(t.image);
@@ -554,8 +556,10 @@ String functionCall(): {Token t; String ex;}
 
 String FormalParameters(): { String ex;}
 {
-	{StringBuffer b = new StringBuffer();}
-  	<OPEN_PAR>  {b.append("(");} 
+	{
+		StringBuffer b = new StringBuffer();
+		b.append("(");
+	}
   	[ 
   		(ex=FormalParameter()) {b.append(ex);} 
   		( 	"," 
@@ -563,9 +567,10 @@ String FormalParameters(): { String ex;}
   		)* 
   	] 
   	
-  	<CLOSE_PAR>  {b.append(")");}
-  	
-  	{return b.toString();}
+    {
+   		b.append(")");
+  		return b.toString();
+  	}
 }
 
 String FormalParameter(): { Token t;}
@@ -583,7 +588,10 @@ String FormalParameter(): { Token t;}
 	|
 	(t=<ID_ADDRESS>)  { Evaluator.addExpression(t.image); }
 	)
-	{System.out.println("Param:" + t.image); return t.image;}
+	
+	{
+		return t.image;
+	}
 }
 
 Token numberType() : { Token t; }

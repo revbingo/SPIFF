@@ -562,15 +562,17 @@ public class TestCaseSpiffParser {
 		parse(adf);
 	}
 	
-	@Ignore
 	@Test
 	public void expressionCanContainFunctions() throws Exception {
 		AdfFile adf = AdfFile.start()
-			.add(".if(abs(-2) == 2) {")
+			.add(".if(pow(2,3) == 2) {")
 			.add("}")
 			.end();
 		
-		parse(adf);
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("pow(2,3)==2"));
 	}
 	
 	private List<Instruction> parse(AdfFile adf) throws Exception {
