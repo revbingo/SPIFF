@@ -43,83 +43,34 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         }
 
   final public void start() throws ParseException {
-    list();
-    jj_consume_token(END);
-    label_1:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case EOL:
-        ;
-        break;
-      default:
-        jj_la1[0] = jj_gen;
-        break label_1;
+    trace_call("start");
+    try {
+      list();
+      jj_consume_token(END);
+      label_1:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          ;
+          break;
+        default:
+          jj_la1[0] = jj_gen;
+          break label_1;
+        }
+        jj_consume_token(EOL);
       }
-      jj_consume_token(EOL);
-    }
-    jj_consume_token(0);
+      jj_consume_token(0);
           this.optimise();
+    } finally {
+      trace_return("start");
+    }
   }
 
   final public void list() throws ParseException {
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case TY_STRING:
-      case TY_INT:
-      case TY_LONG:
-      case TY_BYTE:
-      case TY_SHORT:
-      case TY_DOUBLE:
-      case TY_FLOAT:
-      case TY_UBYTE:
-      case TY_USHORT:
-      case TY_UINT:
-      case TY_ULONG:
-      case EOL:
-      case INS_JUMP:
-      case INS_SETORDER:
-      case INS_REPEAT:
-      case INS_GROUP:
-      case INS_SKIP:
-      case INS_IF:
-      case INS_SET:
-      case INS_PRINT:
-      case INS_MARK:
-      case INS_SETENCODING:
-      case INS_DEFINE:
-      case INS_INCLUDE:
-      case COMMENT:
-        ;
-        break;
-      default:
-        jj_la1[1] = jj_gen;
-        break label_2;
-      }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case TY_STRING:
-      case TY_INT:
-      case TY_LONG:
-      case TY_BYTE:
-      case TY_SHORT:
-      case TY_DOUBLE:
-      case TY_FLOAT:
-      case TY_UBYTE:
-      case TY_USHORT:
-      case TY_UINT:
-      case TY_ULONG:
-      case INS_JUMP:
-      case INS_SETORDER:
-      case INS_REPEAT:
-      case INS_GROUP:
-      case INS_SKIP:
-      case INS_IF:
-      case INS_SET:
-      case INS_PRINT:
-      case INS_MARK:
-      case INS_SETENCODING:
-      case INS_DEFINE:
-      case INS_INCLUDE:
+    trace_call("list");
+    try {
+      label_2:
+      while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case TY_STRING:
         case TY_INT:
@@ -132,8 +83,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         case TY_USHORT:
         case TY_UINT:
         case TY_ULONG:
-          entry();
-          break;
+        case EOL:
         case INS_JUMP:
         case INS_SETORDER:
         case INS_REPEAT:
@@ -146,208 +96,315 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         case INS_SETENCODING:
         case INS_DEFINE:
         case INS_INCLUDE:
-          instruction();
+        case COMMENT:
+          ;
           break;
         default:
-          jj_la1[2] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+          jj_la1[1] = jj_gen;
+          break label_2;
         }
-        break;
-      default:
-        jj_la1[3] = jj_gen;
-        ;
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case TY_STRING:
+        case TY_INT:
+        case TY_LONG:
+        case TY_BYTE:
+        case TY_SHORT:
+        case TY_DOUBLE:
+        case TY_FLOAT:
+        case TY_UBYTE:
+        case TY_USHORT:
+        case TY_UINT:
+        case TY_ULONG:
+        case INS_JUMP:
+        case INS_SETORDER:
+        case INS_REPEAT:
+        case INS_GROUP:
+        case INS_SKIP:
+        case INS_IF:
+        case INS_SET:
+        case INS_PRINT:
+        case INS_MARK:
+        case INS_SETENCODING:
+        case INS_DEFINE:
+        case INS_INCLUDE:
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case TY_STRING:
+          case TY_INT:
+          case TY_LONG:
+          case TY_BYTE:
+          case TY_SHORT:
+          case TY_DOUBLE:
+          case TY_FLOAT:
+          case TY_UBYTE:
+          case TY_USHORT:
+          case TY_UINT:
+          case TY_ULONG:
+            entry();
+            break;
+          case INS_JUMP:
+          case INS_SETORDER:
+          case INS_REPEAT:
+          case INS_GROUP:
+          case INS_SKIP:
+          case INS_IF:
+          case INS_SET:
+          case INS_PRINT:
+          case INS_MARK:
+          case INS_SETENCODING:
+          case INS_DEFINE:
+          case INS_INCLUDE:
+            instruction();
+            break;
+          default:
+            jj_la1[2] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+          break;
+        default:
+          jj_la1[3] = jj_gen;
+          ;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMENT:
+          jj_consume_token(COMMENT);
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          ;
+        }
+        jj_consume_token(EOL);
       }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMENT:
-        jj_consume_token(COMMENT);
-        break;
-      default:
-        jj_la1[4] = jj_gen;
-        ;
-      }
-      jj_consume_token(EOL);
+    } finally {
+      trace_return("list");
     }
   }
 
   final public void entry() throws ParseException {
-    if (jj_2_1(8)) {
-      string();
-    } else if (jj_2_2(2)) {
-      fixedNumber();
-    } else if (jj_2_3(2)) {
-      fixedUnsigned();
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
+    trace_call("entry");
+    try {
+      if (jj_2_1(8)) {
+        string();
+      } else if (jj_2_2(2)) {
+        fixedNumber();
+      } else if (jj_2_3(2)) {
+        fixedUnsigned();
+      } else {
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } finally {
+      trace_return("entry");
     }
   }
 
   final public void instruction() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case INS_JUMP:
-      jumpInstruction();
-      break;
-    case INS_SETORDER:
-      setOrderInstruction();
-      break;
-    case INS_REPEAT:
-      repeatInstruction();
-      break;
-    case INS_GROUP:
-      groupInstruction();
-      break;
-    case INS_SKIP:
-      skipInstruction();
-      break;
-    case INS_IF:
-      ifInstruction();
-      break;
-    case INS_SET:
-      setInstruction();
-      break;
-    case INS_PRINT:
-      printInstruction();
-      break;
-    case INS_MARK:
-      markInstruction();
-      break;
-    case INS_SETENCODING:
-      setEncodingInstruction();
-      break;
-    case INS_DEFINE:
-      defineInstruction();
-      break;
-    case INS_INCLUDE:
-      includeInstruction();
-      break;
-    default:
-      jj_la1[5] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    trace_call("instruction");
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INS_JUMP:
+        jumpInstruction();
+        break;
+      case INS_SETORDER:
+        setOrderInstruction();
+        break;
+      case INS_REPEAT:
+        repeatInstruction();
+        break;
+      case INS_GROUP:
+        groupInstruction();
+        break;
+      case INS_SKIP:
+        skipInstruction();
+        break;
+      case INS_IF:
+        ifInstruction();
+        break;
+      case INS_SET:
+        setInstruction();
+        break;
+      case INS_PRINT:
+        printInstruction();
+        break;
+      case INS_MARK:
+        markInstruction();
+        break;
+      case INS_SETENCODING:
+        setEncodingInstruction();
+        break;
+      case INS_DEFINE:
+        defineInstruction();
+        break;
+      case INS_INCLUDE:
+        includeInstruction();
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } finally {
+      trace_return("instruction");
     }
   }
 
   final public void string() throws ParseException {
-    if (jj_2_4(3)) {
-      fixedString();
-    } else if (jj_2_5(3)) {
-      terminatedString();
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
+    trace_call("string");
+    try {
+      if (jj_2_4(3)) {
+        fixedString();
+      } else if (jj_2_5(3)) {
+        terminatedString();
+      } else {
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } finally {
+      trace_return("string");
     }
   }
 
   final public void includeInstruction() throws ParseException {
+    trace_call("includeInstruction");
+    try {
                               Token t;
-    jj_consume_token(INS_INCLUDE);
-    t = jj_consume_token(IDENTIFIER);
+      jj_consume_token(INS_INCLUDE);
+      t = jj_consume_token(IDENTIFIER);
                 List<Instruction> include = defines.get(t.image);
                 if(include == null) {if (true) throw new RuntimeException("Could not get defined block with name " + t.image);}
                 instructions.addAll(include);
+    } finally {
+      trace_return("includeInstruction");
+    }
   }
 
   final public void defineInstruction() throws ParseException {
+    trace_call("defineInstruction");
+    try {
                              Token t;
                 instructionStack.push(instructions);
                 instructions = new ArrayList<Instruction>();
-    jj_consume_token(INS_DEFINE);
-    jj_consume_token(OPEN_PAR);
-    t = jj_consume_token(IDENTIFIER);
-    jj_consume_token(CLOSE_PAR);
-    jj_consume_token(OPEN_BRACE);
-    list();
-    jj_consume_token(CLOSE_BRACE);
+      jj_consume_token(INS_DEFINE);
+      jj_consume_token(OPEN_PAR);
+      t = jj_consume_token(IDENTIFIER);
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
                 defines.put(t.image, instructions);
                 instructions = instructionStack.pop();
+    } finally {
+      trace_return("defineInstruction");
+    }
   }
 
   final public void setEncodingInstruction() throws ParseException {
+    trace_call("setEncodingInstruction");
+    try {
                                   Token t;
-    jj_consume_token(INS_SETENCODING);
-    t = jj_consume_token(ENCODING);
+      jj_consume_token(INS_SETENCODING);
+      t = jj_consume_token(ENCODING);
                 this.defaultEncoding = t.image;
+    } finally {
+      trace_return("setEncodingInstruction");
+    }
   }
 
   final public void setInstruction() throws ParseException {
+    trace_call("setInstruction");
+    try {
                           String s; Token t;
-    jj_consume_token(INS_SET);
-    t = jj_consume_token(IDENTIFIER);
-    s = expression();
+      jj_consume_token(INS_SET);
+      t = jj_consume_token(IDENTIFIER);
+      s = expression();
                 SetInstruction ins = new SetInstruction();
                 ins.setVarname(t.image);
                 ins.setExpression(s);
                 instructions.add(ins);
+    } finally {
+      trace_return("setInstruction");
+    }
   }
 
   final public void printInstruction() throws ParseException {
+    trace_call("printInstruction");
+    try {
                             Token t; String s;
           PrintInstruction ins = new PrintInstruction();
-    jj_consume_token(INS_PRINT);
-    if (jj_2_6(3)) {
-      s = expression();
+      jj_consume_token(INS_PRINT);
+      if (jj_2_6(3)) {
+        s = expression();
                           ins.setVar(s);
-    } else if (jj_2_7(3)) {
-      t = jj_consume_token(IDENTIFIER);
+      } else if (jj_2_7(3)) {
+        t = jj_consume_token(IDENTIFIER);
                           ins.setVar(t.image);
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+      } else {
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
           instructions.add(ins);
+    } finally {
+      trace_return("printInstruction");
+    }
   }
 
   final public void ifInstruction() throws ParseException {
+    trace_call("ifInstruction");
+    try {
                          String s;
         instructionStack.push(instructions);
         instructions = new ArrayList<Instruction>();
         IfBlock ins = new IfBlock();
-    jj_consume_token(INS_IF);
-    jj_consume_token(OPEN_PAR);
-    s = expression();
-    jj_consume_token(CLOSE_PAR);
-    jj_consume_token(OPEN_BRACE);
-    list();
-    jj_consume_token(CLOSE_BRACE);
-                ins.setIfExpression(s);
-                ins.setInstructions(instructions);
-                instructions = instructionStack.pop();
-    if (jj_2_8(2)) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case EOL:
-        jj_consume_token(EOL);
-        break;
-      default:
-        jj_la1[6] = jj_gen;
-        ;
-      }
-      jj_consume_token(INS_ELSE);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case EOL:
-        jj_consume_token(EOL);
-        break;
-      default:
-        jj_la1[7] = jj_gen;
-        ;
-      }
-                 instructionStack.push(instructions);
-                 instructions = new ArrayList<Instruction>();
+      jj_consume_token(INS_IF);
+      jj_consume_token(OPEN_PAR);
+      s = expression();
+      jj_consume_token(CLOSE_PAR);
       jj_consume_token(OPEN_BRACE);
       list();
       jj_consume_token(CLOSE_BRACE);
+                ins.setIfExpression(s);
+                ins.setInstructions(instructions);
+                instructions = instructionStack.pop();
+      if (jj_2_8(2)) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          jj_consume_token(EOL);
+          break;
+        default:
+          jj_la1[6] = jj_gen;
+          ;
+        }
+        jj_consume_token(INS_ELSE);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          jj_consume_token(EOL);
+          break;
+        default:
+          jj_la1[7] = jj_gen;
+          ;
+        }
+                 instructionStack.push(instructions);
+                 instructions = new ArrayList<Instruction>();
+        jj_consume_token(OPEN_BRACE);
+        list();
+        jj_consume_token(CLOSE_BRACE);
                         ins.setElseInstructions(instructions);
                         instructions = instructionStack.pop();
-    } else {
-      ;
-    }
+      } else {
+        ;
+      }
           instructions.add(ins);
+    } finally {
+      trace_return("ifInstruction");
+    }
   }
 
   final public void setOrderInstruction() throws ParseException {
+    trace_call("setOrderInstruction");
+    try {
                                Token t;
-    jj_consume_token(INS_SETORDER);
-    t = jj_consume_token(BYTEORDER);
+      jj_consume_token(INS_SETORDER);
+      t = jj_consume_token(BYTEORDER);
           SetOrderInstruction ins = new SetOrderInstruction();
           ByteOrder order = null;
           if(t.image.equals("LITTLE_ENDIAN")) {
@@ -357,129 +414,174 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
           }
           ins.setOrder(order);
           instructions.add(ins);
+    } finally {
+      trace_return("setOrderInstruction");
+    }
   }
 
   final public void repeatInstruction() throws ParseException {
+    trace_call("repeatInstruction");
+    try {
                              String s;
                 instructionStack.push(instructions);
                 instructions = new ArrayList<Instruction>();
-    jj_consume_token(INS_REPEAT);
-    jj_consume_token(OPEN_PAR);
-    s = expression();
-    jj_consume_token(CLOSE_PAR);
-    jj_consume_token(OPEN_BRACE);
-    list();
-    jj_consume_token(CLOSE_BRACE);
+      jj_consume_token(INS_REPEAT);
+      jj_consume_token(OPEN_PAR);
+      s = expression();
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
                 RepeatBlock ins = new RepeatBlock();
                 ins.setRepeatCountExpression(s);
                 ins.setInstructions(instructions);
                 instructions = instructionStack.pop();
                 instructions.add(ins);
+    } finally {
+      trace_return("repeatInstruction");
+    }
   }
 
   final public void groupInstruction() throws ParseException {
+    trace_call("groupInstruction");
+    try {
                             Token t;
-    jj_consume_token(INS_GROUP);
-    jj_consume_token(OPEN_PAR);
-    t = jj_consume_token(IDENTIFIER);
-    jj_consume_token(CLOSE_PAR);
+      jj_consume_token(INS_GROUP);
+      jj_consume_token(OPEN_PAR);
+      t = jj_consume_token(IDENTIFIER);
+      jj_consume_token(CLOSE_PAR);
             GroupInstruction ins = new GroupInstruction();
                 ins.setGroupName(t.image);
                 instructions.add(ins);
-    jj_consume_token(OPEN_BRACE);
-    list();
-    jj_consume_token(CLOSE_BRACE);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
                 EndGroupInstruction ins2 = new EndGroupInstruction();
                 ins2.setGroupName(t.image);
                 instructions.add(ins2);
+    } finally {
+      trace_return("groupInstruction");
+    }
   }
 
   final public void jumpInstruction() throws ParseException {
+    trace_call("jumpInstruction");
+    try {
                            String s;
-    jj_consume_token(INS_JUMP);
-    s = expression();
+      jj_consume_token(INS_JUMP);
+      s = expression();
             JumpInstruction ins = new JumpInstruction();
             ins.setExpression(s);
                 instructions.add(ins);
+    } finally {
+      trace_return("jumpInstruction");
+    }
   }
 
   final public void skipInstruction() throws ParseException {
+    trace_call("skipInstruction");
+    try {
                            String s;
-    jj_consume_token(INS_SKIP);
-    s = expression();
+      jj_consume_token(INS_SKIP);
+      s = expression();
                 SkipInstruction ins = new SkipInstruction();
                 ins.setSizeExpression(s);
                 instructions.add(ins);
+    } finally {
+      trace_return("skipInstruction");
+    }
   }
 
   final public void markInstruction() throws ParseException {
+    trace_call("markInstruction");
+    try {
                            Token t;
-    jj_consume_token(INS_MARK);
-    t = jj_consume_token(IDENTIFIER);
+      jj_consume_token(INS_MARK);
+      t = jj_consume_token(IDENTIFIER);
           MarkInstruction ins = new MarkInstruction();
           ins.setName(t.image);
           instructions.add(ins);
+    } finally {
+      trace_return("markInstruction");
+    }
   }
 
   final public void fixedString() throws ParseException {
+    trace_call("fixedString");
+    try {
                        Token t4, t5; String s;
           FixedLengthString ins = new FixedLengthString();
           ins.setEncoding(defaultEncoding);
-    jj_consume_token(TY_STRING);
-    jj_consume_token(OPEN_PAR);
-    s = expression();
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case COMMA:
-      jj_consume_token(COMMA);
-      t5 = jj_consume_token(ENCODING);
+      jj_consume_token(TY_STRING);
+      jj_consume_token(OPEN_PAR);
+      s = expression();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        jj_consume_token(COMMA);
+        t5 = jj_consume_token(ENCODING);
                                      ins.setEncoding(t5.image);
-      break;
-    default:
-      jj_la1[8] = jj_gen;
-      ;
-    }
-    jj_consume_token(CLOSE_PAR);
-    t4 = jj_consume_token(IDENTIFIER);
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        ;
+      }
+      jj_consume_token(CLOSE_PAR);
+      t4 = jj_consume_token(IDENTIFIER);
          ins.setLengthExpr(s);
          ins.setName(t4.image);
          instructions.add(ins);
+    } finally {
+      trace_return("fixedString");
+    }
   }
 
   final public void terminatedString() throws ParseException {
+    trace_call("terminatedString");
+    try {
                             Token t2, t3;
           TerminatedString ins = new TerminatedString();
           ins.setEncoding(defaultEncoding);
-    jj_consume_token(TY_STRING);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case OPEN_PAR:
-      jj_consume_token(OPEN_PAR);
-      t3 = jj_consume_token(ENCODING);
-      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(TY_STRING);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_PAR:
+        jj_consume_token(OPEN_PAR);
+        t3 = jj_consume_token(ENCODING);
+        jj_consume_token(CLOSE_PAR);
                                                         ins.setEncoding(t3.image);
-      break;
-    default:
-      jj_la1[9] = jj_gen;
-      ;
-    }
-    t2 = jj_consume_token(IDENTIFIER);
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        ;
+      }
+      t2 = jj_consume_token(IDENTIFIER);
                 ins.setName(t2.image);
                 instructions.add(ins);
+    } finally {
+      trace_return("terminatedString");
+    }
   }
 
   final public void fixedNumber() throws ParseException {
+    trace_call("fixedNumber");
+    try {
                        Token t2, t4;
-    t2 = numberType();
-    t4 = jj_consume_token(IDENTIFIER);
+      t2 = numberType();
+      t4 = jj_consume_token(IDENTIFIER);
                 FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
                 ReferencedInstruction ins = insF.getInstruction(t2.image);
                 ins.setName(t4.image);
                 instructions.add(ins);
+    } finally {
+      trace_return("fixedNumber");
+    }
   }
 
   final public void fixedUnsigned() throws ParseException {
+    trace_call("fixedUnsigned");
+    try {
                          Token t1, t2;
-    t1 = unsignedNumberType();
-    t2 = jj_consume_token(IDENTIFIER);
+      t1 = unsignedNumberType();
+      t2 = jj_consume_token(IDENTIFIER);
                 FixedLengthUnsignedNumber ins = null;
                 if(t1.image.equals("uint")){
                         ins = new UnsignedIntegerInstruction();
@@ -492,295 +594,348 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
                 }
                 ins.setName(t2.image);
                 instructions.add(ins);
+    } finally {
+      trace_return("fixedUnsigned");
+    }
   }
 
   final public String expression() throws ParseException {
+    trace_call("expression");
+    try {
                         String s; Token t;
          StringBuffer b = new StringBuffer();
-    s = plusexpression();
-                               b.append(s);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case EQUAL:
-    case GREATER_THAN:
-    case LESS_THAN:
-    case NOT_EQUAL:
-    case GREATER_OR_EQUAL:
-    case LESS_OR_EQUAL:
-      t = comparator();
+      s = additiveExpression();
+                                   b.append(s);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case EQUAL:
+      case GREATER_THAN:
+      case LESS_THAN:
+      case NOT_EQUAL:
+      case GREATER_OR_EQUAL:
+      case LESS_OR_EQUAL:
+        t = comparator();
                                  b.append(t.image);
-      s = plusexpression();
-                                b.append(s);
-      break;
-    default:
-      jj_la1[10] = jj_gen;
-      ;
-    }
+        s = additiveExpression();
+                                    b.append(s);
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        ;
+      }
           {if (true) return b.toString();}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("expression");
+    }
   }
 
   final public Token comparator() throws ParseException {
+    trace_call("comparator");
+    try {
                        Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case EQUAL:
-      t = jj_consume_token(EQUAL);
-      break;
-    case GREATER_THAN:
-      t = jj_consume_token(GREATER_THAN);
-      break;
-    case LESS_THAN:
-      t = jj_consume_token(LESS_THAN);
-      break;
-    case NOT_EQUAL:
-      t = jj_consume_token(NOT_EQUAL);
-      break;
-    case LESS_OR_EQUAL:
-      t = jj_consume_token(LESS_OR_EQUAL);
-      break;
-    case GREATER_OR_EQUAL:
-      t = jj_consume_token(GREATER_OR_EQUAL);
-      break;
-    default:
-      jj_la1[11] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-          {if (true) return t;}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public String plusexpression() throws ParseException {
-                            Token t; String s;
-          StringBuffer expr = new StringBuffer();
-    s = term();
-                      expr.append(s);
-    label_3:
-    while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case PL_MI_OPERATOR:
-        ;
+      case EQUAL:
+        t = jj_consume_token(EQUAL);
+        break;
+      case GREATER_THAN:
+        t = jj_consume_token(GREATER_THAN);
+        break;
+      case LESS_THAN:
+        t = jj_consume_token(LESS_THAN);
+        break;
+      case NOT_EQUAL:
+        t = jj_consume_token(NOT_EQUAL);
+        break;
+      case LESS_OR_EQUAL:
+        t = jj_consume_token(LESS_OR_EQUAL);
+        break;
+      case GREATER_OR_EQUAL:
+        t = jj_consume_token(GREATER_OR_EQUAL);
         break;
       default:
-        jj_la1[12] = jj_gen;
-        break label_3;
-      }
-      t = jj_consume_token(PL_MI_OPERATOR);
-                                expr.append(t.image);
-      s = term();
-                      expr.append(s);
-    }
-          {if (true) return expr.toString();}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public String term() throws ParseException {
-                  String s; Token t;
-          StringBuffer term = new StringBuffer();
-    s = operand();
-          term.append(s);
-    label_4:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case MUL_DIV_OPERATOR:
-        ;
-        break;
-      default:
-        jj_la1[13] = jj_gen;
-        break label_4;
-      }
-      t = jj_consume_token(MUL_DIV_OPERATOR);
-                                  term.append(t.image);
-      s = operand();
-                                                                         term.append(s);
-    }
-          {if (true) return term.toString();}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public String operand() throws ParseException {
-                     Token t; String ex;
-          StringBuffer s = new StringBuffer();
-    if (jj_2_9(2)) {
-      ex = functionCall();
-                             s.append(ex);
-    } else {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENTIFIER:
-        t = jj_consume_token(IDENTIFIER);
-                         s.append(t.image); Evaluator.addExpression(t.image);
-        break;
-      case INTEGER:
-        t = jj_consume_token(INTEGER);
-                        s.append(t.image);
-        break;
-      case ID_ADDRESS:
-        t = jj_consume_token(ID_ADDRESS);
-                           String s1 = t.image; s.append(s1.substring(1,s1.length()) + ".address"); Evaluator.addExpression(t.image);
-        break;
-      case ID_VALUE:
-        t = jj_consume_token(ID_VALUE);
-                         s.append(t.image); Evaluator.addExpression(t.image);
-        break;
-      case OPEN_PAR:
-        t = jj_consume_token(OPEN_PAR);
-                        s.append(t.image);
-        ex = expression();
-                                                                s.append(ex);
-        t = jj_consume_token(CLOSE_PAR);
-                                                                                                 s.append(t.image);
-        break;
-      default:
-        jj_la1[14] = jj_gen;
+        jj_la1[11] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
+          {if (true) return t;}
+    throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("comparator");
     }
+  }
+
+  final public String additiveExpression() throws ParseException {
+    trace_call("additiveExpression");
+    try {
+                                Token t; String s;
+          StringBuffer expr = new StringBuffer();
+      s = multiplicativeExpression();
+                                          expr.append(s);
+      label_3:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PL_MI_OPERATOR:
+          ;
+          break;
+        default:
+          jj_la1[12] = jj_gen;
+          break label_3;
+        }
+        t = jj_consume_token(PL_MI_OPERATOR);
+                                expr.append(t.image);
+        s = multiplicativeExpression();
+                                          expr.append(s);
+      }
+          {if (true) return expr.toString();}
+    throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("additiveExpression");
+    }
+  }
+
+  final public String multiplicativeExpression() throws ParseException {
+    trace_call("multiplicativeExpression");
+    try {
+                                      String s; Token t;
+          StringBuffer term = new StringBuffer();
+      s = unaryExpression();
+          term.append(s);
+      label_4:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case MUL_DIV_OPERATOR:
+          ;
+          break;
+        default:
+          jj_la1[13] = jj_gen;
+          break label_4;
+        }
+        t = jj_consume_token(MUL_DIV_OPERATOR);
+                                  term.append(t.image);
+        s = unaryExpression();
+                                                                                 term.append(s);
+      }
+          {if (true) return term.toString();}
+    throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("multiplicativeExpression");
+    }
+  }
+
+  final public String unaryExpression() throws ParseException {
+    trace_call("unaryExpression");
+    try {
+                             Token t; String ex;
+          StringBuffer s = new StringBuffer();
+      if (jj_2_9(2)) {
+        ex = functionCall();
+                             s.append(ex);
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IDENTIFIER:
+          t = jj_consume_token(IDENTIFIER);
+                         s.append(t.image); Evaluator.addExpression(t.image);
+          break;
+        case INTEGER:
+          t = jj_consume_token(INTEGER);
+                        s.append(t.image);
+          break;
+        case ID_ADDRESS:
+          t = jj_consume_token(ID_ADDRESS);
+                           String s1 = t.image; s.append(s1.substring(1,s1.length()) + ".address"); Evaluator.addExpression(t.image);
+          break;
+        case ID_VALUE:
+          t = jj_consume_token(ID_VALUE);
+                         s.append(t.image); Evaluator.addExpression(t.image);
+          break;
+        case OPEN_PAR:
+          t = jj_consume_token(OPEN_PAR);
+                        s.append(t.image);
+          ex = expression();
+                                                                s.append(ex);
+          t = jj_consume_token(CLOSE_PAR);
+                                                                                                 s.append(t.image);
+          break;
+        default:
+          jj_la1[14] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
           {if (true) return s.toString();}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("unaryExpression");
+    }
   }
 
   final public String functionCall() throws ParseException {
+    trace_call("functionCall");
+    try {
                         Token t; String ex;
-    t = jj_consume_token(IDENTIFIER);
-    jj_consume_token(OPEN_PAR);
-    ex = FormalParameters();
-    jj_consume_token(CLOSE_PAR);
+      t = jj_consume_token(IDENTIFIER);
+      jj_consume_token(OPEN_PAR);
+      ex = FormalParameters();
+      jj_consume_token(CLOSE_PAR);
                 StringBuffer b = new StringBuffer();
                 b.append(t.image);
                 b.append(ex);
                 {if (true) return b.toString();}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("functionCall");
+    }
   }
 
   final public String FormalParameters() throws ParseException {
+    trace_call("FormalParameters");
+    try {
                              String ex;
                 StringBuffer b = new StringBuffer();
                 b.append("(");
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case OPEN_PAR:
-    case INTEGER:
-    case FLOAT:
-    case IDENTIFIER:
-    case ID_VALUE:
-    case ID_ADDRESS:
-      ex = FormalParameter();
-                                        b.append(ex);
-      label_5:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case COMMA:
-          ;
-          break;
-        default:
-          jj_la1[15] = jj_gen;
-          break label_5;
-        }
-        jj_consume_token(COMMA);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_PAR:
+      case INTEGER:
+      case FLOAT:
+      case IDENTIFIER:
+      case ID_VALUE:
+      case ID_ADDRESS:
         ex = FormalParameter();
+                                        b.append(ex);
+        label_5:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case COMMA:
+            ;
+            break;
+          default:
+            jj_la1[15] = jj_gen;
+            break label_5;
+          }
+          jj_consume_token(COMMA);
+          ex = FormalParameter();
                                                 b.append(","); b.append(ex);
+        }
+        break;
+      default:
+        jj_la1[16] = jj_gen;
+        ;
       }
-      break;
-    default:
-      jj_la1[16] = jj_gen;
-      ;
-    }
                 b.append(")");
                 {if (true) return b.toString();}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("FormalParameters");
+    }
   }
 
   final public String FormalParameter() throws ParseException {
+    trace_call("FormalParameter");
+    try {
                             Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case OPEN_PAR:
-      jj_consume_token(OPEN_PAR);
-      numberType();
-      jj_consume_token(CLOSE_PAR);
-      break;
-    default:
-      jj_la1[17] = jj_gen;
-      ;
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENTIFIER:
-      t = jj_consume_token(IDENTIFIER);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_PAR:
+        jj_consume_token(OPEN_PAR);
+        numberType();
+        jj_consume_token(CLOSE_PAR);
+        break;
+      default:
+        jj_la1[17] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENTIFIER:
+        t = jj_consume_token(IDENTIFIER);
                            Evaluator.addExpression(t.image);
-      break;
-    case INTEGER:
-      t = jj_consume_token(INTEGER);
-      break;
-    case FLOAT:
-      t = jj_consume_token(FLOAT);
-      break;
-    case ID_VALUE:
-      t = jj_consume_token(ID_VALUE);
+        break;
+      case INTEGER:
+        t = jj_consume_token(INTEGER);
+        break;
+      case FLOAT:
+        t = jj_consume_token(FLOAT);
+        break;
+      case ID_VALUE:
+        t = jj_consume_token(ID_VALUE);
                          Evaluator.addExpression(t.image);
-      break;
-    case ID_ADDRESS:
-      t = jj_consume_token(ID_ADDRESS);
+        break;
+      case ID_ADDRESS:
+        t = jj_consume_token(ID_ADDRESS);
                             Evaluator.addExpression(t.image);
-      break;
-    default:
-      jj_la1[18] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+        break;
+      default:
+        jj_la1[18] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
                 {if (true) return t.image;}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("FormalParameter");
+    }
   }
 
   final public Token numberType() throws ParseException {
+    trace_call("numberType");
+    try {
                        Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case TY_DOUBLE:
-      t = jj_consume_token(TY_DOUBLE);
-      break;
-    case TY_INT:
-      t = jj_consume_token(TY_INT);
-      break;
-    case TY_BYTE:
-      t = jj_consume_token(TY_BYTE);
-      break;
-    case TY_FLOAT:
-      t = jj_consume_token(TY_FLOAT);
-      break;
-    case TY_SHORT:
-      t = jj_consume_token(TY_SHORT);
-      break;
-    case TY_LONG:
-      t = jj_consume_token(TY_LONG);
-      break;
-    default:
-      jj_la1[19] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case TY_DOUBLE:
+        t = jj_consume_token(TY_DOUBLE);
+        break;
+      case TY_INT:
+        t = jj_consume_token(TY_INT);
+        break;
+      case TY_BYTE:
+        t = jj_consume_token(TY_BYTE);
+        break;
+      case TY_FLOAT:
+        t = jj_consume_token(TY_FLOAT);
+        break;
+      case TY_SHORT:
+        t = jj_consume_token(TY_SHORT);
+        break;
+      case TY_LONG:
+        t = jj_consume_token(TY_LONG);
+        break;
+      default:
+        jj_la1[19] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
          {if (true) return t;}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("numberType");
+    }
   }
 
   final public Token unsignedNumberType() throws ParseException {
+    trace_call("unsignedNumberType");
+    try {
                                Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case TY_UBYTE:
-      t = jj_consume_token(TY_UBYTE);
-      break;
-    case TY_USHORT:
-      t = jj_consume_token(TY_USHORT);
-      break;
-    case TY_ULONG:
-      t = jj_consume_token(TY_ULONG);
-      break;
-    case TY_UINT:
-      t = jj_consume_token(TY_UINT);
-      break;
-    default:
-      jj_la1[20] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case TY_UBYTE:
+        t = jj_consume_token(TY_UBYTE);
+        break;
+      case TY_USHORT:
+        t = jj_consume_token(TY_USHORT);
+        break;
+      case TY_ULONG:
+        t = jj_consume_token(TY_ULONG);
+        break;
+      case TY_UINT:
+        t = jj_consume_token(TY_UINT);
+        break;
+      default:
+        jj_la1[20] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
          {if (true) return t;}
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("unsignedNumberType");
+    }
   }
 
   private boolean jj_2_1(int xla) {
@@ -1299,6 +1454,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
           }
         }
       }
+      trace_token(token, "");
       return token;
     }
     token = oldToken;
@@ -1336,6 +1492,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
     jj_gen++;
+      trace_token(token, " (in getNextToken)");
     return token;
   }
 
@@ -1424,12 +1581,55 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /** Enable tracing. */
+  private int trace_indent = 0;
+  private boolean trace_enabled = true;
+
+/** Enable tracing. */
   final public void enable_tracing() {
+    trace_enabled = true;
   }
 
-  /** Disable tracing. */
+/** Disable tracing. */
   final public void disable_tracing() {
+    trace_enabled = false;
+  }
+
+  private void trace_call(String s) {
+    if (trace_enabled) {
+      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+      System.out.println("Call:   " + s);
+    }
+    trace_indent = trace_indent + 2;
+  }
+
+  private void trace_return(String s) {
+    trace_indent = trace_indent - 2;
+    if (trace_enabled) {
+      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+      System.out.println("Return: " + s);
+    }
+  }
+
+  private void trace_token(Token t, String where) {
+    if (trace_enabled) {
+      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+      System.out.print("Consumed token: <" + tokenImage[t.kind]);
+      if (t.kind != 0 && !tokenImage[t.kind].equals("\"" + t.image + "\"")) {
+        System.out.print(": \"" + t.image + "\"");
+      }
+      System.out.println(" at line " + t.beginLine + " column " + t.beginColumn + ">" + where);
+    }
+  }
+
+  private void trace_scan(Token t1, int t2) {
+    if (trace_enabled) {
+      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+      System.out.print("Visited token: <" + tokenImage[t1.kind]);
+      if (t1.kind != 0 && !tokenImage[t1.kind].equals("\"" + t1.image + "\"")) {
+        System.out.print(": \"" + t1.image + "\"");
+      }
+      System.out.println(" at line " + t1.beginLine + " column " + t1.beginColumn + ">; Expected token: <" + tokenImage[t2] + ">");
+    }
   }
 
   private void jj_rescan_token() {

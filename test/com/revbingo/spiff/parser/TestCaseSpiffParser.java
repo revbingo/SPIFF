@@ -242,7 +242,7 @@ public class TestCaseSpiffParser {
 	public void jumpInstructionTakesLiteralOrExpressionForAddressToJumpTo() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add(".jump 14")
-			.add(".jump x-1")
+			.add(".jump x - 1")
 			.end();
 		
 		List<Instruction> insts = parse(adf);
@@ -265,7 +265,7 @@ public class TestCaseSpiffParser {
 	public void skipInstructionTakesLiteralOrExpressionForLengthToSkip() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add(".skip 14")
-			.add(".skip x-1")
+			.add(".skip x - 1")
 			.end();
 		
 		List<Instruction> insts = parse(adf);
@@ -573,6 +573,19 @@ public class TestCaseSpiffParser {
 		
 		assertThat(insts.size(), is(1));
 		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("pow(2,3)==2"));
+	}
+	
+	@Test
+	public void expressionsCanContainNegativeNumbers() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".if(abs(-2) == 2) {")
+			.add("}")
+			.end();
+	
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("abs(-2)==2"));
 	}
 	
 	private List<Instruction> parse(AdfFile adf) throws Exception {

@@ -115,7 +115,7 @@ TOKEN:  /* OTHERS */
 	< #DIGIT : ["0"-"9"] > 
 	| < #ALPHA : ["a"-"z","A"-"Z"] > 
 	| < #ALPHANUM : <ALPHA> | <DIGIT> >
-	| < INTEGER : (<DIGIT>)+ > 
+	| < INTEGER : ("-")?(<DIGIT>)+ > 
 	| < FLOAT : (<DIGIT>)+"."(<DIGIT>)+ > 
 	| < IDENTIFIER : <ALPHA>(<ALPHANUM>)* >
 	| < ID_VALUE : <IDENTIFIER>".value" >
@@ -474,10 +474,10 @@ String expression() : { String s; Token t;}
 {
 	{StringBuffer b = new StringBuffer(); }
 		
-	(s=plusexpression()) { b.append(s);}
+	(s=additiveExpression()) { b.append(s);}
 	
 	[ (t=comparator())	{b.append(t.image);}
- 	  (s=plusexpression()) {b.append(s);} ]
+ 	  (s=additiveExpression()) {b.append(s);} ]
 
 	{ return b.toString();}
 }
@@ -500,31 +500,31 @@ Token comparator() : { Token t;}
 	{ return t; }
 }
 
-String plusexpression() : { Token t; String s;}
+String additiveExpression() : { Token t; String s;}
 {
 	{ StringBuffer expr = new StringBuffer(); } 
-	( s=term()) { expr.append(s); }
+	( s=multiplicativeExpression()) { expr.append(s); }
 
 	((t=<PL_MI_OPERATOR>) { expr.append(t.image); } 
-	 (s=term()) { expr.append(s); })*
+	 (s=multiplicativeExpression()) { expr.append(s); })*
 	 
 	{ return expr.toString(); } 
 }
 
-String term() : { String s; Token t;}
+String multiplicativeExpression() : { String s; Token t;}
 {
 	{ StringBuffer term = new StringBuffer(); }
-	( s=operand())
+	( s=unaryExpression())
 	{ term.append(s);}
-	((t=<MUL_DIV_OPERATOR>) { term.append(t.image);} (s=operand()) { term.append(s); } )*
+	((t=<MUL_DIV_OPERATOR>) { term.append(t.image);} (s=unaryExpression()) { term.append(s); } )*
 	{ return term.toString(); }
 }
 
-String operand() : { Token t; String ex;}
+String unaryExpression() : { Token t; String ex;}
 {
 	{ StringBuffer s = new StringBuffer(); }
 	(
-	LOOKAHEAD(2)
+	LOOKAHEAD(2) 
 	(ex=functionCall()) {s.append(ex);}
 	|
 	(t=<IDENTIFIER>){s.append(t.image); Evaluator.addExpression(t.image);}
