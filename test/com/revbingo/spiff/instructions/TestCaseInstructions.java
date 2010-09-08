@@ -11,25 +11,36 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.parser.ParseException;
 
 public class TestCaseInstructions {
 
 	ByteBuffer testBuffer;
 	byte[] testData;
 	
-	MockEventDispatcher ed;
+	Mockery context = new Mockery();
+	EventDispatcher ed;
 	
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
-		ed = new MockEventDispatcher();
+		ed = context.mock(EventDispatcher.class);
+		final EventDispatcher dispatcher = ed;
+		context.checking(new Expectations() {{
+			ignoring(dispatcher).notifyData(with(any(ReferencedInstruction.class)));
+			ignoring(dispatcher).notifyGroup(with(any(String.class)), with(any(boolean.class)));
+		}});
 	}
 
 	@Test
@@ -199,28 +210,46 @@ public class TestCaseInstructions {
 	
 	@Test
 	public void testRepeatBlock() throws Exception {
+		context = new Mockery();
+		
+		final EventDispatcher dispatcher = context.mock(EventDispatcher.class);
+		final ReferencedInstruction theInstruction = new ByteInstruction();
+		
+		context.checking(new Expectations() {{
+			exactly(10).of(dispatcher).notifyData(with(theInstruction));
+		}});
+		
 		RepeatBlock unit = new RepeatBlock();
-		unit.setInstructions(Arrays.asList(new Instruction[] { new ByteInstruction() }));
+		unit.setInstructions(Arrays.asList((Instruction) theInstruction));
 		unit.setRepeatCountExpression("10");
 		
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, dispatcher);
 		
-		assertThat(ed.receivedInstructions.size(), is(equalTo(10)));
+		context.assertIsSatisfied();
 	}
 	
 
 	@Test
 	public void testNestedRepeatBlock() throws Exception {
+		context = new Mockery();
+		
+		final EventDispatcher dispatcher = context.mock(EventDispatcher.class);
+		final ReferencedInstruction theInstruction = new ByteInstruction();
+		
+		context.checking(new Expectations() {{
+			exactly(10).of(dispatcher).notifyData(with(theInstruction));
+		}});
+		
 		RepeatBlock outerUnit = new RepeatBlock();
 		outerUnit.setRepeatCountExpression("5");
 		RepeatBlock innerUnit = new RepeatBlock();
-		innerUnit.setInstructions(Arrays.asList((Instruction) new ByteInstruction()));
+		innerUnit.setInstructions(Arrays.asList((Instruction) theInstruction));
 		innerUnit.setRepeatCountExpression("2");
 		
 		outerUnit.setInstructions(Arrays.asList(new Instruction[] { innerUnit }));
-		outerUnit.execute(testBuffer, ed);
+		outerUnit.execute(testBuffer, dispatcher);
 		
-		assertThat(ed.receivedInstructions.size(), is(equalTo(10)));
+		context.assertIsSatisfied();
 	}
 	
 	@Test
@@ -235,19 +264,22 @@ public class TestCaseInstructions {
 		assertThat(Evaluator.evaluateInt("testMark"), is(equalTo(4)));
 	}
 	
-	public class MockEventDispatcher implements EventDispatcher {
-
-		public List<ReferencedInstruction> receivedInstructions = new ArrayList<ReferencedInstruction>();
-
-		@Override
-		public void notifyData(ReferencedInstruction ins) {
-			receivedInstructions.add(ins);
-		}
-
-		@Override
-		public void notifyGroup(String groupName, boolean start) {
-			
-		}
+	@Test
+	public void blockCanBeUsedAsIterable() throws Exception {
+		List<Instruction> insts = Arrays.asList((Instruction) new ByteInstruction("one"), new ByteInstruction("two"));
 		
+		Block unit = new Block(insts);
+		
+		int count = 0;
+		for(Instruction i : unit) {
+			count++;
+		}
+		assertThat(count, is(2));
+	}
+	
+	@Test(expected=ParseException.class)
+	public void numberFactoryThrowsExceptionForUnknownType() throws Exception {
+		FixedLengthNumberFactory unit = new FixedLengthNumberFactory();
+		unit.getInstruction("oops");
 	}
 }
