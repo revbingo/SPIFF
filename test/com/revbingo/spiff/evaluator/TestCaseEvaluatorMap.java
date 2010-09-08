@@ -49,4 +49,14 @@ public class TestCaseEvaluatorMap {
 		if(type != null) assertThat(o, instanceOf(type));
 	}
 	
+	@Test
+	public void clearClearsMap() {
+		EvaluatorMap unit = new EvaluatorMap();
+		unit.addVariable("a", 1);
+		assertThat(unit.getProperty("a", Integer.class), is(notNullValue()));
+		
+		unit.clear();
+		assertThat(unit.getProperty("a", Integer.class), is(nullValue()));
+	}
+	
 }

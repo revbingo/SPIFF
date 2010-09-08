@@ -19,6 +19,7 @@ public class TerminatedString extends ReferencedInstruction {
 		while((nextByte = buffer.get()) != 0x00) {
 			baos.write(nextByte);
 		}
+		
 		try {
 			String result = "";
 			if(encoding != null){

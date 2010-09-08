@@ -634,7 +634,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       case IDENTIFIER:
         t = jj_consume_token(IDENTIFIER);
       s.append(t.image);
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
         break;
       case INTEGER:
         t = jj_consume_token(INTEGER);
@@ -644,12 +644,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         t = jj_consume_token(ID_ADDRESS);
       String s1 = t.image;
       s.append(s1.substring(1, s1.length()) + ".address");
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
         break;
       case ID_VALUE:
         t = jj_consume_token(ID_VALUE);
       s.append(t.image);
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
         break;
       case OPEN_PAR:
         t = jj_consume_token(OPEN_PAR);
@@ -725,7 +725,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
       break;
     case INTEGER:
       t = jj_consume_token(INTEGER);
@@ -735,11 +735,11 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       break;
     case ID_VALUE:
       t = jj_consume_token(ID_VALUE);
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
       break;
     case ID_ADDRESS:
       t = jj_consume_token(ID_ADDRESS);
-      Evaluator.addExpression(t.image);
+      Evaluator.cacheExpression(t.image);
       break;
     default:
       jj_la1[17] = jj_gen;

@@ -12,16 +12,8 @@ public class SetInstruction implements Instruction {
 	private String varname;
 	private String expression;
 	
-	public String getVarname() {
-		return varname;
-	}
-
 	public void setVarname(String varname) {
 		this.varname = varname;
-	}
-
-	public String getExpression() {
-		return expression;
 	}
 
 	public void setExpression(String expr) throws ParseException {

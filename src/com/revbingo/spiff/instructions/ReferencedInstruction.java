@@ -21,9 +21,7 @@ public abstract class ReferencedInstruction implements Instruction {
 	public int getAddress() {
 		return address;
 	}
-	public void setAddress(int address) {
-		this.address = address;
-	}
+	
 	public String getName() {
 		return name;
 	}

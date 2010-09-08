@@ -13,7 +13,7 @@ import com.revbingo.spiff.parser.ParseException;
 public class Evaluator {
 
 	private static Library lib;
-	private static EvaluatorMap map;
+	private static EvaluatorMap variableMap;
 	private static HashSet<String> evaluatedExpressions;
 	private static Object[] context;
 	private static HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
@@ -25,33 +25,33 @@ public class Evaluator {
 
 		staticLib[0] = java.lang.Math.class;
 		dynamicLib[0] = EvaluatorMap.class;
-		
-		map = new EvaluatorMap(); 
+
+		variableMap = new EvaluatorMap();
 		evaluatedExpressions = new HashSet<String>();
-		lib = new Library(staticLib, dynamicLib, dotLib, map, null);
+		lib = new Library(staticLib, dynamicLib, dotLib, variableMap, null);
 		context = new Object[1];
-		context[0] = map;
+		context[0] = variableMap;
 	}
-	
-	public static void addExpression(String exp){
+
+	public static void cacheExpression(String exp){
 		if(exp.startsWith("&")) {
 			exp = exp.substring(1);
 		}
 		evaluatedExpressions.add(exp);
 	}
-	
+
 	public static HashSet<String> getEvaluatedExpressions(){
 		return evaluatedExpressions;
 	}
-	
+
 	public static boolean isReferenced(String name){
 		return evaluatedExpressions.contains(name);
 	}
-	
+
 	public static void addVariable(String name, Object var){
-		map.addVariable(name, var);
+		variableMap.addVariable(name, var);
 	}
-	
+
 	private static CompiledExpression compile(String expression) throws CompilationException {
 		CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib);
 		cExpr.put(expression, c);
@@ -63,7 +63,7 @@ public class Evaluator {
 		cExpr.put(expression + "@" + type.getSimpleName(), c);
 		return c;
 	}
-	
+
 	public static int evaluateInt(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Integer.TYPE);
@@ -72,7 +72,7 @@ public class Evaluator {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
 		}
 	}
-	
+
 	public static long evaluateLong(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Long.TYPE);
@@ -81,43 +81,43 @@ public class Evaluator {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
 		}
 	}
-	
+
 	public static short evaluateShort(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Short.TYPE);
 			return c.evaluate_short(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}		
+		}
 	}
-	
+
 	public static boolean evaluateBoolean(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Boolean.TYPE);
 			return c.evaluate_boolean(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
-	
+
 	public static byte evaluateByte(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Byte.TYPE);
 			return c.evaluate_byte(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
-	
+
 	public static double evaluateDouble(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Double.TYPE);
 			return c.evaluate_double(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
-	
+
 	public static float evaluateFloat(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Float.TYPE);
@@ -126,7 +126,7 @@ public class Evaluator {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
 		}
 	}
-	
+
 	public static String evaluateString(String expression) throws ExecutionException{
 		Object o;
 		try {
@@ -134,23 +134,23 @@ public class Evaluator {
 			o = c.evaluate(context);
 			if(o instanceof String){
 				return (String) o;
-			}else{
+			} else {
 				throw new ExecutionException("Expression resulted in non-String");
 			}
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
-	
+
 	public static Object evaluate(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression);
 			return c.evaluate(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}				
+		}
 	}
-	
+
 	static CompiledExpression getCompiledExpression(String expression, Class<?> type) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression + "@" + type.getSimpleName());
 		if(c == null){
@@ -162,10 +162,10 @@ public class Evaluator {
 		}
 		return c;
 	}
-	
+
 	static CompiledExpression getCompiledExpression(String expression) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression);
-		
+
 		if(c == null){
 			try {
 				c = compile(expression);
@@ -174,5 +174,10 @@ public class Evaluator {
 			}
 		}
 		return c;
+	}
+
+	public static void clear() {
+		evaluatedExpressions.clear();
+		variableMap.clear();
 	}
 }

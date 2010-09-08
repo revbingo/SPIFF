@@ -55,4 +55,8 @@ public class EvaluatorMap extends DVMap {
 		Object o = varMap.get(name);
 		return (o == null) ? null : type.cast(o);
 	}
+	
+	public void clear() {
+		varMap.clear();
+	}
 }

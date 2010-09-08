@@ -2,8 +2,7 @@ package com.revbingo.spiff.evaluator;
 
 import static org.hamcrest.CoreMatchers.*;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import gnu.jel.CompiledExpression;
 
 import org.junit.Test;
@@ -15,14 +14,14 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void expressionCanBeAddedToListOfEvaluatedExpressions() throws Exception {
-		Evaluator.addExpression("a+b");
+		Evaluator.cacheExpression("a+b");
 		
 		assertTrue(Evaluator.getEvaluatedExpressions().contains("a+b"));
 	}
 	
 	@Test
 	public void expressionIsMarkedAsReferenced() {
-		Evaluator.addExpression("a+b");
+		Evaluator.cacheExpression("a+b");
 		assertTrue(Evaluator.isReferenced("a+b"));
 	}
 	
@@ -31,7 +30,7 @@ public class TestCaseEvaluator {
 		Evaluator.addVariable("a", 3);
 		Evaluator.addVariable("b", 5);
 		
-		assertThat(Evaluator.evaluateInt("a+b"), equalTo(8));
+		assertThat(Evaluator.evaluateInt("a + b"), equalTo(8));
 	}
 	
 	@Test(expected=ExecutionException.class)
@@ -154,6 +153,24 @@ public class TestCaseEvaluator {
 		assertThat(shortExpr, is(not(sameInstance(Evaluator.getCompiledExpression("a + b", int.class)))));
 	}
 	
+	@Test
+	public void clearEvaluatorClearsExpressionsAndVariables() throws Exception {
+		Evaluator.addVariable("a", 2);
+		int i = Evaluator.evaluateInt("a + 3");
+		
+		assertThat(i, is(5));
+		assertThat(Evaluator.getEvaluatedExpressions().size(), is(1));
+		
+		Evaluator.clear();
+		
+		assertThat(Evaluator.getEvaluatedExpressions().size(), is(0));
+		
+		try {
+			Evaluator.evaluateInt("a + 3");
+			fail("Should not have been able to evaluate variable a");
+		} catch(ExecutionException e) {}
+	}
+	
 	@Test(expected=ExecutionException.class)
 	public void evaluateStringThrowsExceptionIfNotAString() throws ExecutionException {
 		Evaluator.evaluateString("1 + 2");
@@ -178,4 +195,5 @@ public class TestCaseEvaluator {
 	public void badTypedExpressionThrowsException() throws Exception {
 		Evaluator.evaluateBoolean("a---");
 	}
+	
 }
