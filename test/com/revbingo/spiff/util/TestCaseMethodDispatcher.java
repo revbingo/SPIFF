@@ -29,6 +29,20 @@ public class TestCaseMethodDispatcher {
 	}
 	
 	@Test
+	public void getClassesReturnsNullForNullParams() throws Exception {
+		assertThat(MethodDispatcher.getClasses((Object[]) null), is(nullValue()));
+	}
+	
+	@Test
+	public void getClassesReturnsNullInReturnedArrayWhenNullInPassedArray() throws Exception {
+		Class<?>[] result = MethodDispatcher.getClasses(new Object[] {null});
+		
+		assertThat(result, is(not(nullValue())));
+		assertThat(result.length, is(1));
+		assertThat(result[0], is(nullValue()));
+	}
+	
+	@Test
 	public void testDispatch() throws Exception {
 		TestReceiver receiver = new TestReceiver();
 

@@ -28,11 +28,11 @@ public class MethodDispatcher {
 		alternativeTypes.put(float.class, Float.class);
 	}
 	
-	public static Object dispatchSetter(String fieldName, Object receiver, Object... params) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static Object dispatchSetter(String fieldName, Object receiver, Object... params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		return dispatch("set" + capitalise(fieldName), receiver, params);
 	}
 	
-	public static Object dispatch(String methodName, Object receiver, Object... params) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static Object dispatch(String methodName, Object receiver, Object... params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		Method m = findMethod(methodName, receiver, getClasses(params));
 		return m.invoke(receiver, params);
 	}
@@ -42,8 +42,10 @@ public class MethodDispatcher {
 	}
 	
 	static Class<?>[] getClasses(Object... params) {
+		if(params == null) return null;
 		Class<?>[] result = new Class<?>[params.length];
 		for (int i = 0; i < params.length; i++) {
+			if(params[i] == null) continue;
 			result[i] = params[i].getClass();
 		}
 		return result;

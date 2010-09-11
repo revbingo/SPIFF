@@ -13,7 +13,6 @@ import com.revbingo.spiff.bitmap.Bitmap;
 import com.revbingo.spiff.bitmap.BitmapFileHeader;
 import com.revbingo.spiff.bitmap.BitmapInfoHeader;
 import com.revbingo.spiff.bitmap.PixelData;
-import com.revbingo.spiff.events.BindingEventDispatcher;
 
 public class TestCaseBindingEventDispatcher {
 	
@@ -21,7 +20,8 @@ public class TestCaseBindingEventDispatcher {
 //	public void testDiscoverBindings() throws Exception {
 //		BindingEventDispatcher<Bitmap> unit = BindingEventDispatcher.getInstance(Bitmap.class);
 //		
-//		Map<String, BindingWrapper> bindings = unit.getBindingFactory().getBindings();
+//		Map<String, BindingWrapper> bindings = unit.discoverBindings(parentBinding, c);
+//		e
 //		
 //		assertThat(bindings.size(), equalTo(5));
 //		
@@ -32,4 +32,5 @@ public class TestCaseBindingEventDispatcher {
 //		assertEquals(Short.TYPE, bindings.get("bfType").getType());
 //	}
 
+	
 }
