@@ -2,6 +2,7 @@ package com.revbingo.spiff.events;
 
 import java.security.Permission;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
@@ -16,10 +17,15 @@ import static org.junit.Assert.*;
 
 public class TestCaseClassBindingEventDispatcher {
 
+	ClassBindingEventDispatcher<RootBinding> unit;
+	
+	@Before
+	public void setUp() {
+		unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+	}
+	
 	@Test
 	public void createsRootClassInstanceOnConstructionAndReturnsCorrectType() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
-	
 		RootBinding binding = unit.getBoundValue();
 		
 		assertThat(binding, is(notNullValue()));
@@ -37,8 +43,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test
 	public void populatesPublicFieldWhenInstructionNameMatchesField() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
-		
 		ReferencedInstruction ri = new ByteInstruction("byteOne");
 		ri.value = (byte) 3;
 		
@@ -51,8 +55,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test
 	public void populatesPrivateFieldUsingPublicSetterWhenInstructionNameMatchesSetter() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
-		
 		ReferencedInstruction ri = new ByteInstruction("privateByte");
 		ri.value = (byte) 3;
 		
@@ -64,8 +66,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfSecurityManagerPreventsFieldBeingSet() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
-		
 		ReferencedInstruction ri = new ByteInstruction("byteOne");
 		ri.value = (byte) 3;
 	
@@ -91,13 +91,20 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfNoSuchField() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		unit.notifyData(new ByteInstruction("nonExistant"));
+	}
+	
+	@Test
+	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
+		ReferencedInstruction ri = new ByteInstruction("setterWithADifferentName");
+		ri.value = new Byte((byte) 3);
+		unit.notifyData(ri);
+		
+		assertThat(unit.getBoundValue().gotASetter, is((byte) 3));
 	}
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfWrongType() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		ReferencedInstruction ri = new FixedLengthString();
 		ri.name = "byteOne";
 		ri.value = "oops";
@@ -106,7 +113,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test
 	public void finalFieldsCanBeAltered() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		ReferencedInstruction ri = new ByteInstruction("finalByte");
 		ri.value = new Byte((byte) 3);
 		unit.notifyData(ri);
@@ -116,7 +122,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfMethodThrowsException() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		ReferencedInstruction ri = new ByteInstruction("exceptionThrower");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
@@ -124,7 +129,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test
 	public void canMakePrivateFieldAccessible() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		ReferencedInstruction ri = new ByteInstruction("notSoPrivateByte");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
@@ -135,7 +139,6 @@ public class TestCaseClassBindingEventDispatcher {
 	
 	@Test
 	public void fieldWithBindingAnnotationIsCalled() throws Exception {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		ReferencedInstruction ri = new ByteInstruction("boundField");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
@@ -151,6 +154,8 @@ public class TestCaseClassBindingEventDispatcher {
 		private byte privateByte;
 		private byte publicByte;
 		private byte notSoPrivateByte;
+		
+		public byte gotASetter;
 		
 		@Binding("boundField")
 		public byte notTheSameName;
@@ -179,6 +184,9 @@ public class TestCaseClassBindingEventDispatcher {
 			throw new RuntimeException();
 		}
 		
+		public void setSetterWithADifferentName(byte b) {
+			gotASetter = b;
+		}
 	}
 	
 	public class ArgsRequired {

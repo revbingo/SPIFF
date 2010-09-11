@@ -13,7 +13,8 @@ public class TestCaseMethodDispatcher {
 		INT_OBJECT,
 		SHORT_PRIMITIVE,
 		FLOAT_OBJECT,
-		FLOAT_PRIMITIVE
+		FLOAT_PRIMITIVE,
+		BYTE_PRIMITIVE;
 	}
 	
 	@Test
@@ -55,6 +56,12 @@ public class TestCaseMethodDispatcher {
 		result = (InvokedWith) MethodDispatcher.dispatch("testMethod", receiver, new Float(1.0));
 		assertThat(result, equalTo(InvokedWith.FLOAT_OBJECT));
 
+		result = (InvokedWith) MethodDispatcher.dispatch("testMethod", receiver, new Byte((byte) 3));
+		assertThat(result, equalTo(InvokedWith.BYTE_PRIMITIVE));
+		
+		result = (InvokedWith) MethodDispatcher.dispatch("testMethod", receiver, (byte) 3);
+		assertThat(result, equalTo(InvokedWith.BYTE_PRIMITIVE));
+		
 		//Known issue - passing an Object[] means that an overloaded method will always be invoked on
 		//the boxed type, not the primitive
 //		result = (InvokedWith) MethodDispatcher.dispatch("testMethod", receiver, 1.0f);
@@ -102,6 +109,10 @@ public class TestCaseMethodDispatcher {
 		
 		public InvokedWith testMethod(Float f) {
 			return InvokedWith.FLOAT_OBJECT;
+		}
+		
+		public InvokedWith testMethod(byte b) {
+			return InvokedWith.BYTE_PRIMITIVE;
 		}
 		
 //		public InvokedWith testMethod(float f) {
