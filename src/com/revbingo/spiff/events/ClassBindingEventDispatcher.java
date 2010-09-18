@@ -3,6 +3,11 @@ package com.revbingo.spiff.events;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
@@ -12,6 +17,12 @@ import com.revbingo.spiff.util.MethodDispatcher;
 public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 
 	private T rootBinding;
+	
+	private static Map<Class<?>, Class<?>> preferredCollections = new HashMap<Class<?>, Class<?>>();
+	
+	static {
+		preferredCollections.put(List.class, ArrayList.class);
+	}
 	
 	public ClassBindingEventDispatcher(Class<T> clazz) {
 		try {
@@ -58,11 +69,27 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	public void setFieldValue(Field f, Object value) {
 		try {
 			if(!f.isAccessible()) f.setAccessible(true);
-			f.set(rootBinding, value);
+			Class<?> fieldClass = f.getType();
+			if(Collection.class.isAssignableFrom(fieldClass)) {
+				Object fieldObj = f.get(rootBinding);
+				if(fieldObj == null) {
+					if(fieldClass.isInterface() && preferredCollections.containsKey(fieldClass)) {
+						fieldClass = preferredCollections.get(fieldClass);
+					}
+					fieldObj = fieldClass.newInstance();
+					f.set(rootBinding, fieldObj);
+				}
+				Collection collection = (Collection) fieldObj;
+				collection.add(value);
+			} else {
+				f.set(rootBinding, value);
+			}
 		} catch (IllegalArgumentException e) {
 			throw new ExecutionException("Wrong type " + value.getClass().getCanonicalName() + " for field " + f.getName(), e);
 		} catch (IllegalAccessException e) {
 			throw new ExecutionException("Could not access field " + f.getName(), e);
+		} catch (InstantiationException e) {
+			throw new ExecutionException("Tried to instantiate non-concrete type " + f.getType(), e);
 		}
 	}
 
