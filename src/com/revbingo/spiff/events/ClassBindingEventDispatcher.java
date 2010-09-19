@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
@@ -20,6 +21,10 @@ import com.revbingo.spiff.util.MethodDispatcher;
 public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 
 	private T rootBinding;
+	private Object currentBinding;
+	private Stack<Object> bindingStack;
+	
+	private boolean isStrict = true;
 	
 	private static Map<Class<?>, Class<?>> preferredCollections = new HashMap<Class<?>, Class<?>>();
 	
@@ -32,6 +37,9 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	public ClassBindingEventDispatcher(Class<T> clazz) {
 		try {
 			this.rootBinding = clazz.newInstance();
+			this.currentBinding = this.rootBinding;
+			
+			bindingStack = new Stack<Object>();
 		} catch (InstantiationException e) {
 			throw new ExecutionException("Could not instantiate " + clazz.getCanonicalName(), e);
 		} catch (IllegalAccessException e) {
@@ -39,10 +47,14 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 		}
 	}
 
+	public void isStrict(boolean isStrict) {
+		this.isStrict = isStrict;
+	}
+
 	@Override
 	public void notifyData(ReferencedInstruction ins) {
 		try {
-			Field f = rootBinding.getClass().getDeclaredField(ins.name);
+			Field f = currentBinding.getClass().getDeclaredField(ins.name);
 			this.setFieldValue(f, ins.value);
 		} catch (SecurityException e) {
 			throw new ExecutionException("SecurityManager prevents access to field " + ins.name, e);
@@ -61,7 +73,7 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 						}
 					}
 				}
-				if(!dispatched) throw new ExecutionException("Could not find field " + ins.name, e);
+				if(!dispatched && isStrict) throw new ExecutionException("Could not find field " + ins.name, e);
 			} catch (IllegalAccessException e1) {
 				//Hmm, how to test?
 				e1.printStackTrace();
@@ -76,18 +88,18 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 			if(!f.isAccessible()) f.setAccessible(true);
 			Class<?> fieldClass = f.getType();
 			if(Collection.class.isAssignableFrom(fieldClass)) {
-				Object fieldObj = f.get(rootBinding);
+				Object fieldObj = f.get(currentBinding);
 				if(fieldObj == null) {
 					if(fieldClass.isInterface() && preferredCollections.containsKey(fieldClass)) {
 						fieldClass = preferredCollections.get(fieldClass);
 					}
 					fieldObj = fieldClass.newInstance();
-					f.set(rootBinding, fieldObj);
+					f.set(currentBinding, fieldObj);
 				}
-				Collection collection = (Collection) fieldObj;
+				@SuppressWarnings("unchecked") Collection<Object> collection = (Collection<Object>) fieldObj;
 				collection.add(value);
 			} else {
-				f.set(rootBinding, value);
+				f.set(currentBinding, value);
 			}
 		} catch (IllegalArgumentException e) {
 			throw new ExecutionException("Wrong type " + value.getClass().getCanonicalName() + " for field " + f.getName(), e);
@@ -99,8 +111,32 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	}
 
 	@Override
-	public void notifyGroup(String groupName, boolean start) {
-		throw new UnsupportedOperationException();
+	public void notifyGroup(String groupName, boolean start) throws ExecutionException {
+		try {
+			if(start) {
+				bindingStack.push(currentBinding);
+				Field f = currentBinding.getClass().getDeclaredField(groupName);
+				Object o = f.get(currentBinding);
+				if(o == null) {
+					Object newInstance = f.getType().newInstance();
+					f.set(currentBinding, newInstance);
+					currentBinding = newInstance;
+				}
+			} else {
+				currentBinding = bindingStack.pop();
+			}
+		} catch (SecurityException e) {
+			throw new ExecutionException("", e);
+		} catch (NoSuchFieldException e) {
+			throw new ExecutionException("", e);
+		} catch (IllegalArgumentException e) {
+			throw new ExecutionException("", e);
+		} catch (IllegalAccessException e) {
+			throw new ExecutionException("", e);
+		} catch (InstantiationException e) {
+			throw new ExecutionException("", e);
+		}
+		
 	}
 
 	public T getBoundValue() {

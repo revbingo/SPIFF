@@ -1,5 +1,9 @@
 package com.revbingo.spiff.events;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,15 +16,10 @@ import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
-import com.revbingo.spiff.instructions.Block;
 import com.revbingo.spiff.instructions.ByteInstruction;
-import com.revbingo.spiff.instructions.FixedLengthNumberFactory;
 import com.revbingo.spiff.instructions.FixedLengthString;
+import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
-import com.revbingo.spiff.instructions.RepeatBlock;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 
 public class TestCaseClassBindingEventDispatcherBasicCases {
 
@@ -97,8 +96,17 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	}
 	
 	@Test(expected=ExecutionException.class)
-	public void exceptionThrownIfNoSuchField() throws Exception {
+	public void exceptionThrownIfNoSuchFieldAndStrictMode() throws Exception {
+		unit.isStrict(true);
 		unit.notifyData(new ByteInstruction("nonExistant"));
+	}
+	
+	@Test
+	public void noExceptionThrownIfNoSuchFieldAndInNonStrictMode() throws Exception {
+		unit.isStrict(false);
+		unit.notifyData(new ByteInstruction("nonExistant"));
+		
+		assertThat(unit.getBoundValue(), is(notNullValue()));
 	}
 	
 	@Test
@@ -232,6 +240,27 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		assertThat(binding.existingStringList.get(1), is("anotherElement"));
 	}
 	
+	@Test
+	public void strictModeIgnoresUnboundedFields() {
+		ReferencedInstruction ri = new FixedLengthString();
+		ri.name = "existingStringList";
+		ri.value = "anotherElement";
+		unit.notifyData(ri);
+	}
+	
+	@Test
+	public void autoboxedTypesAreHandled() {
+		ReferencedInstruction ri = new IntegerInstruction();
+		ri.name = "primitiveInt";
+		ri.value = new Integer(10);
+		
+		unit.notifyData(ri);
+		
+		RootBinding binding = unit.getBoundValue();
+		assertThat(binding, is(notNullValue()));
+		assertThat(binding.primitiveInt, is(10));
+	}
+	
 	public static class RootBinding {
 		public byte byteOne;
 		//need to use Byte because primtive byte would get inlined, so test assertion fails
@@ -255,6 +284,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		public Queue<String> aQueue;
 		
 		public UnknownCollection unknownCollection;
+		
+		public int primitiveInt;
 		
 		public RootBinding() {
 			existingStringList.add("existingElement");

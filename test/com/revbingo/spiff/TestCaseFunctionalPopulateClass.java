@@ -22,17 +22,18 @@ import com.revbingo.spiff.bitmap.IncompleteBitmap;
 import com.revbingo.spiff.bitmap.IncompleteBitmapFileHeader;
 import com.revbingo.spiff.bitmap.PixelData;
 import com.revbingo.spiff.events.BindingEventDispatcher;
+import com.revbingo.spiff.events.ClassBindingEventDispatcher;
 
 public class TestCaseFunctionalPopulateClass {
 
 	@Test
 	public void testPopulateBeans() throws Exception {
-		BindingEventDispatcher<Bitmap> eventDispatcher = BindingEventDispatcher.getInstance(Bitmap.class);
+		ClassBindingEventDispatcher<Bitmap> eventDispatcher = new ClassBindingEventDispatcher<Bitmap>(Bitmap.class);  //BindingEventDispatcher.getInstance(Bitmap.class);
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
 		unit.parse(new File("test-resources/bitmap_class.adf"), new File("mono.bmp"));
 		
-		Bitmap bitmap = eventDispatcher.getResult();
+		Bitmap bitmap = eventDispatcher.getBoundValue();
 		
 		BitmapFileHeader fileHeader;
 		BitmapInfoHeader infoHeader;
