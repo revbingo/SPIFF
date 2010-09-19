@@ -4,6 +4,8 @@ import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,7 @@ import com.revbingo.spiff.instructions.RepeatBlock;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-public class TestCaseClassBindingEventDispatcher {
+public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	ClassBindingEventDispatcher<RootBinding> unit;
 	
@@ -170,6 +172,30 @@ public class TestCaseClassBindingEventDispatcher {
 	}
 	
 	@Test
+	public void setInterfaceHasConcreteImplementationMapped() throws Exception {
+		ReferencedInstruction ri = new FixedLengthString();
+		ri.name= "aSet";
+		ri.value = "one";
+			
+		unit.notifyData(ri);
+		
+		RootBinding binding = unit.getBoundValue();
+		assertThat(binding.aSet.size(), is(1));
+	}
+
+	@Test
+	public void queueInterfaceHasConcreteImplementationMapped() throws Exception {
+		ReferencedInstruction ri = new FixedLengthString();
+		ri.name= "aQueue";
+		ri.value = "one";
+			
+		unit.notifyData(ri);
+		
+		RootBinding binding = unit.getBoundValue();
+		assertThat(binding.aQueue.size(), is(1));
+	}
+	
+	@Test
 	public void collectionsWorkWithRenamedBinding() throws Exception {
 		ReferencedInstruction ri = new FixedLengthString();
 		ri.name = "notTheList";
@@ -224,6 +250,9 @@ public class TestCaseClassBindingEventDispatcher {
 		
 		@Binding("notTheList")
 		public List<String> anotherList;
+		
+		public Set<String> aSet;
+		public Queue<String> aQueue;
 		
 		public UnknownCollection unknownCollection;
 		

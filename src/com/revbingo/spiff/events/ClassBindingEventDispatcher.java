@@ -1,13 +1,16 @@
 package com.revbingo.spiff.events;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
@@ -22,6 +25,8 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	
 	static {
 		preferredCollections.put(List.class, ArrayList.class);
+		preferredCollections.put(Set.class, HashSet.class);
+		preferredCollections.put(Queue.class, LinkedList.class);
 	}
 	
 	public ClassBindingEventDispatcher(Class<T> clazz) {
