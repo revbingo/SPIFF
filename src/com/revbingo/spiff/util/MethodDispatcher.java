@@ -37,7 +37,7 @@ public class MethodDispatcher {
 		return m.invoke(receiver, params);
 	}
 	
-	private static String capitalise(String str) {
+	public static String capitalise(String str) {
 		return str.substring(0,1).toUpperCase() + str.substring(1, str.length());
 	}
 	
