@@ -18,9 +18,9 @@ public class FieldBinder implements Binder {
 		try {
 			boundField.set(target, value);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			throw new ExecutionException("Wrong type for field " + boundField.getName() + " (expected " + boundField.getType().getSimpleName() + ", got " + value.getClass().getSimpleName() + ")");
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new ExecutionException("Cannot access field " + boundField.getName() + " (is it final static?)");
 		}
 	}
 	

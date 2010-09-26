@@ -1,19 +1,14 @@
 package com.revbingo.spiff.test;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
 import org.junit.Ignore;
@@ -22,15 +17,14 @@ import org.junit.Test;
 import com.mark.spiff.mp3.SongList;
 import com.revbingo.spiff.BinaryParser;
 import com.revbingo.spiff.TreeBuildingEventDispatcher;
-import com.revbingo.spiff.events.BindingEventDispatcher;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.events.ClassBindingEventDispatcher;
 
 public class TestITunesParse {
 
 	@Ignore
 	@Test
 	public void testITunesParse() throws Exception {
-		BindingEventDispatcher<SongList> ed = BindingEventDispatcher.getInstance(SongList.class);
+		ClassBindingEventDispatcher<SongList> ed = new ClassBindingEventDispatcher<SongList>(SongList.class);
 		BinaryParser parser = new BinaryParser(ed);
 		
 		parser.parse(new File("itunesdb.adf"), new File("iTunesDB"));

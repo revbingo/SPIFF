@@ -15,9 +15,9 @@ import com.revbingo.spiff.util.MethodDispatcher;
 
 public class BindingFactory {
 
+	List<Matcher> matchers = Arrays.asList(new BoundMethodMatcher(), new BoundFieldMatcher(), new SetterMatcher(), new FieldMatcher());
+	
 	public Binder getBindingFor(String name, Class<?> clazz) {
-		List<Matcher> matchers = Arrays.asList(new BoundMethodMatcher(), new BoundFieldMatcher(), new SetterMatcher(), new FieldMatcher());
-		
 		for(Matcher matcher : matchers) {
 			Binder b = matcher.match(name, clazz);
 			if(b != null) return b;
@@ -35,12 +35,11 @@ public class BindingFactory {
 		public Binder match(String name, Class<?> clazz) {
 			for(Method m : clazz.getMethods()) {
 				if(m.isAnnotationPresent(Binding.class) && m.getAnnotation(Binding.class).value().equals(name)) {
-					return new MethodBinder();
+					return new MethodBinder(m);
 				}
 			}
 			return null;
 		}
-		
 	}
 	
 	private static class BoundFieldMatcher extends Matcher {
@@ -62,13 +61,16 @@ public class BindingFactory {
 		@Override
 		public Binder match(String name, Class<?> clazz) {
 			for(Method m : clazz.getMethods()) {
-				if(m.getName().equals("set" + MethodDispatcher.capitalise(name))) {
-					return new MethodBinder();
+				if(m.getName().equals(createSetterName(name))) {
+					return new MethodBinder(m);
 				}
 			}
 			return null;
 		}
 		
+		private String createSetterName(String str) {
+			return "set" + str.substring(0,1).toUpperCase() + str.substring(1, str.length());
+		}
 	}
 	
 	private static class FieldMatcher extends Matcher {
@@ -78,7 +80,7 @@ public class BindingFactory {
 			for(Field f : clazz.getDeclaredFields()) {
 				if(f.getName().equals(name)) {
 					if(Collection.class.isAssignableFrom(f.getType())) {
-						return new CollectionBinder();
+						return new CollectionBinder(f);
 					}
 					return new FieldBinder(f);
 				}

@@ -21,7 +21,6 @@ import com.revbingo.spiff.bitmap.BitmapInfoHeader;
 import com.revbingo.spiff.bitmap.IncompleteBitmap;
 import com.revbingo.spiff.bitmap.IncompleteBitmapFileHeader;
 import com.revbingo.spiff.bitmap.PixelData;
-import com.revbingo.spiff.events.BindingEventDispatcher;
 import com.revbingo.spiff.events.ClassBindingEventDispatcher;
 
 public class TestCaseFunctionalPopulateClass {

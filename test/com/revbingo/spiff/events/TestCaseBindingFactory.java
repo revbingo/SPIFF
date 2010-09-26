@@ -60,6 +60,13 @@ public class TestCaseBindingFactory {
 		assertThat(binder, instanceOf(CollectionBinder.class));
 	}
 	
+	@Test
+	public void returnsNullIfNoBindingFound() {
+		BindingFactory unit = new BindingFactory();
+		
+		assertThat(unit.getBindingFor("nothing", BindingTest.class), is(nullValue()));
+	}
+	
 	public static class BindingTest {
 		
 		public List<String> strings;
