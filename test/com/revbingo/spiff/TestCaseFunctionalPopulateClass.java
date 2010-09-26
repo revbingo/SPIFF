@@ -33,7 +33,7 @@ public class TestCaseFunctionalPopulateClass {
 		
 		unit.parse(new File("test-resources/bitmap_class.adf"), new File("mono.bmp"));
 		
-		Bitmap bitmap = eventDispatcher.getBoundValue();
+		Bitmap bitmap = eventDispatcher.getResult();
 		
 		BitmapFileHeader fileHeader;
 		BitmapInfoHeader infoHeader;
@@ -78,7 +78,8 @@ public class TestCaseFunctionalPopulateClass {
 	
 	@Test
 	public void testNonStrictMode() throws Exception {
-		BindingEventDispatcher<IncompleteBitmap> eventDispatcher = BindingEventDispatcher.getInstance(IncompleteBitmap.class);
+		ClassBindingEventDispatcher<IncompleteBitmap> eventDispatcher = new ClassBindingEventDispatcher<IncompleteBitmap>(IncompleteBitmap.class);
+		eventDispatcher.isStrict(false);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
@@ -94,9 +95,9 @@ public class TestCaseFunctionalPopulateClass {
 		assertThat(fileHeader.getBfOffBits(), equalTo(0x36));
 	}
 	
-	@Test(expected=RuntimeException.class)
+	@Test(expected=ExecutionException.class)
 	public void testThrowsExceptionInStrictMode() throws Exception {
-		BindingEventDispatcher<IncompleteBitmap> eventDispatcher = BindingEventDispatcher.getInstance(IncompleteBitmap.class);
+		ClassBindingEventDispatcher<IncompleteBitmap> eventDispatcher = new ClassBindingEventDispatcher<IncompleteBitmap>(IncompleteBitmap.class);
 		eventDispatcher.isStrict(true);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);

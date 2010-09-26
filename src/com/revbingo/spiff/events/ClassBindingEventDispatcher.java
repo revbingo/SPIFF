@@ -15,6 +15,7 @@ import java.util.Stack;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
+import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
 import com.revbingo.spiff.util.MethodDispatcher;
 
@@ -54,33 +55,53 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	@Override
 	public void notifyData(ReferencedInstruction ins) {
 		try {
-			Field f = currentBinding.getClass().getDeclaredField(ins.name);
-			this.setFieldValue(f, ins.value);
-		} catch (SecurityException e) {
-			throw new ExecutionException("SecurityManager prevents access to field " + ins.name, e);
-		} catch (NoSuchFieldException e) {
+			Field targetField;
+			try {
+				targetField = currentBinding.getClass().getDeclaredField(ins.name);
+			} catch (NoSuchFieldException e) {
+				targetField = findFieldFor(ins.getName());
+				
+			}
+			
+			if(targetField != null) {
+				this.setFieldValue(targetField, ins.value);
+				return;
+			}
+			
 			try {
 				MethodDispatcher.dispatchSetter(ins.name, rootBinding, ins.value);
 			} catch (NoSuchMethodException e1) {
-				boolean dispatched = false;
-				for(Field f : rootBinding.getClass().getDeclaredFields()) {
-					if(f.isAnnotationPresent(Binding.class)) {
-						Binding b = f.getAnnotation(Binding.class);
-						if(b.value().equals(ins.name)) {
-							if(!f.isAccessible()) f.setAccessible(true);
-							setFieldValue(f, ins.value);
-							dispatched = true;
-						}
-					}
+				if(isStrict) {
+					throw new ExecutionException("No suitable target for instruction " + ins.name, e1);
+				} else {
+					return;
 				}
-				if(!dispatched && isStrict) throw new ExecutionException("Could not find field " + ins.name, e);
 			} catch (IllegalAccessException e1) {
 				//Hmm, how to test?
 				e1.printStackTrace();
 			} catch (InvocationTargetException e1) {
 				throw new ExecutionException("Exception occurred invoking setter for " + ins.name);
 			}
+		} catch (SecurityException e) {
+			throw new ExecutionException("SecurityManager prevents access to field " + ins.name, e);
 		}
+	}
+
+	private Field findFieldFor(String bindingName) {
+		for(Field f : currentBinding.getClass().getDeclaredFields()) {
+			if(f.isAnnotationPresent(Binding.class)) {
+				Binding b = f.getAnnotation(Binding.class);
+				if(b.value().equals(bindingName)) {
+					return f;
+				}
+			} else if(f.isAnnotationPresent(BindingCollection.class)) {
+				BindingCollection b = f.getAnnotation(BindingCollection.class);
+				if(b.value().equals(bindingName)) {
+					return f;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void setFieldValue(Field f, Object value) {
@@ -115,19 +136,45 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 		try {
 			if(start) {
 				bindingStack.push(currentBinding);
-				Field f = currentBinding.getClass().getDeclaredField(groupName);
-				Object o = f.get(currentBinding);
-				if(o == null) {
-					Object newInstance = f.getType().newInstance();
-					f.set(currentBinding, newInstance);
+				
+				Field targetBindingField;
+				try {
+					targetBindingField = currentBinding.getClass().getDeclaredField(groupName);
+				} catch (NoSuchFieldException e) {
+					targetBindingField = findFieldFor(groupName);
+					if(targetBindingField == null && isStrict) {
+						throw new ExecutionException("Could not find field for binding " + groupName, e);
+					} else if (targetBindingField == null && !isStrict) {
+						return;
+					}
+				}
+				if(!targetBindingField.isAccessible()) targetBindingField.setAccessible(true);
+				Class<?> targetType = targetBindingField.getType();
+				if(Collection.class.isAssignableFrom(targetType)) {
+					Collection<Object> collection = (Collection<Object>) targetBindingField.get(currentBinding);
+					if(collection == null) {
+						if(targetType.isInterface() && preferredCollections.containsKey(targetType)) {
+							targetType = preferredCollections.get(targetType);
+						}
+						collection = (Collection<Object>) targetType.newInstance();
+						targetBindingField.set(currentBinding, collection);
+					}
+					
+					Object newInstance = targetBindingField.getAnnotation(BindingCollection.class).type().newInstance();
+					collection.add(newInstance);
 					currentBinding = newInstance;
+				} else {
+					Object targetObject = targetBindingField.get(currentBinding);
+					if(targetObject == null) {
+						Object newInstance = targetBindingField.getType().newInstance();
+						targetBindingField.set(currentBinding, newInstance);
+						currentBinding = newInstance;
+					}
 				}
 			} else {
 				currentBinding = bindingStack.pop();
 			}
 		} catch (SecurityException e) {
-			throw new ExecutionException("", e);
-		} catch (NoSuchFieldException e) {
 			throw new ExecutionException("", e);
 		} catch (IllegalArgumentException e) {
 			throw new ExecutionException("", e);
@@ -139,7 +186,7 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 		
 	}
 
-	public T getBoundValue() {
+	public T getResult() {
 		return rootBinding;
 	}
 

@@ -4,7 +4,7 @@ import com.revbingo.spiff.annotations.Binding;
 
 public class BitmapFileHeader {
 
-	@Binding(value="bfType")
+	@Binding("bfType")
 	private short bfTypeWithAnotherName;
 	private int bfSize;
 	private short bfReserved1;

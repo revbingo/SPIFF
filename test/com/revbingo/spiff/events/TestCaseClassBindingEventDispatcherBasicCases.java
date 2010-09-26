@@ -32,7 +32,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	
 	@Test
 	public void createsRootClassInstanceOnConstructionAndReturnsCorrectType() throws Exception {
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		
 		assertThat(binding, is(notNullValue()));
 	}
@@ -54,7 +54,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding, is(notNullValue()));
 		assertThat(binding.byteOne, is((byte) 3));
 	}
@@ -66,7 +66,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.getPrivateByte(), is((byte) 3));
 	}
 	
@@ -106,7 +106,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		unit.isStrict(false);
 		unit.notifyData(new ByteInstruction("nonExistant"));
 		
-		assertThat(unit.getBoundValue(), is(notNullValue()));
+		assertThat(unit.getResult(), is(notNullValue()));
 	}
 	
 	@Test
@@ -115,7 +115,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		ri.value = new Byte((byte) 3);
 		unit.notifyData(ri);
 		
-		assertThat(unit.getBoundValue().gotASetter, is((byte) 3));
+		assertThat(unit.getResult().gotASetter, is((byte) 3));
 	}
 	
 	@Test(expected=ExecutionException.class)
@@ -132,7 +132,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		ri.value = new Byte((byte) 3);
 		unit.notifyData(ri);
 		
-		assertThat(unit.getBoundValue().finalByte, is((byte) 3));
+		assertThat(unit.getResult().finalByte, is((byte) 3));
 	}
 	
 	@Test(expected=ExecutionException.class)
@@ -148,7 +148,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.getNotSoPrivateByte(), is((byte) 3));
 	}
 	
@@ -158,7 +158,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.notTheSameName, is((byte) 3));
 	}
 	
@@ -172,7 +172,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 			unit.notifyData(ri);
 		}
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.stringList.size(), is(3));
 		assertThat(binding.stringList.get(0), is("inst0"));
 		assertThat(binding.stringList.get(1), is("inst1"));
@@ -187,7 +187,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 			
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.aSet.size(), is(1));
 	}
 
@@ -199,7 +199,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 			
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.aQueue.size(), is(1));
 	}
 	
@@ -213,7 +213,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 			unit.notifyData(ri);
 		}
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.anotherList.size(), is(3));
 		assertThat(binding.anotherList.get(0), is("inst0"));
 		assertThat(binding.anotherList.get(1), is("inst1"));
@@ -234,7 +234,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		ri.value = "anotherElement";
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding.existingStringList.size(), is(2));
 		assertThat(binding.existingStringList.get(0), is("existingElement"));
 		assertThat(binding.existingStringList.get(1), is("anotherElement"));
@@ -256,7 +256,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		
 		unit.notifyData(ri);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding, is(notNullValue()));
 		assertThat(binding.primitiveInt, is(10));
 	}

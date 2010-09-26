@@ -6,6 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BindingCollection {
 
-	String value();
+	String value() default "";
 	Class<?> type();
 }

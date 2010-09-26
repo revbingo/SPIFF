@@ -3,9 +3,13 @@ package com.revbingo.spiff.events;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.revbingo.spiff.annotations.Binding;
+import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
 
@@ -23,7 +27,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		unit.notifyGroup("inner", true);
 		unit.notifyGroup("inner", false);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding, is(notNullValue()));
 		
 		assertThat(binding.inner, is(notNullValue()));
@@ -47,7 +51,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		
 		unit.notifyGroup("inner", false);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding, is(notNullValue()));
 		assertThat(binding.inner, is(notNullValue()));
 		assertThat(binding.inner.x, is(3));
@@ -77,7 +81,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		rootX.value = new Integer(30);
 		unit.notifyData(rootX);
 		
-		RootBinding binding = unit.getBoundValue();
+		RootBinding binding = unit.getResult();
 		assertThat(binding, is(notNullValue()));
 		assertThat(binding.inner, is(notNullValue()));
 		assertThat(binding.inner.x, is(3));
@@ -85,9 +89,41 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		assertThat(binding.x, is(30));
 	}
 	
+	@Test
+	public void bindingToCollectionOfObjects() {
+		for(int i = 0; i < 3; i++) {
+			unit.notifyGroup("listOfObjects", true);
+			ReferencedInstruction xInst = new IntegerInstruction();
+			xInst.name = "x";
+			xInst.value = new Integer(i);
+			
+			unit.notifyData(xInst);
+			
+			ReferencedInstruction yInst = new IntegerInstruction();
+			yInst.name = "y";
+			yInst.value = 21;
+			
+			unit.notifyData(yInst);
+			unit.notifyGroup("listOfObjects", false);
+		}
+		
+		RootBinding binding = unit.getResult();
+		assertThat(binding.listOfObjects, is(notNullValue()));
+		assertThat(binding.listOfObjects.size(), is(3));
+		assertThat(binding.listOfObjects.get(0), instanceOf(InnerBinding.class));
+		assertThat(binding.listOfObjects.get(0).x, is(0));
+		assertThat(binding.listOfObjects.get(1), instanceOf(InnerBinding.class));
+		assertThat(binding.listOfObjects.get(1).x, is(1));
+		assertThat(binding.listOfObjects.get(2), instanceOf(InnerBinding.class));
+		assertThat(binding.listOfObjects.get(2).x, is(2));
+	}
+	
 	public static class RootBinding {
 		public InnerBinding inner;
 		public int x;
+		
+		@BindingCollection(type=InnerBinding.class)
+		public List<InnerBinding> listOfObjects;
 	}
 	
 	public static class InnerBinding {
@@ -101,4 +137,5 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		public int a;
 		public int b;
 	}
+	
 }

@@ -1,7 +1,6 @@
 .setorder LITTLE_ENDIAN
 .setencoding UTF-16LE
 
-.group(BITMAPFILE) {
 	.group(BITMAPFILEHEADER) {
 		short	bfType
 		int		bfSize
@@ -40,5 +39,4 @@
 			.skip (&rgbRed - &rowStart - 1) % 4
 		}
 	}
-}
 END

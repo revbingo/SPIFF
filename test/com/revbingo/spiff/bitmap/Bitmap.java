@@ -6,7 +6,6 @@ import java.util.List;
 import com.revbingo.spiff.annotations.Binding;
 import com.revbingo.spiff.annotations.BindingCollection;
 
-@Binding("BITMAPFILE")
 public class Bitmap {
 
 	@Binding("BITMAPFILEHEADER")
