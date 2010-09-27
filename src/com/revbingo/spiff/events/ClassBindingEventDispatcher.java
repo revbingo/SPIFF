@@ -30,14 +30,6 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	
 	private BindingFactory bindingFactory = new BindingFactory();
 	
-	private static Map<Class<?>, Class<?>> preferredCollections = new HashMap<Class<?>, Class<?>>();
-	
-	static {
-		preferredCollections.put(List.class, ArrayList.class);
-		preferredCollections.put(Set.class, HashSet.class);
-		preferredCollections.put(Queue.class, LinkedList.class);
-	}
-	
 	public ClassBindingEventDispatcher(Class<T> clazz) {
 		try {
 			this.rootBinding = clazz.newInstance();
@@ -69,96 +61,24 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 		}
 	}
 
-	public void setFieldValue(Field f, Object value) {
-		try {
-			if(!f.isAccessible()) f.setAccessible(true);
-			Class<?> fieldClass = f.getType();
-			if(Collection.class.isAssignableFrom(fieldClass)) {
-				Object fieldObj = f.get(currentBinding);
-				if(fieldObj == null) {
-					if(fieldClass.isInterface() && preferredCollections.containsKey(fieldClass)) {
-						fieldClass = preferredCollections.get(fieldClass);
-					}
-					fieldObj = fieldClass.newInstance();
-					f.set(currentBinding, fieldObj);
-				}
-				@SuppressWarnings("unchecked") Collection<Object> collection = (Collection<Object>) fieldObj;
-				collection.add(value);
-			} else {
-				f.set(currentBinding, value);
-			}
-		} catch (IllegalArgumentException e) {
-			throw new ExecutionException("Wrong type " + value.getClass().getCanonicalName() + " for field " + f.getName(), e);
-		} catch (IllegalAccessException e) {
-			throw new ExecutionException("Could not access field " + f.getName(), e);
-		} catch (InstantiationException e) {
-			throw new ExecutionException("Tried to instantiate non-concrete type " + f.getType(), e);
-		}
-	}
-
 	@Override
 	public void notifyGroup(String groupName, boolean start) throws ExecutionException {
-//		try {
-			if(start) {
-				bindingStack.push(currentBinding);
-				
-				Binder binder = bindingFactory.getBindingFor(groupName, currentBinding.getClass());
-				if(binder == null) {
-					if(isStrict) {
-						throw new ExecutionException("Could not get binding for group " + groupName);
-					} else {
-						return;
-					}
+		if(start) {
+			bindingStack.push(currentBinding);
+			
+			Binder binder = bindingFactory.getBindingFor(groupName, currentBinding.getClass());
+			if(binder == null) {
+				if(isStrict) {
+					throw new ExecutionException("Could not get binding for group " + groupName);
 				} else {
-					currentBinding = binder.createAndBind(currentBinding);
+					return;
 				}
-//				Field targetBindingField;
-//				try {
-//					targetBindingField = currentBinding.getClass().getDeclaredField(groupName);
-//				} catch (NoSuchFieldException e) {
-//					targetBindingField = findFieldFor(groupName);
-//					if(targetBindingField == null && isStrict) {
-//						throw new ExecutionException("Could not find field for binding " + groupName, e);
-//					} else if (targetBindingField == null && !isStrict) {
-//						return;
-//					}
-//				}
-//				if(!targetBindingField.isAccessible()) targetBindingField.setAccessible(true);
-//				Class<?> targetType = targetBindingField.getType();
-//				if(Collection.class.isAssignableFrom(targetType)) {
-//					Collection<Object> collection = (Collection<Object>) targetBindingField.get(currentBinding);
-//					if(collection == null) {
-//						if(targetType.isInterface() && preferredCollections.containsKey(targetType)) {
-//							targetType = preferredCollections.get(targetType);
-//						}
-//						collection = (Collection<Object>) targetType.newInstance();
-//						targetBindingField.set(currentBinding, collection);
-//					}
-//					
-//					Object newInstance = targetBindingField.getAnnotation(BindingCollection.class).type().newInstance();
-//					collection.add(newInstance);
-//					currentBinding = newInstance;
-//				} else {
-//					Object targetObject = targetBindingField.get(currentBinding);
-//					if(targetObject == null) {
-//						Object newInstance = targetBindingField.getType().newInstance();
-//						targetBindingField.set(currentBinding, newInstance);
-//						currentBinding = newInstance;
-//					}
-//				}
 			} else {
-				currentBinding = bindingStack.pop();
+				currentBinding = binder.createAndBind(currentBinding);
 			}
-//		} catch (SecurityException e) {
-//			throw new ExecutionException("", e);
-//		} catch (IllegalArgumentException e) {
-//			throw new ExecutionException("", e);
-//		} catch (IllegalAccessException e) {
-//			throw new ExecutionException("", e);
-//		} catch (InstantiationException e) {
-//			throw new ExecutionException("", e);
-//		}
-		
+		} else {
+			currentBinding = bindingStack.pop();
+		}
 	}
 
 	public T getResult() {
