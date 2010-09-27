@@ -19,7 +19,7 @@ public class TestCaseCollectionBinder {
 
 	@Test
 	public void collectionIsInstantiatedOnFirstCall() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("integers"));
+		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("integers"), Integer.class);
 		
 		CollectionTestClass target = new CollectionTestClass();
 		
@@ -30,7 +30,7 @@ public class TestCaseCollectionBinder {
 	
 	@Test
 	public void subsequentBindsAddsToCollection() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("integers"));
+		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("integers"),Integer.class);
 		
 		CollectionTestClass target = new CollectionTestClass();
 		
@@ -46,7 +46,7 @@ public class TestCaseCollectionBinder {
 	
 	@Test
 	public void setsAreSupported() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aSet"));
+		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aSet"), Integer.class);
 		
 		CollectionTestClass target = new CollectionTestClass();
 		
@@ -60,7 +60,7 @@ public class TestCaseCollectionBinder {
 	
 	@Test
 	public void queuesAreSupported() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aQueue"));
+		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aQueue"), Integer.class);
 		
 		CollectionTestClass target = new CollectionTestClass();
 		
@@ -74,7 +74,7 @@ public class TestCaseCollectionBinder {
 	
 	@Test
 	public void doesntOverwriteExistingCollection() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aTreeSet"));
+		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("aTreeSet"), Integer.class);
 		
 		CollectionTestClass target = new CollectionTestClass();
 		
@@ -92,7 +92,7 @@ public class TestCaseCollectionBinder {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfCollectionBinderCreatedForNonCollectionField() throws Exception {
-		ObjectCollectionBinder unit = new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("notACollection"));
+		new ObjectCollectionBinder(CollectionTestClass.class.getDeclaredField("notACollection"), Integer.class);
 	}
 	
 	public static class CollectionTestClass {

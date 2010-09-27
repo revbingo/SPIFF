@@ -261,6 +261,12 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		assertThat(binding.primitiveInt, is(10));
 	}
 	
+
+	@Test(expected=ExecutionException.class)
+	public void exceptionThrownIfGroupInstructionUsedForGroupInstruction() throws Exception {
+		unit.notifyGroup("stringList", true);
+	}
+	
 	public static class RootBinding {
 		public byte byteOne;
 		//need to use Byte because primtive byte would get inlined, so test assertion fails

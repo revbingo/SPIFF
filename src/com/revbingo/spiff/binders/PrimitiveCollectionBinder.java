@@ -15,11 +15,11 @@ import com.revbingo.spiff.ExecutionException;
 
 public class PrimitiveCollectionBinder implements Binder {
 
-	private Field boundField;
-	private FieldBinder boundFieldBinder;
+	protected Field boundField;
+	protected FieldBinder boundFieldBinder;
 	
-	private static Map<Class<? extends Collection>, Class<? extends Collection>> preferredCollections 
-	= new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
+	protected static Map<Class<? extends Collection>, Class<? extends Collection>> preferredCollections 
+										= new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
 
 	static {
 		preferredCollections.put(List.class, ArrayList.class);
@@ -28,6 +28,7 @@ public class PrimitiveCollectionBinder implements Binder {
 	}
 
 	public PrimitiveCollectionBinder(Field f) {
+		if(!Collection.class.isAssignableFrom(f.getType())) throw new ExecutionException("Cannot create CollectionBinder for non-Collection class");
 		boundField = f;
 		boundFieldBinder = new FieldBinder(boundField);
 	}
@@ -47,8 +48,12 @@ public class PrimitiveCollectionBinder implements Binder {
 		}
 	}
 	
+	@Override
+	public Object createAndBind(Object target) throws ExecutionException {
+		throw new ExecutionException("Cannot bind group for Collection with primitive type");
+	}
 
-	private Collection<?> instantiateCollection(Field f) throws ExecutionException {
+	protected Collection<?> instantiateCollection(Field f) throws ExecutionException {
 		Class<? extends Collection> collectionType = (Class<? extends Collection>) f.getType();
 		if(collectionType.isInterface() && preferredCollections.containsKey(collectionType)) {
 			collectionType = preferredCollections.get(collectionType);
@@ -60,11 +65,4 @@ public class PrimitiveCollectionBinder implements Binder {
 			throw new ExecutionException("Could not instantiate collection for field " + f.getName(), e);
 		}
 	}
-
-
-	@Override
-	public Object createAndBind(Object target) throws ExecutionException {
-		throw new UnsupportedOperationException();
-	}
-
 }
