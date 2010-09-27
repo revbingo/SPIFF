@@ -13,27 +13,25 @@ import java.util.Set;
 
 import com.revbingo.spiff.ExecutionException;
 
-public class CollectionBinder implements Binder {
+public class PrimitiveCollectionBinder implements Binder {
 
 	private Field boundField;
 	private FieldBinder boundFieldBinder;
 	
 	private static Map<Class<? extends Collection>, Class<? extends Collection>> preferredCollections 
-									= new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
-	
+	= new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
+
 	static {
 		preferredCollections.put(List.class, ArrayList.class);
 		preferredCollections.put(Set.class, HashSet.class);
 		preferredCollections.put(Queue.class, LinkedList.class);
 	}
-	
-	public CollectionBinder(Field f) {
-		if(!Collection.class.isAssignableFrom(f.getType())) throw new ExecutionException("Cannot create CollectionBinder for non-Collection class");
-		
+
+	public PrimitiveCollectionBinder(Field f) {
 		boundField = f;
 		boundFieldBinder = new FieldBinder(boundField);
 	}
-	
+
 	@Override
 	public void bind(Object target, Object value) throws ExecutionException {
 		try {
@@ -45,10 +43,11 @@ public class CollectionBinder implements Binder {
 			
 			collection.add(value);
 		} catch (Exception e) {
-			throw new ExecutionException("Could not get current value of field");
+			throw new ExecutionException("Could not get current value of field", e);
 		}
 	}
 	
+
 	private Collection<?> instantiateCollection(Field f) throws ExecutionException {
 		Class<? extends Collection> collectionType = (Class<? extends Collection>) f.getType();
 		if(collectionType.isInterface() && preferredCollections.containsKey(collectionType)) {
@@ -61,4 +60,11 @@ public class CollectionBinder implements Binder {
 			throw new ExecutionException("Could not instantiate collection for field " + f.getName(), e);
 		}
 	}
+
+
+	@Override
+	public Object createAndBind(Object target) throws ExecutionException {
+		throw new UnsupportedOperationException();
+	}
+
 }

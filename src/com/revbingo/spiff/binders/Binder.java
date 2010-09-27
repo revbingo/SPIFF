@@ -5,4 +5,5 @@ import com.revbingo.spiff.ExecutionException;
 public interface Binder {
 
 	void bind(Object target, Object value) throws ExecutionException;
+	Object createAndBind(Object target) throws ExecutionException;
 }

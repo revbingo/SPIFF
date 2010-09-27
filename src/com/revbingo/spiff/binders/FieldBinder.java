@@ -23,5 +23,19 @@ public class FieldBinder implements Binder {
 			throw new ExecutionException("Cannot access field " + boundField.getName() + " (is it final static?)");
 		}
 	}
+
+	@Override
+	public Object createAndBind(Object target) throws ExecutionException {
+		Object newInstance;
+		try {
+			newInstance = boundField.getType().newInstance();
+			this.bind(target, newInstance);
+			return newInstance;
+		} catch (InstantiationException e) {
+			throw new ExecutionException("Could not instantiate new instance of " + boundField.getType().getSimpleName());
+		} catch (IllegalAccessException e) {
+			throw new ExecutionException("Could not instantiate new instance of " + boundField.getType().getSimpleName());
+		}
+	}
 	
 }

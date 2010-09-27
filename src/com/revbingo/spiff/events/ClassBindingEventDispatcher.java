@@ -16,6 +16,7 @@ import java.util.Stack;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
 import com.revbingo.spiff.annotations.BindingCollection;
+import com.revbingo.spiff.binders.Binder;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
 import com.revbingo.spiff.util.MethodDispatcher;
 
@@ -26,6 +27,8 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	private Stack<Object> bindingStack;
 	
 	private boolean isStrict = true;
+	
+	private BindingFactory bindingFactory = new BindingFactory();
 	
 	private static Map<Class<?>, Class<?>> preferredCollections = new HashMap<Class<?>, Class<?>>();
 	
@@ -54,56 +57,18 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 
 	@Override
 	public void notifyData(ReferencedInstruction ins) {
-		try {
-			Field targetField;
-			try {
-				targetField = currentBinding.getClass().getDeclaredField(ins.name);
-			} catch (NoSuchFieldException e) {
-				targetField = findFieldFor(ins.getName());
-				
-			}
-			
-			if(targetField != null) {
-				this.setFieldValue(targetField, ins.value);
+		Binder binder = bindingFactory.getBindingFor(ins.name, currentBinding.getClass());
+		if(binder == null) {
+			if(isStrict) {
+				throw new ExecutionException("Could not get binding for instruction " + ins.name);
+			} else {
 				return;
 			}
-			
-			try {
-				MethodDispatcher.dispatchSetter(ins.name, rootBinding, ins.value);
-			} catch (NoSuchMethodException e1) {
-				if(isStrict) {
-					throw new ExecutionException("No suitable target for instruction " + ins.name, e1);
-				} else {
-					return;
-				}
-			} catch (IllegalAccessException e1) {
-				//Hmm, how to test?
-				e1.printStackTrace();
-			} catch (InvocationTargetException e1) {
-				throw new ExecutionException("Exception occurred invoking setter for " + ins.name);
-			}
-		} catch (SecurityException e) {
-			throw new ExecutionException("SecurityManager prevents access to field " + ins.name, e);
+		} else {
+			binder.bind(currentBinding, ins.value);
 		}
 	}
 
-	private Field findFieldFor(String bindingName) {
-		for(Field f : currentBinding.getClass().getDeclaredFields()) {
-			if(f.isAnnotationPresent(Binding.class)) {
-				Binding b = f.getAnnotation(Binding.class);
-				if(b.value().equals(bindingName)) {
-					return f;
-				}
-			} else if(f.isAnnotationPresent(BindingCollection.class)) {
-				BindingCollection b = f.getAnnotation(BindingCollection.class);
-				if(b.value().equals(bindingName)) {
-					return f;
-				}
-			}
-		}
-		return null;
-	}
-	
 	public void setFieldValue(Field f, Object value) {
 		try {
 			if(!f.isAccessible()) f.setAccessible(true);
@@ -133,56 +98,66 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 
 	@Override
 	public void notifyGroup(String groupName, boolean start) throws ExecutionException {
-		try {
+//		try {
 			if(start) {
 				bindingStack.push(currentBinding);
 				
-				Field targetBindingField;
-				try {
-					targetBindingField = currentBinding.getClass().getDeclaredField(groupName);
-				} catch (NoSuchFieldException e) {
-					targetBindingField = findFieldFor(groupName);
-					if(targetBindingField == null && isStrict) {
-						throw new ExecutionException("Could not find field for binding " + groupName, e);
-					} else if (targetBindingField == null && !isStrict) {
+				Binder binder = bindingFactory.getBindingFor(groupName, currentBinding.getClass());
+				if(binder == null) {
+					if(isStrict) {
+						throw new ExecutionException("Could not get binding for group " + groupName);
+					} else {
 						return;
 					}
-				}
-				if(!targetBindingField.isAccessible()) targetBindingField.setAccessible(true);
-				Class<?> targetType = targetBindingField.getType();
-				if(Collection.class.isAssignableFrom(targetType)) {
-					Collection<Object> collection = (Collection<Object>) targetBindingField.get(currentBinding);
-					if(collection == null) {
-						if(targetType.isInterface() && preferredCollections.containsKey(targetType)) {
-							targetType = preferredCollections.get(targetType);
-						}
-						collection = (Collection<Object>) targetType.newInstance();
-						targetBindingField.set(currentBinding, collection);
-					}
-					
-					Object newInstance = targetBindingField.getAnnotation(BindingCollection.class).type().newInstance();
-					collection.add(newInstance);
-					currentBinding = newInstance;
 				} else {
-					Object targetObject = targetBindingField.get(currentBinding);
-					if(targetObject == null) {
-						Object newInstance = targetBindingField.getType().newInstance();
-						targetBindingField.set(currentBinding, newInstance);
-						currentBinding = newInstance;
-					}
+					currentBinding = binder.createAndBind(currentBinding);
 				}
+//				Field targetBindingField;
+//				try {
+//					targetBindingField = currentBinding.getClass().getDeclaredField(groupName);
+//				} catch (NoSuchFieldException e) {
+//					targetBindingField = findFieldFor(groupName);
+//					if(targetBindingField == null && isStrict) {
+//						throw new ExecutionException("Could not find field for binding " + groupName, e);
+//					} else if (targetBindingField == null && !isStrict) {
+//						return;
+//					}
+//				}
+//				if(!targetBindingField.isAccessible()) targetBindingField.setAccessible(true);
+//				Class<?> targetType = targetBindingField.getType();
+//				if(Collection.class.isAssignableFrom(targetType)) {
+//					Collection<Object> collection = (Collection<Object>) targetBindingField.get(currentBinding);
+//					if(collection == null) {
+//						if(targetType.isInterface() && preferredCollections.containsKey(targetType)) {
+//							targetType = preferredCollections.get(targetType);
+//						}
+//						collection = (Collection<Object>) targetType.newInstance();
+//						targetBindingField.set(currentBinding, collection);
+//					}
+//					
+//					Object newInstance = targetBindingField.getAnnotation(BindingCollection.class).type().newInstance();
+//					collection.add(newInstance);
+//					currentBinding = newInstance;
+//				} else {
+//					Object targetObject = targetBindingField.get(currentBinding);
+//					if(targetObject == null) {
+//						Object newInstance = targetBindingField.getType().newInstance();
+//						targetBindingField.set(currentBinding, newInstance);
+//						currentBinding = newInstance;
+//					}
+//				}
 			} else {
 				currentBinding = bindingStack.pop();
 			}
-		} catch (SecurityException e) {
-			throw new ExecutionException("", e);
-		} catch (IllegalArgumentException e) {
-			throw new ExecutionException("", e);
-		} catch (IllegalAccessException e) {
-			throw new ExecutionException("", e);
-		} catch (InstantiationException e) {
-			throw new ExecutionException("", e);
-		}
+//		} catch (SecurityException e) {
+//			throw new ExecutionException("", e);
+//		} catch (IllegalArgumentException e) {
+//			throw new ExecutionException("", e);
+//		} catch (IllegalAccessException e) {
+//			throw new ExecutionException("", e);
+//		} catch (InstantiationException e) {
+//			throw new ExecutionException("", e);
+//		}
 		
 	}
 

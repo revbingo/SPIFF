@@ -26,4 +26,9 @@ public class MethodBinder implements Binder {
 			throw new ExecutionException("An exception was thrown when invoking " + boundMethod.getName(), e);
 		}
 	}
+
+	@Override
+	public Object createAndBind(Object target) throws ExecutionException {
+		throw new UnsupportedOperationException();
+	}
 }

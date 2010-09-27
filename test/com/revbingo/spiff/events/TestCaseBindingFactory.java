@@ -9,9 +9,10 @@ import org.junit.Test;
 
 import com.revbingo.spiff.annotations.*;
 import com.revbingo.spiff.binders.Binder;
-import com.revbingo.spiff.binders.CollectionBinder;
+import com.revbingo.spiff.binders.ObjectCollectionBinder;
 import com.revbingo.spiff.binders.FieldBinder;
 import com.revbingo.spiff.binders.MethodBinder;
+import com.revbingo.spiff.binders.PrimitiveCollectionBinder;
 
 public class TestCaseBindingFactory {
 
@@ -52,12 +53,27 @@ public class TestCaseBindingFactory {
 	}
 	
 	@Test
-	public void collectionFieldsReturnCollectionBinder() {
+	public void collectionFieldsForPrimitivesReturnPrimitiveCollectionBinder() {
 		BindingFactory unit = new BindingFactory();
 		
 		Binder binder = unit.getBindingFor("strings", BindingTest.class);
+		assertThat(binder, instanceOf(PrimitiveCollectionBinder.class));
 		
-		assertThat(binder, instanceOf(CollectionBinder.class));
+		binder = unit.getBindingFor("integers", BindingTest.class);
+		assertThat(binder, instanceOf(PrimitiveCollectionBinder.class));
+		
+		binder = unit.getBindingFor("floats", BindingTest.class);
+		assertThat(binder, instanceOf(PrimitiveCollectionBinder.class));
+	}
+	
+
+	@Test
+	public void collectionFieldsForNonPrimitivesReturnObjectCollectionBinder() {
+		BindingFactory unit = new BindingFactory();
+		
+		Binder binder = unit.getBindingFor("objects", BindingTest.class);
+		
+		assertThat(binder, instanceOf(ObjectCollectionBinder.class));
 	}
 	
 	@Test
@@ -70,6 +86,13 @@ public class TestCaseBindingFactory {
 	public static class BindingTest {
 		
 		public List<String> strings;
+		public List<Integer> integers;
+		
+		@BindingCollection(type=Float.class)
+		public List<Float> floats;
+		
+		@BindingCollection(type=Object.class)
+		public List<Object> objects;
 		
 		public int publicFieldInt;
 		
