@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
 import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.instructions.IntegerInstruction;
@@ -15,15 +16,9 @@ import com.revbingo.spiff.instructions.ReferencedInstruction;
 
 public class TestCaseClassBindingEventDispatcherGroupings {
 
-	private ClassBindingEventDispatcher<RootBinding> unit;
-	
-	@Before
-	public void setUp() {
-		unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
-	}
-	
 	@Test
 	public void startingAndEndingGroupCreatesBoundObject() {
+		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		unit.notifyGroup("inner", false);
 		
@@ -35,6 +30,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void fieldsSetOnInnerObjectWhenInGroup() {
+		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		
 		ReferencedInstruction xInst = new IntegerInstruction();
@@ -60,6 +56,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void restoresPreviousBindingAtEndOfGroup() {
+		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		
 		ReferencedInstruction xInst = new IntegerInstruction();
@@ -91,6 +88,8 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void bindingToCollectionOfObjects() {
+		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		
 		for(int i = 0; i < 3; i++) {
 			unit.notifyGroup("listOfObjects", true);
 			ReferencedInstruction xInst = new IntegerInstruction();
@@ -116,6 +115,15 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		assertThat(binding.listOfObjects.get(1).x, is(1));
 		assertThat(binding.listOfObjects.get(2), instanceOf(InnerBinding.class));
 		assertThat(binding.listOfObjects.get(2).x, is(2));
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionThrownIfStrictAndNoBindingForGroup() {
+		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		
+		unit.isStrict(true);
+		
+		unit.notifyGroup("unbound", true);
 	}
 	
 	public static class RootBinding {

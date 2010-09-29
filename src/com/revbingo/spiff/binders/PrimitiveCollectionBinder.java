@@ -35,34 +35,33 @@ public class PrimitiveCollectionBinder implements Binder {
 
 	@Override
 	public void bind(Object target, Object value) throws ExecutionException {
-		try {
-			Collection collection = (Collection) boundField.get(target);
-			if(collection == null) {
-				collection = this.instantiateCollection(boundField);
-				boundFieldBinder.bind(target, collection);
-			}
-			
-			collection.add(value);
-		} catch (Exception e) {
-			throw new ExecutionException("Could not get current value of field", e);
-		}
+		Collection collection = this.ensureCollectionExists(boundField, target);
+		collection.add(value);
 	}
 	
 	@Override
 	public Object createAndBind(Object target) throws ExecutionException {
-		throw new ExecutionException("Cannot bind group for Collection with primitive type");
+		throw new ExecutionException("Cannot bind group to a primitive");
 	}
 
-	protected Collection<?> instantiateCollection(Field f) throws ExecutionException {
-		Class<? extends Collection> collectionType = (Class<? extends Collection>) f.getType();
-		if(collectionType.isInterface() && preferredCollections.containsKey(collectionType)) {
-			collectionType = preferredCollections.get(collectionType);
+	protected Collection<?> ensureCollectionExists(Field f, Object target) throws ExecutionException {
+		try {
+			Collection collection = (Collection) boundField.get(target);
+			if(collection != null) return collection;
+			
+			Class<? extends Collection> collectionType = (Class<? extends Collection>) f.getType();
+			if(collectionType.isInterface() && preferredCollections.containsKey(collectionType)) {
+				collectionType = preferredCollections.get(collectionType);
+			}
+			
+			collection = collectionType.newInstance();
+			boundFieldBinder.bind(target, collection);
+			return collection;
+		} catch (IllegalAccessException e) {
+			throw new ExecutionException("Could not get current value of field", e);
+		} catch (InstantiationException e) {
+			throw new ExecutionException("Could not instantiate new instance of " + boundField.getType().getSimpleName());
 		}
 		
-		try {
-			return collectionType.newInstance();
-		} catch (Exception e) {
-			throw new ExecutionException("Could not instantiate collection for field " + f.getName(), e);
-		}
 	}
 }

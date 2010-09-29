@@ -29,6 +29,6 @@ public class MethodBinder implements Binder {
 
 	@Override
 	public Object createAndBind(Object target) throws ExecutionException {
-		throw new UnsupportedOperationException();
+		throw new ExecutionException("Cannot bind group to a method");
 	}
 }

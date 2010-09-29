@@ -83,6 +83,24 @@ public class TestCaseBindingFactory {
 		assertThat(unit.getBindingFor("nothing", BindingTest.class), is(nullValue()));
 	}
 	
+	@Test
+	public void returnsPrimitiveCollectionBinderIfEBoundToCollectionOfPrimitivesButNotDeclaredAsCollection() throws Exception {
+		BindingFactory unit = new BindingFactory();
+		
+		Binder binder = unit.getBindingFor("notExplicitlyACollection", BindingTest.class);
+		
+		assertThat(binder, is(instanceOf(PrimitiveCollectionBinder.class)));
+	}
+	
+	@Test
+	public void collectedTypesInferredFromGenericsIfNotExplicitInBindingAnnotation() throws Exception {
+		BindingFactory unit = new BindingFactory();
+		
+		Binder binder = unit.getBindingFor("notTellingYouTheType", BindingTest.class);
+		
+		assertThat(binder, is(instanceOf(PrimitiveCollectionBinder.class)));
+	}
+	
 	public static class BindingTest {
 		
 		public List<String> strings;
@@ -93,6 +111,12 @@ public class TestCaseBindingFactory {
 		
 		@BindingCollection(type=Object.class)
 		public List<Object> objects;
+		
+		@Binding("notExplicitlyACollection")
+		public List<Integer> moreInts;
+		
+		@BindingCollection("notTellingYouTheType")
+		public List<Integer> evenMoreInts;
 		
 		public int publicFieldInt;
 		

@@ -17,20 +17,10 @@ public class ObjectCollectionBinder extends PrimitiveCollectionBinder {
 	@Override
 	public Object createAndBind(Object target) throws ExecutionException {
 		try {
-			Collection collection = (Collection) boundField.get(target);
-			if(collection == null) {
-				collection = instantiateCollection(boundField);
-				boundFieldBinder.bind(target, collection);
-			}
-			if(collectedType != null) {
-			
-					Object newInstance = collectedType.newInstance();
-					collection.add(newInstance);
-					return newInstance;
-				
-			} else {
-				return target;
-			}
+			Collection collection = ensureCollectionExists(boundField, target);
+			Object newInstance = collectedType.newInstance();
+			collection.add(newInstance);
+			return newInstance;
 		} catch (InstantiationException e) {
 			throw new ExecutionException("Could not instantiate new instance of " + boundField.getType().getSimpleName());
 		} catch (IllegalAccessException e) {

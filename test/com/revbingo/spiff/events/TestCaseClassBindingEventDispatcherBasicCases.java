@@ -220,13 +220,6 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		assertThat(binding.anotherList.get(2), is("inst2"));
 	}
 	
-	@Test(expected=ExecutionException.class)
-	public void exceptionIfTryingToInstantiateUnknownInterface() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString();
-		ri.name = "unknownCollection";
-		unit.notifyData(ri);
-	}
-	
 	@Test
 	public void existingCollectionIsAddedTo() {
 		ReferencedInstruction ri = new FixedLengthString();
@@ -263,7 +256,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	
 
 	@Test(expected=ExecutionException.class)
-	public void exceptionThrownIfGroupInstructionUsedForGroupInstruction() throws Exception {
+	public void exceptionThrownIfGroupInstructionUsedForPrimitiveField() throws Exception {
 		unit.notifyGroup("stringList", true);
 	}
 	
@@ -288,8 +281,6 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		
 		public Set<String> aSet;
 		public Queue<String> aQueue;
-		
-		public UnknownCollection unknownCollection;
 		
 		public int primitiveInt;
 		
@@ -334,7 +325,4 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		private Private() {}
 	}
 
-	public interface UnknownCollection extends Collection {
-		
-	}
 }

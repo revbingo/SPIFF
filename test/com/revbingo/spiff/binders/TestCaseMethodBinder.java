@@ -3,6 +3,8 @@ package com.revbingo.spiff.binders;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
@@ -49,6 +51,11 @@ public class TestCaseMethodBinder {
 		unit.bind(target, 10);
 	}
 	
+	@Test(expected=ExecutionException.class)
+	public void createAndBindCannotBeCalled() throws Exception {
+		new MethodBinder(MethodBindingTestClass.class.getDeclaredMethod("theMethod", int.class)).createAndBind(null);
+	}
+	
 	@Test
 	public void privateMethodsCanBeAccessed() throws Exception {
 		MethodBinder unit = new MethodBinder(MethodBindingTestClass.class.getDeclaredMethod("aPrivateMethod", int.class));
@@ -60,6 +67,17 @@ public class TestCaseMethodBinder {
 		unit.bind(target, x);
 		
 		assertThat(target.privateReally, is(x));
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionThrownIfMethodIsMadeInaccessible() throws Exception {
+		Method privateMethod = MethodBindingTestClass.class.getDeclaredMethod("aPrivateMethod", int.class);
+		MethodBinder unit = new MethodBinder(privateMethod);
+		
+		MethodBindingTestClass target = new MethodBindingTestClass();
+		
+		privateMethod.setAccessible(false);
+		unit.bind(target, 10);
 	}
 	
 	public static class MethodBindingTestClass {
