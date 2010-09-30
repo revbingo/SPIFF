@@ -7,5 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface BindingCollection {
 
 	String value() default "";
-	Class<?> type() default Object.class;
+	Class<?> type();
 }

@@ -45,10 +45,10 @@ public class BindingFactory {
 						return new MethodBinder(m);
 					}
 				}
-			} catch(SecurityException e) {
-				throw new ExecutionException("SecurityManager prevents acces to class methods", e);
+				return null;
+			} catch (SecurityException e) {
+				throw new ExecutionException("SecurityManager prevents access to class methods", e);
 			}
-			return null;
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class BindingFactory {
 						Class<?> genericType = null;
 						Type fieldType = f.getGenericType();
 						if(fieldType instanceof ParameterizedType) {
-							genericType = ((ParameterizedType) fieldType).getActualTypeArguments()[0].getClass();
+							genericType = (Class) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 						}
 						
 						if(primitiveTypes.contains(genericType)) {
@@ -79,12 +79,6 @@ public class BindingFactory {
 								| f.getName().equals(name))) {
 					
 					Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
-					if(genericType == null) {
-						Type fieldType = f.getGenericType();
-						if(fieldType instanceof ParameterizedType) {
-							genericType = ((ParameterizedType) fieldType).getActualTypeArguments()[0].getClass();
-						}
-					}
 					
 					if(primitiveTypes.contains(genericType)) {
 						return new PrimitiveCollectionBinder(f);

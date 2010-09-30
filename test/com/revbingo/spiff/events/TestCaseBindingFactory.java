@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.*;
 import com.revbingo.spiff.binders.Binder;
 import com.revbingo.spiff.binders.ObjectCollectionBinder;
@@ -84,7 +85,7 @@ public class TestCaseBindingFactory {
 	}
 	
 	@Test
-	public void returnsPrimitiveCollectionBinderIfEBoundToCollectionOfPrimitivesButNotDeclaredAsCollection() throws Exception {
+	public void returnsPrimitiveCollectionBinderIfBoundToCollectionOfPrimitivesButNotDeclaredAsCollection() throws Exception {
 		BindingFactory unit = new BindingFactory();
 		
 		Binder binder = unit.getBindingFor("notExplicitlyACollection", BindingTest.class);
@@ -93,12 +94,21 @@ public class TestCaseBindingFactory {
 	}
 	
 	@Test
-	public void collectedTypesInferredFromGenericsIfNotExplicitInBindingAnnotation() throws Exception {
+	public void returnsObjectCollectionBinderIfBoundToCollectionOfNonPrimitivesButNotDeclaredAsCollection() throws Exception {
 		BindingFactory unit = new BindingFactory();
 		
-		Binder binder = unit.getBindingFor("notTellingYouTheType", BindingTest.class);
+		Binder binder = unit.getBindingFor("notExplicitlyACollectionWithNonPrimitives", BindingTest.class);
 		
-		assertThat(binder, is(instanceOf(PrimitiveCollectionBinder.class)));
+		assertThat(binder, is(instanceOf(ObjectCollectionBinder.class)));
+	}
+
+	@Test
+	public void privateMethodsCannotBeBound() throws Exception {
+		BindingFactory unit = new BindingFactory();
+		
+		Binder binder = unit.getBindingFor("privateMethod", BindingTest.class);
+		
+		assertThat(binder, is(nullValue()));
 	}
 	
 	public static class BindingTest {
@@ -109,14 +119,16 @@ public class TestCaseBindingFactory {
 		@BindingCollection(type=Float.class)
 		public List<Float> floats;
 		
-		@BindingCollection(type=Object.class)
+		//@BindingCollection(type=Object.class)
 		public List<Object> objects;
 		
 		@Binding("notExplicitlyACollection")
 		public List<Integer> moreInts;
 		
-		@BindingCollection("notTellingYouTheType")
-		public List<Integer> evenMoreInts;
+		@Binding("notExplicitlyACollectionWithNonPrimitives")
+		public List<Object> someObjects;
+		
+		public List<Object> unboundObjects;
 		
 		public int publicFieldInt;
 		
@@ -130,8 +142,9 @@ public class TestCaseBindingFactory {
 		public void setADifferentInt(int theInt) {
 		}
 		
-		public void setIntWithASetter(int theInt) {
-			
-		}
+		public void setIntWithASetter(int theInt) { }
+		
+		@Binding("privateMethod")
+		private void privateMethod(int theInt) { }
 	}
 }
