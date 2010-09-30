@@ -1,24 +1,10 @@
 package com.revbingo.spiff.events;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 import java.util.Stack;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.annotations.Binding;
-import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.binders.Binder;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
-import com.revbingo.spiff.util.MethodDispatcher;
 
 public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 
