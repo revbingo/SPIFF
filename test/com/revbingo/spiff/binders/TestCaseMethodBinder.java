@@ -1,7 +1,7 @@
 package com.revbingo.spiff.binders;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
 

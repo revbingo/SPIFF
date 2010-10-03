@@ -1,18 +1,20 @@
 package com.revbingo.spiff.events;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.annotations.*;
+import com.revbingo.spiff.annotations.Binding;
+import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.binders.Binder;
-import com.revbingo.spiff.binders.ObjectCollectionBinder;
 import com.revbingo.spiff.binders.FieldBinder;
 import com.revbingo.spiff.binders.MethodBinder;
+import com.revbingo.spiff.binders.ObjectCollectionBinder;
 import com.revbingo.spiff.binders.PrimitiveCollectionBinder;
 
 public class TestCaseBindingFactory {

@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 
 import java.security.Permission;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;

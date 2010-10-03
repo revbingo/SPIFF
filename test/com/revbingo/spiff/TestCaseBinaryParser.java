@@ -3,11 +3,8 @@ package com.revbingo.spiff;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +12,6 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,8 +19,6 @@ import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
-import com.revbingo.spiff.parser.ParseException;
-import com.revbingo.spiff.parser.SpiffParser;
 
 @RunWith(JMock.class)
 public class TestCaseBinaryParser {

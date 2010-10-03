@@ -2,7 +2,6 @@ package com.mark.spiff.mp3;
 
 import java.util.List;
 
-import com.revbingo.spiff.annotations.Binding;
 import com.revbingo.spiff.annotations.BindingCollection;
 
 public class SongList {

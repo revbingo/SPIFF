@@ -1,16 +1,15 @@
 package com.revbingo.spiff.parser;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.ByteOrder;
 import java.util.List;
 
-import net.sf.cglib.transform.impl.AddDelegateTransformer;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.revbingo.spiff.instructions.ByteInstruction;
@@ -36,7 +35,6 @@ import com.revbingo.spiff.instructions.UnsignedByteInstruction;
 import com.revbingo.spiff.instructions.UnsignedIntegerInstruction;
 import com.revbingo.spiff.instructions.UnsignedLongInstruction;
 import com.revbingo.spiff.instructions.UnsignedShortInstruction;
-import com.sun.org.apache.bcel.internal.generic.IfInstruction;
 
 public class TestCaseSpiffParser {
 

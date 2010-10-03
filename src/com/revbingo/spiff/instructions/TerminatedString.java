@@ -1,7 +1,6 @@
 package com.revbingo.spiff.instructions;
 
 import java.io.ByteArrayOutputStream;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 

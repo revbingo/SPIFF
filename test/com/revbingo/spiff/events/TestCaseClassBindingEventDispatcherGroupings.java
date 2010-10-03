@@ -1,15 +1,15 @@
 package com.revbingo.spiff.events;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.annotations.Binding;
 import com.revbingo.spiff.annotations.BindingCollection;
 import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.ReferencedInstruction;

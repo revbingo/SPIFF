@@ -1,12 +1,9 @@
 package com.revbingo.spiff;
 
-import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 import com.revbingo.spiff.events.EventDispatcher;
 import com.revbingo.spiff.instructions.ReferencedInstruction;

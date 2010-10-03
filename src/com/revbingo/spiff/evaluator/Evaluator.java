@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.parser.ParseException;
 
 public class Evaluator {
 

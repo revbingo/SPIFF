@@ -1,15 +1,15 @@
 package com.revbingo.spiff.binders;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Field;
 
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.events.ClassBindingEventDispatcher;
-import com.revbingo.spiff.events.TestCaseClassBindingEventDispatcherBasicCases.ArgsRequired;
 
 public class TestCaseFieldBinder {
 

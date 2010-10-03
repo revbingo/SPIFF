@@ -1,14 +1,18 @@
 package com.revbingo.spiff.evaluator;
 
-import static org.hamcrest.CoreMatchers.*;
-
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import gnu.jel.CompiledExpression;
 
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.evaluator.Evaluator;
 
 public class TestCaseEvaluator {
 
@@ -159,11 +163,8 @@ public class TestCaseEvaluator {
 		int i = Evaluator.evaluateInt("a + 3");
 		
 		assertThat(i, is(5));
-		assertThat(Evaluator.getEvaluatedExpressions().size(), is(1));
 		
 		Evaluator.clear();
-		
-		assertThat(Evaluator.getEvaluatedExpressions().size(), is(0));
 		
 		try {
 			Evaluator.evaluateInt("a + 3");

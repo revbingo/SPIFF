@@ -1,7 +1,6 @@
 package com.revbingo.spiff.instructions;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,7 +3,6 @@ package com.revbingo.spiff;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 
@@ -11,10 +10,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.revbingo.spiff.BinaryParser;
 import com.revbingo.spiff.bitmap.Bitmap;
 import com.revbingo.spiff.bitmap.BitmapFileHeader;
 import com.revbingo.spiff.bitmap.BitmapInfoHeader;
