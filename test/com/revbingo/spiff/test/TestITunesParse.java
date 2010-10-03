@@ -1,5 +1,8 @@
 package com.revbingo.spiff.test;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
@@ -11,7 +14,6 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.TreeModel;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mark.spiff.mp3.SongList;
@@ -21,19 +23,21 @@ import com.revbingo.spiff.events.ClassBindingEventDispatcher;
 
 public class TestITunesParse {
 
-	@Ignore
 	@Test
 	public void testITunesParse() throws Exception {
 		ClassBindingEventDispatcher<SongList> ed = new ClassBindingEventDispatcher<SongList>(SongList.class);
 		BinaryParser parser = new BinaryParser(ed);
-		
-		parser.parse(new File("itunesdb.adf"), new File("iTunesDB"));
+		ed.isStrict(false);
+		parser.parse(new File("samples/itunesdb.adf"), new File("test-resources/iTunesDB"));
 		
 		SongList result = ed.getResult();
-		System.out.println(result.songs.size());
-		result.printSongs();
+		
+		assertThat(result.songs.size(), is(5375));
+		
+		assertThat(result.songs.get(0).strings.get(0), is("Glenn Miller-In The Mood"));
+		assertThat(result.songs.get(0).strings.get(1), is(":iPod_Control:Music:F23:RPDM.mp3"));
+		assertThat(result.songs.get(0).strings.get(2), is("Best of Big Band Swing"));
 	}
-	
 	
 	public void testITunesParseTree() throws Exception {
 		TreeBuildingEventDispatcher ed = new TreeBuildingEventDispatcher();

@@ -30,7 +30,7 @@ public class TestCaseFunctionalPopulateClass {
 		ClassBindingEventDispatcher<Bitmap> eventDispatcher = new ClassBindingEventDispatcher<Bitmap>(Bitmap.class);  //BindingEventDispatcher.getInstance(Bitmap.class);
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
-		unit.parse(new File("test-resources/bitmap_class.adf"), new File("mono.bmp"));
+		unit.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/mono.bmp"));
 		
 		Bitmap bitmap = eventDispatcher.getResult();
 		
@@ -82,7 +82,7 @@ public class TestCaseFunctionalPopulateClass {
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
-		unit.parse(new File("test-resources/bitmap_class.adf"), new File("mono.bmp"));
+		unit.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/mono.bmp"));
 		
 		IncompleteBitmap bitmap = (IncompleteBitmap) eventDispatcher.getResult();
 		
