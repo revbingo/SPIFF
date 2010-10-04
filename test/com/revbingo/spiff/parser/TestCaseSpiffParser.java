@@ -22,6 +22,7 @@ import com.revbingo.spiff.instructions.IfBlock;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
+import com.revbingo.spiff.instructions.LiteralStringInstruction;
 import com.revbingo.spiff.instructions.LongInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
 import com.revbingo.spiff.instructions.PrintInstruction;
@@ -138,6 +139,20 @@ public class TestCaseSpiffParser {
 		
 		TerminatedString str = (TerminatedString) insts.get(0);
 		assertThat(str.getEncoding(), is("UTF-8"));
+	}
+	
+	@Test
+	public void stringWithLiteralGeneratesLiteralStringInstruction() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("string('mhbd') m")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(LiteralStringInstruction.class));
+		
+		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
+		assertThat(litStr.getLiteral(), is("mhbd"));
 	}
 	
 	@Test

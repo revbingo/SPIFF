@@ -13,7 +13,6 @@ public class FixedLengthString extends ReferencedInstruction {
 	
 	@Override
 	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
-		address = buffer.position();
 		int length = ((Number) Evaluator.evaluate(lengthExpr)).intValue();
 		byte[] bytes = new byte[length];
 		buffer.get(bytes);

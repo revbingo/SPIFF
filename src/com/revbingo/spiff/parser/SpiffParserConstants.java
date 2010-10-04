@@ -51,65 +51,67 @@ public interface SpiffParserConstants {
   /** RegularExpression Id. */
   int COMMA = 22;
   /** RegularExpression Id. */
-  int INS_JUMP = 23;
+  int QUOTE = 23;
   /** RegularExpression Id. */
-  int INS_SETORDER = 24;
+  int INS_JUMP = 24;
   /** RegularExpression Id. */
-  int INS_REPEAT = 25;
+  int INS_SETORDER = 25;
   /** RegularExpression Id. */
-  int INS_GROUP = 26;
+  int INS_REPEAT = 26;
   /** RegularExpression Id. */
-  int INS_SKIP = 27;
+  int INS_GROUP = 27;
   /** RegularExpression Id. */
-  int INS_IF = 28;
+  int INS_SKIP = 28;
   /** RegularExpression Id. */
-  int INS_SET = 29;
+  int INS_IF = 29;
   /** RegularExpression Id. */
-  int INS_PRINT = 30;
+  int INS_SET = 30;
   /** RegularExpression Id. */
-  int INS_ELSE = 31;
+  int INS_PRINT = 31;
   /** RegularExpression Id. */
-  int INS_MARK = 32;
+  int INS_ELSE = 32;
   /** RegularExpression Id. */
-  int INS_SETENCODING = 33;
+  int INS_MARK = 33;
   /** RegularExpression Id. */
-  int INS_DEFINE = 34;
+  int INS_SETENCODING = 34;
   /** RegularExpression Id. */
-  int INS_INCLUDE = 35;
+  int INS_DEFINE = 35;
   /** RegularExpression Id. */
-  int EQUAL = 36;
+  int INS_INCLUDE = 36;
   /** RegularExpression Id. */
-  int GREATER_THAN = 37;
+  int EQUAL = 37;
   /** RegularExpression Id. */
-  int LESS_THAN = 38;
+  int GREATER_THAN = 38;
   /** RegularExpression Id. */
-  int NOT_EQUAL = 39;
+  int LESS_THAN = 39;
   /** RegularExpression Id. */
-  int GREATER_OR_EQUAL = 40;
+  int NOT_EQUAL = 40;
   /** RegularExpression Id. */
-  int LESS_OR_EQUAL = 41;
+  int GREATER_OR_EQUAL = 41;
   /** RegularExpression Id. */
-  int PL_MI_OPERATOR = 42;
+  int LESS_OR_EQUAL = 42;
   /** RegularExpression Id. */
-  int MUL_DIV_OPERATOR = 43;
+  int PL_MI_OPERATOR = 43;
   /** RegularExpression Id. */
-  int DIGIT = 44;
+  int MUL_DIV_OPERATOR = 44;
   /** RegularExpression Id. */
-  int ALPHA = 45;
+  int DIGIT = 45;
   /** RegularExpression Id. */
-  int ALPHANUM = 46;
+  int ALPHA = 46;
   /** RegularExpression Id. */
-  int INTEGER = 47;
+  int ALPHANUM = 47;
   /** RegularExpression Id. */
-  int FLOAT = 48;
+  int INTEGER = 48;
   /** RegularExpression Id. */
-  int IDENTIFIER = 49;
+  int FLOAT = 49;
   /** RegularExpression Id. */
-  int ID_VALUE = 50;
+  int IDENTIFIER = 50;
   /** RegularExpression Id. */
-  int ID_ADDRESS = 51;
+  int ID_VALUE = 51;
   /** RegularExpression Id. */
-  int COMMENT = 52;
+  int ID_ADDRESS = 52;
+  /** RegularExpression Id. */
+  int COMMENT = 53;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -139,6 +141,7 @@ public interface SpiffParserConstants {
     "\"{\"",
     "\"}\"",
     "\",\"",
+    "\"\\\'\"",
     "\".jump\"",
     "\".setorder\"",
     "\".repeat\"",

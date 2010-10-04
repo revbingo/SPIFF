@@ -180,6 +180,24 @@ public class TestCaseInstructions {
 	}
 	
 	@Test
+	public void testLiteralStringInstructionConsumesIfStringMatches() throws Exception {
+		LiteralStringInstruction unit = new LiteralStringInstruction();
+		unit.setLiteral("TestData!");
+		unit.execute(testBuffer, ed);
+		
+		assertThat((String) unit.value, is("TestData!"));
+	}
+
+	@Test(expected=ExecutionException.class)
+	public void testLiteralStringInstructionThrowsExecutionInstructionIfStringDoesNotMatch() throws Exception {
+		LiteralStringInstruction unit = new LiteralStringInstruction();
+		unit.setLiteral("notData");
+		unit.execute(testBuffer, ed);
+		
+		assertThat((String) unit.value, is("TestData!"));
+	}
+	
+	@Test
 	public void testTerminatedString() throws Exception {
 		TerminatedString unit = new TerminatedString();
 		unit.address = -1;
@@ -277,7 +295,6 @@ public class TestCaseInstructions {
 		context.assertIsSatisfied();
 	}
 	
-
 	@Test
 	public void testNestedRepeatBlock() throws Exception {
 		context = new Mockery();
