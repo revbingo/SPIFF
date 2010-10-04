@@ -6,28 +6,16 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 
-public class FixedLengthString extends ReferencedInstruction {
+public class FixedLengthString extends StringInstruction {
 
 	private String lengthExpr; 
-	private String encoding;
 	
 	@Override
-	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
+	public byte[] getBytes(ByteBuffer buffer) {
 		int length = ((Number) Evaluator.evaluate(lengthExpr)).intValue();
 		byte[] bytes = new byte[length];
 		buffer.get(bytes);
-		try {
-			String result = "";
-			if(encoding != null){
-				result = new String(bytes, encoding);
-			}else{
-				//use platform default
-				result = new String(bytes);
-			}
-			return result;
-		} catch (UnsupportedEncodingException e) {
-			throw new ExecutionException(name + ": Unknown encoding " + encoding, e);
-		}
+		return bytes;
 	}
 	
 	public void setLengthExpr(String s){
@@ -36,13 +24,5 @@ public class FixedLengthString extends ReferencedInstruction {
 	
 	public String getLengthExpr() {
 		return lengthExpr;
-	}
-	
-	public void setEncoding(String enc){
-		encoding = enc;
-	}
-	
-	public String getEncoding() {
-		return encoding;
 	}
 }
