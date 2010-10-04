@@ -156,6 +156,21 @@ public class TestCaseSpiffParser {
 	}
 	
 	@Test
+	public void stringWithLiteralCanTakeOptionalEncoding() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("string('mhbd', UTF-8) m")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(LiteralStringInstruction.class));
+		
+		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
+		assertThat(litStr.getLiteral(), is("mhbd"));
+		assertThat(litStr.getEncoding(), is("UTF-8"));
+	}
+	
+	@Test
 	public void lineEndingsAreRecognised() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add("byte byteOne\n", false)
