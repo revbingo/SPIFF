@@ -5,16 +5,16 @@ import com.revbingo.spiff.annotations.Binding;
 public class BitmapFileHeader {
 
 	@Binding("bfType")
-	private short bfTypeWithAnotherName;
+	private String bfTypeWithAnotherName;
 	private int bfSize;
 	private short bfReserved1;
 	private short bfReserved2;
 	private int bfOffBits;
 	
-	public short getBfTypeWithAnotherName() {
+	public String getBfTypeWithAnotherName() {
 		return bfTypeWithAnotherName;
 	}
-	public void setBfTypeWithAnotherName(java.lang.Short bfType) {
+	public void setBfTypeWithAnotherName(String bfType) {
 		this.bfTypeWithAnotherName = bfType;
 	}
 	

@@ -2,13 +2,13 @@ package com.revbingo.spiff.bitmap;
 
 public class IncompleteBitmapFileHeader {
 
-	private short bfType;
+	private String bfType;
 	private int bfOffBits;
 	
-	public void setBfType(short bfType) {
+	public void setBfType(String bfType) {
 		this.bfType = bfType;
 	}
-	public short getBfType() {
+	public String getBfType() {
 		return bfType;
 	}
 	public void setBfOffBits(int bfOffBits) {

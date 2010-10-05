@@ -36,7 +36,7 @@ public class TestCaseFunctionalPopulateClass {
 		assertThat((fileHeader = bitmap.getBitmapFileHeader()), is(notNullValue()));
 		assertThat((infoHeader = bitmap.getBitmapInfoHeader()), is(notNullValue()));
 		
-		assertThat(fileHeader.getBfTypeWithAnotherName(), equalTo((short) 0x4D42));
+		assertThat(fileHeader.getBfTypeWithAnotherName(), equalTo("BM"));
 		assertThat(fileHeader.getBfSize(), equalTo(134));
 		assertThat(fileHeader.getBfReserved1(), equalTo((short) 0));
 		assertThat(fileHeader.getBfReserved2(), equalTo((short) 0));
@@ -87,7 +87,7 @@ public class TestCaseFunctionalPopulateClass {
 		
 		assertThat((fileHeader = bitmap.getFileHeader()), is(notNullValue()));
 		
-		assertThat(fileHeader.getBfType(), equalTo((short) 0x4D42));
+		assertThat(fileHeader.getBfType(), is("BM"));
 		assertThat(fileHeader.getBfOffBits(), equalTo(0x36));
 	}
 	

@@ -1,8 +1,7 @@
 .setorder LITTLEENDIAN
-.setencoding UTF-16LE
  
 .group(BitmapFileHeader) {
-short	bfType
+string('BM', US-ASCII)	bfType
 int		bfSize
 short	bfReserved1
 short	bfReserved2

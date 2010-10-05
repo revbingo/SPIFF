@@ -1,8 +1,7 @@
 .setorder LITTLE_ENDIAN
-.setencoding UTF-16LE
 
 .group(BITMAPFILEHEADER) {
-	short	bfType
+	string('BM', US-ASCII) bfType
 	int		bfSize
 	short	bfReserved1
 	short	bfReserved2
