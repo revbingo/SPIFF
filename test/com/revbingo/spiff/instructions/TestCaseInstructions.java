@@ -3,6 +3,7 @@ package com.revbingo.spiff.instructions;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -13,6 +14,7 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -106,6 +108,36 @@ public class TestCaseInstructions {
 		unit.execute(testBuffer, ed);
 		assertThat((Double) unit.value, is(equalTo(expectedValue)));
 		assertThat(unit.address, is(equalTo(0)));
+	}
+	
+	@Test
+	public void testBitsInstruction() throws Exception {
+		BitsInstruction unit = new BitsInstruction();
+		String numberOfBitsExpression = "13";
+		unit.setNumberOfBitsExpr(numberOfBitsExpression);
+		unit.execute(testBuffer, ed);
+
+		assertThat(unit.value, instanceOf(boolean[].class));
+		
+		boolean[] result = (boolean[]) unit.value;
+		assertThat(result.length, is(Integer.valueOf(numberOfBitsExpression)));
+		
+		assertThat(testBuffer.position(), is(2));
+		assertThat(result[0], is(false));
+		assertThat(result[1], is(true));
+		assertThat(result[2], is(false));
+		assertThat(result[3], is(true));
+		assertThat(result[4], is(false));
+		assertThat(result[5], is(true));
+		assertThat(result[6], is(false));
+		assertThat(result[7], is(false));
+		
+		assertThat(result[8], is(false));
+		assertThat(result[9], is(true));
+		assertThat(result[10], is(true));
+		assertThat(result[11], is(false));
+		assertThat(result[12], is(false));
+		
 	}
 	
 	@Test

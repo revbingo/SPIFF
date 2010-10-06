@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.revbingo.spiff.instructions.BitsInstruction;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.DoubleInstruction;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
@@ -76,6 +77,19 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(9), instanceOf(UnsignedLongInstruction.class));
 	}
 	
+	@Test
+	public void bitsTakesArgForNumberOfBits() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("bits(20) theBits")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(BitsInstruction.class));
+		
+		
+	}
 	@Test
 	public void parenthesesWithExpressionAfterKeywordIndicatesFixedLengthString() throws Exception {
 		AdfFile adf = AdfFile.start()
@@ -601,6 +615,19 @@ public class TestCaseSpiffParser {
 		
 		assertThat(insts.size(), is(1));
 		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("pow(2,3)==2"));
+	}
+	
+	@Test
+	public void expressionCanContainFunctionWithSingleArg() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".repeat(ceil(biWidth/8)) {")
+			.add("}")
+			.end();
+		
+		List<Instruction> insts = parse(adf);
+		
+		assertThat(insts.size(), is(1));
+		assertThat(((RepeatBlock) insts.get(0)).getRepeatCountExpression(), is("ceil(biWidth/8)"));
 	}
 	
 	@Test

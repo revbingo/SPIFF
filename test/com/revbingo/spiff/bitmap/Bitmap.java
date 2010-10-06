@@ -13,11 +13,12 @@ public class Bitmap {
 	
 	@Binding("BITMAPINFOHEADER")
 	private BitmapInfoHeader bitmapInfoHeader;
-	
+
+	@Binding("RGBQUAD")
 	private List<RGBQuad> rgbQuad = new ArrayList<RGBQuad>();
 	
 	@BindingCollection(value="PIXELDATA", type=PixelData.class)
-	private List<PixelData> pixelData;
+	private List<PixelData> pixelData = new ArrayList<PixelData>();
 
 	public BitmapFileHeader getBitmapFileHeader() {
 		return bitmapFileHeader;
@@ -50,5 +51,26 @@ public class Bitmap {
 	public void setPixelData(ArrayList<PixelData> pixelData) {
 		this.pixelData = pixelData;
 	}
+	
+	@Binding("pixelBits")
+	public void convert1BitPixelData(boolean[] bits) {
+		for(int i = 0; i < bits.length; i++) {
+			mapPixelFromColourTable((bits[i] == true) ? 1 : 0);
+		}
+	}
 
+	@Binding("pixel8")
+	public void convert8BitPixelData() {
+		
+	}
+	
+	private void mapPixelFromColourTable(int quadIndex) {
+		RGBQuad quad = rgbQuad.get(quadIndex);
+		PixelData d = new PixelData();
+		d.rgbBlue = quad.rgbBlue;
+		d.rgbRed = quad.rgbRed;
+		d.rgbGreen = quad.rgbGreen;
+		
+		pixelData.add(d);
+	}
 }

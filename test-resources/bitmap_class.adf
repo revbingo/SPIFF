@@ -1,5 +1,40 @@
 .setorder LITTLE_ENDIAN
 
+# =======================================
+# These blocks define how to parse colours for each row
+# depending on the colour depth
+
+# In a 24-bit bitmap, each byte is a colour channel
+.define(PIXELS24) {
+	.repeat(biWidth) {
+		.group(PIXELDATA) {
+			ubyte rgbBlue
+			ubyte rgbGreen
+			ubyte rgbRed
+		}
+	}
+	#Each row is zero padded to a multiple of 4
+	.skip (&rgbRed - &rowStart - 1) % 4
+}
+
+# In a 1-bit bitmap, each bit corresponds to the colour table
+.define(PIXELS1) {
+	bits(biWidth)  pixelBits
+}
+
+# In a 4-bit bitmap, each nibble corresponds to the colour table
+.define(PIXELS4) {
+	
+}
+
+# In an 8-bit bitmap, each byte is a pixel
+.define(PIXELS8) {
+   .repeat(biWdith) {
+		byte pixel8
+   }
+}
+# =========================================
+
 .group(BITMAPFILEHEADER) {
 	string('BM', US-ASCII) bfType
 	int		bfSize
@@ -22,19 +57,37 @@
 	int		biClrImportant
 }
 
-.if(biBitCount >= 24){  #each colour is specified
-	.repeat(biHeight){
-		.mark rowStart
-		.repeat(biWidth){
-			.group(PIXELDATA){
-				ubyte rgbBlue
-				ubyte rgbGreen
-				ubyte rgbRed
-			}
+.if(biBitCount != 24) {
+    # there will be an RGBQUAD array
+	.set randomVar pow(2, biBitCount)
+	.repeat(randomVar) {
+	    .group(RGBQUAD) {
+			ubyte	rgbBlue
+			ubyte	rgbGreen
+			ubyte	rgbRed
+			ubyte	rgbReserved
 		}
-
-		#Each row is zero padded to a multiple of 4
-		.skip (&rgbRed - &rowStart - 1) % 4
 	}
 }
+
+.repeat(biHeight) {
+	.mark rowStart
+	
+	.if(biBitCount == 24) {
+		.include PIXELS24	
+	}
+
+	.if(biBitCount == 1) {
+		.include PIXELS1
+	}
+	
+	.if(biBitCount == 4) {
+		.include PIXELS4
+	}
+	
+	.if(biBitCount == 8) {
+		.include PIXELS8
+	}
+}
+
 END

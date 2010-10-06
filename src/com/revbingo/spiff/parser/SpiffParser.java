@@ -85,6 +85,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       case TY_USHORT:
       case TY_UINT:
       case TY_ULONG:
+      case TY_BITS:
       case EOL:
       case INS_JUMP:
       case INS_SETORDER:
@@ -117,6 +118,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       case TY_USHORT:
       case TY_UINT:
       case TY_ULONG:
+      case TY_BITS:
       case INS_JUMP:
       case INS_SETORDER:
       case INS_REPEAT:
@@ -141,6 +143,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         case TY_USHORT:
         case TY_UINT:
         case TY_ULONG:
+        case TY_BITS:
           entry();
           break;
         case INS_JUMP:
@@ -187,9 +190,31 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     } else if (jj_2_3(2)) {
       fixedUnsigned();
     } else {
-      jj_consume_token(-1);
-      throw new ParseException();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case TY_BITS:
+        bits();
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
     }
+  }
+
+  final public void bits() throws ParseException {
+        Token t2;
+        String expr;
+    jj_consume_token(TY_BITS);
+    jj_consume_token(OPEN_PAR);
+    expr = expression();
+    jj_consume_token(CLOSE_PAR);
+    t2 = jj_consume_token(IDENTIFIER);
+                BitsInstruction inst = new BitsInstruction();
+                inst.setName(t2.image);
+                inst.setNumberOfBitsExpr(expr);
+
+                instructions.add(inst);
   }
 
   final public void instruction() throws ParseException {
@@ -231,7 +256,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       includeInstruction();
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -332,7 +357,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         jj_consume_token(EOL);
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[7] = jj_gen;
         ;
       }
       jj_consume_token(INS_ELSE);
@@ -341,7 +366,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         jj_consume_token(EOL);
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         ;
       }
       instructionStack.push(instructions);
@@ -452,7 +477,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       ins.setEncoding(t5.image);
       break;
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[9] = jj_gen;
       ;
     }
     jj_consume_token(CLOSE_PAR);
@@ -478,7 +503,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
               ins.setEncoding(t5.image);
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[10] = jj_gen;
       ;
     }
     jj_consume_token(CLOSE_PAR);
@@ -500,7 +525,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       ins.setEncoding(t3.image);
       break;
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[11] = jj_gen;
       ;
     }
     t2 = jj_consume_token(IDENTIFIER);
@@ -546,24 +571,28 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   final public String expression() throws ParseException {
   String s;
   Token t;
-    StringBuffer b = new StringBuffer();
+   StringBuffer b = new StringBuffer();
     s = additiveExpression();
     b.append(s);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case EQUAL:
-    case GREATER_THAN:
-    case LESS_THAN:
-    case NOT_EQUAL:
-    case GREATER_OR_EQUAL:
-    case LESS_OR_EQUAL:
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case EQUAL:
+      case GREATER_THAN:
+      case LESS_THAN:
+      case NOT_EQUAL:
+      case GREATER_OR_EQUAL:
+      case LESS_OR_EQUAL:
+        ;
+        break;
+      default:
+        jj_la1[12] = jj_gen;
+        break label_3;
+      }
       t = comparator();
-      b.append(t.image);
+                          b.append(t.image);
       s = additiveExpression();
-      b.append(s);
-      break;
-    default:
-      jj_la1[11] = jj_gen;
-      ;
+                                  b.append(s);
     }
     {if (true) return b.toString();}
     throw new Error("Missing return statement in function");
@@ -591,7 +620,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       t = jj_consume_token(GREATER_OR_EQUAL);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[13] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -605,20 +634,20 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     StringBuffer expr = new StringBuffer();
     s = multiplicativeExpression();
     expr.append(s);
-    label_3:
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PL_MI_OPERATOR:
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
-        break label_3;
+        jj_la1[14] = jj_gen;
+        break label_4;
       }
       t = jj_consume_token(PL_MI_OPERATOR);
-      expr.append(t.image);
+              expr.append(t.image);
       s = multiplicativeExpression();
-      expr.append(s);
+              expr.append(s);
     }
     {if (true) return expr.toString();}
     throw new Error("Missing return statement in function");
@@ -630,15 +659,15 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     StringBuffer term = new StringBuffer();
     s = unaryExpression();
     term.append(s);
-    label_4:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case MUL_DIV_OPERATOR:
         ;
         break;
       default:
-        jj_la1[14] = jj_gen;
-        break label_4;
+        jj_la1[15] = jj_gen;
+        break label_5;
       }
       t = jj_consume_token(MUL_DIV_OPERATOR);
       term.append(t.image);
@@ -687,7 +716,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       s.append(t.image);
         break;
       default:
-        jj_la1[15] = jj_gen;
+        jj_la1[16] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -715,6 +744,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     StringBuffer b = new StringBuffer();
     b.append("(");
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case OPEN_PAR:
     case INTEGER:
     case FLOAT:
     case IDENTIFIER:
@@ -722,15 +752,15 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     case ID_ADDRESS:
       ex = FormalParameter();
       b.append(ex);
-      label_5:
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case COMMA:
           ;
           break;
         default:
-          jj_la1[16] = jj_gen;
-          break label_5;
+          jj_la1[17] = jj_gen;
+          break label_6;
         }
         jj_consume_token(COMMA);
         ex = FormalParameter();
@@ -739,7 +769,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       }
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[18] = jj_gen;
       ;
     }
     b.append(")");
@@ -748,30 +778,36 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   }
 
   final public String FormalParameter() throws ParseException {
-  Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENTIFIER:
-      t = jj_consume_token(IDENTIFIER);
+  Token t = null;
+  String expr;
+    if (jj_2_11(2)) {
+      expr = expression();
+        {if (true) return expr;}
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENTIFIER:
+        t = jj_consume_token(IDENTIFIER);
       Evaluator.cacheExpression(t.image);
-      break;
-    case INTEGER:
-      t = jj_consume_token(INTEGER);
-      break;
-    case FLOAT:
-      t = jj_consume_token(FLOAT);
-      break;
-    case ID_VALUE:
-      t = jj_consume_token(ID_VALUE);
+        break;
+      case INTEGER:
+        t = jj_consume_token(INTEGER);
+        break;
+      case FLOAT:
+        t = jj_consume_token(FLOAT);
+        break;
+      case ID_VALUE:
+        t = jj_consume_token(ID_VALUE);
       Evaluator.cacheExpression(t.image);
-      break;
-    case ID_ADDRESS:
-      t = jj_consume_token(ID_ADDRESS);
+        break;
+      case ID_ADDRESS:
+        t = jj_consume_token(ID_ADDRESS);
       Evaluator.cacheExpression(t.image);
-      break;
-    default:
-      jj_la1[18] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+        break;
+      default:
+        jj_la1[19] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
     }
     {if (true) return t.image;}
     throw new Error("Missing return statement in function");
@@ -799,7 +835,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       t = jj_consume_token(TY_LONG);
       break;
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -823,7 +859,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       t = jj_consume_token(TY_UINT);
       break;
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[21] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -901,93 +937,43 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     finally { jj_save(9, xla); }
   }
 
-  private boolean jj_3R_31() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_32()) jj_scanpos = xsp;
-    return false;
+  private boolean jj_2_11(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_11(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_18() {
-    if (jj_3R_21()) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  private boolean jj_3_9() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(14)) jj_scanpos = xsp;
-    if (jj_scan_token(INS_ELSE)) return true;
-    xsp = jj_scanpos;
-    if (jj_scan_token(14)) jj_scanpos = xsp;
-    if (jj_scan_token(OPEN_BRACE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_25() {
-    if (jj_scan_token(MUL_DIV_OPERATOR)) return true;
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_15() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(10)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(11)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(13)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(12)) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_12() {
-    if (jj_3R_17()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_18()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_9() {
-    if (jj_scan_token(TY_STRING)) return true;
-    if (jj_scan_token(OPEN_PAR)) return true;
-    if (jj_scan_token(QUOTE)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(QUOTE)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_22()) jj_scanpos = xsp;
-    if (jj_scan_token(CLOSE_PAR)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_19() {
-    if (jj_3R_24()) return true;
+  private boolean jj_3R_20() {
+    if (jj_3R_25()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3R_25()) { jj_scanpos = xsp; break; }
+      if (jj_3R_26()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_13() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(OPEN_PAR)) return true;
-    if (jj_3R_31()) return true;
-    if (jj_scan_token(CLOSE_PAR)) return true;
     return false;
   }
 
   private boolean jj_3R_14() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(OPEN_PAR)) return true;
+    if (jj_3R_32()) return true;
+    if (jj_scan_token(CLOSE_PAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_24() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_scan_token(ENCODING)) return true;
+    return false;
+  }
+
+  private boolean jj_3_6() {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_15() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(8)) {
@@ -1009,30 +995,13 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_23() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_scan_token(ENCODING)) return true;
-    return false;
-  }
-
-  private boolean jj_3_6() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_20() {
-    if (jj_scan_token(PL_MI_OPERATOR)) return true;
-    if (jj_3R_19()) return true;
-    return false;
-  }
-
   private boolean jj_3_4() {
-    if (jj_3R_9()) return true;
+    if (jj_3R_10()) return true;
     return false;
   }
 
   private boolean jj_3_5() {
-    if (jj_3R_10()) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -1041,37 +1010,31 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_30() {
-    if (jj_scan_token(OPEN_PAR)) return true;
-    if (jj_3R_12()) return true;
-    if (jj_scan_token(CLOSE_PAR)) return true;
+  private boolean jj_3R_21() {
+    if (jj_scan_token(PL_MI_OPERATOR)) return true;
+    if (jj_3R_20()) return true;
     return false;
   }
 
-  private boolean jj_3R_36() {
-    if (jj_scan_token(ID_ADDRESS)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_8() {
-    if (jj_3R_15()) return true;
+  private boolean jj_3R_9() {
+    if (jj_3R_16()) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3R_10() {
+  private boolean jj_3R_11() {
     if (jj_scan_token(TY_STRING)) return true;
     if (jj_scan_token(OPEN_PAR)) return true;
-    if (jj_3R_12()) return true;
+    if (jj_3R_13()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_23()) jj_scanpos = xsp;
+    if (jj_3R_24()) jj_scanpos = xsp;
     if (jj_scan_token(CLOSE_PAR)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3R_6() {
+  private boolean jj_3R_7() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_4()) {
@@ -1085,89 +1048,125 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   }
 
   private boolean jj_3_7() {
-    if (jj_3R_12()) return true;
+    if (jj_3R_13()) return true;
     return false;
   }
 
-  private boolean jj_3R_29() {
+  private boolean jj_3R_37() {
+    if (jj_scan_token(ID_ADDRESS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_31() {
+    if (jj_scan_token(OPEN_PAR)) return true;
+    if (jj_3R_13()) return true;
+    if (jj_scan_token(CLOSE_PAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_36() {
     if (jj_scan_token(ID_VALUE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_8() {
+    if (jj_3R_15()) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_30() {
+    if (jj_scan_token(ID_VALUE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_18() {
+    if (jj_3R_20()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_21()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
   private boolean jj_3R_35() {
-    if (jj_scan_token(ID_VALUE)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3R_17() {
-    if (jj_3R_19()) return true;
+  private boolean jj_3R_29() {
+    if (jj_scan_token(ID_ADDRESS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_11() {
+    if (jj_3R_13()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_34() {
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_20()) { jj_scanpos = xsp; break; }
+    xsp = jj_scanpos;
+    if (jj_3_11()) {
+    jj_scanpos = xsp;
+    if (jj_3R_35()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(49)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(50)) {
+    jj_scanpos = xsp;
+    if (jj_3R_36()) {
+    jj_scanpos = xsp;
+    if (jj_3R_37()) return true;
+    }
+    }
+    }
+    }
     }
     return false;
   }
 
   private boolean jj_3R_28() {
-    if (jj_scan_token(ID_ADDRESS)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_34() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_27() {
     if (jj_scan_token(INTEGER)) return true;
     return false;
   }
 
-  private boolean jj_3R_33() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_34()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(48)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(49)) {
-    jj_scanpos = xsp;
-    if (jj_3R_35()) {
-    jj_scanpos = xsp;
-    if (jj_3R_36()) return true;
-    }
-    }
-    }
-    }
+  private boolean jj_3R_17() {
+    if (jj_scan_token(OPEN_PAR)) return true;
+    if (jj_scan_token(ENCODING)) return true;
+    if (jj_scan_token(CLOSE_PAR)) return true;
     return false;
   }
 
-  private boolean jj_3R_7() {
-    if (jj_3R_14()) return true;
+  private boolean jj_3R_27() {
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3R_26() {
+  private boolean jj_3R_12() {
+    if (jj_scan_token(TY_STRING)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_17()) jj_scanpos = xsp;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3R_21() {
+  private boolean jj_3R_22() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(37)) {
-    jj_scanpos = xsp;
     if (jj_scan_token(38)) {
     jj_scanpos = xsp;
     if (jj_scan_token(39)) {
     jj_scanpos = xsp;
     if (jj_scan_token(40)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
+    if (jj_scan_token(41)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(41)) return true;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) return true;
     }
     }
     }
@@ -1177,34 +1176,26 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   }
 
   private boolean jj_3_10() {
-    if (jj_3R_13()) return true;
+    if (jj_3R_14()) return true;
     return false;
   }
 
-  private boolean jj_3R_16() {
-    if (jj_scan_token(OPEN_PAR)) return true;
-    if (jj_scan_token(ENCODING)) return true;
-    if (jj_scan_token(CLOSE_PAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_37() {
+  private boolean jj_3R_38() {
     if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_33()) return true;
+    if (jj_3R_34()) return true;
     return false;
   }
 
-  private boolean jj_3_3() {
-    if (jj_3R_8()) return true;
+  private boolean jj_3R_23() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_scan_token(ENCODING)) return true;
     return false;
   }
 
-  private boolean jj_3R_24() {
+  private boolean jj_3R_25() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_10()) {
-    jj_scanpos = xsp;
-    if (jj_3R_26()) {
     jj_scanpos = xsp;
     if (jj_3R_27()) {
     jj_scanpos = xsp;
@@ -1212,47 +1203,109 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_29()) {
     jj_scanpos = xsp;
-    if (jj_3R_30()) return true;
+    if (jj_3R_30()) {
+    jj_scanpos = xsp;
+    if (jj_3R_31()) return true;
     }
     }
     }
     }
     }
+    return false;
+  }
+
+  private boolean jj_3_9() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(15)) jj_scanpos = xsp;
+    if (jj_scan_token(INS_ELSE)) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(15)) jj_scanpos = xsp;
+    if (jj_scan_token(OPEN_BRACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_19() {
+    if (jj_3R_22()) return true;
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_33() {
+    if (jj_3R_34()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_38()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_3() {
+    if (jj_3R_9()) return true;
     return false;
   }
 
   private boolean jj_3_2() {
-    if (jj_3R_7()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_11() {
-    if (jj_scan_token(TY_STRING)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_16()) jj_scanpos = xsp;
-    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_3R_8()) return true;
     return false;
   }
 
   private boolean jj_3_1() {
-    if (jj_3R_6()) return true;
+    if (jj_3R_7()) return true;
     return false;
   }
 
-  private boolean jj_3R_32() {
-    if (jj_3R_33()) return true;
+  private boolean jj_3R_13() {
+    if (jj_3R_18()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3R_37()) { jj_scanpos = xsp; break; }
+      if (jj_3R_19()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
-  private boolean jj_3R_22() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_scan_token(ENCODING)) return true;
+  private boolean jj_3R_32() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_33()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(10)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(11)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(13)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(12)) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_10() {
+    if (jj_scan_token(TY_STRING)) return true;
+    if (jj_scan_token(OPEN_PAR)) return true;
+    if (jj_scan_token(QUOTE)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(QUOTE)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_23()) jj_scanpos = xsp;
+    if (jj_scan_token(CLOSE_PAR)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_26() {
+    if (jj_scan_token(MUL_DIV_OPERATOR)) return true;
+    if (jj_3R_25()) return true;
     return false;
   }
 
@@ -1267,7 +1320,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[21];
+  final private int[] jj_la1 = new int[22];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1275,12 +1328,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4000,0xff007ff8,0xff003ff8,0xff003ff8,0x0,0xff000000,0x4000,0x4000,0x400000,0x400000,0x40000,0x0,0x0,0x0,0x0,0x40000,0x400000,0x0,0x0,0x3f0,0x3c00,};
+      jj_la1_0 = new int[] {0x8000,0xfe00fff8,0xfe007ff8,0xfe007ff8,0x0,0x4000,0xfe000000,0x8000,0x8000,0x800000,0x800000,0x80000,0x0,0x0,0x0,0x0,0x80000,0x800000,0x80000,0x0,0x3f0,0x3c00,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x20001e,0x1e,0x1e,0x200000,0x1e,0x0,0x0,0x0,0x0,0x0,0x7e0,0x7e0,0x800,0x1000,0x1d0000,0x0,0x1f0000,0x1f0000,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x40003d,0x3d,0x3d,0x400000,0x0,0x3d,0x0,0x0,0x0,0x0,0x0,0xfc0,0xfc0,0x1000,0x2000,0x3a0000,0x0,0x3e0000,0x3e0000,0x0,0x0,};
    }
-  final private JJCalls[] jj_2_rtns = new JJCalls[10];
+  final private JJCalls[] jj_2_rtns = new JJCalls[11];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
@@ -1295,7 +1348,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1310,7 +1363,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1321,7 +1374,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1332,7 +1385,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1342,7 +1395,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1352,7 +1405,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 22; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1464,12 +1517,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[54];
+    boolean[] la1tokens = new boolean[55];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 22; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1481,7 +1534,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         }
       }
     }
-    for (int i = 0; i < 54; i++) {
+    for (int i = 0; i < 55; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
@@ -1508,7 +1561,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
 
   private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -1525,6 +1578,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
             case 7: jj_3_8(); break;
             case 8: jj_3_9(); break;
             case 9: jj_3_10(); break;
+            case 10: jj_3_11(); break;
           }
         }
         p = p.next;

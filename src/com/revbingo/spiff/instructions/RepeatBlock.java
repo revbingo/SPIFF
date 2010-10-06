@@ -21,7 +21,7 @@ public class RepeatBlock extends Block {
 	
 	@Override
 	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
-		long repeatCount = Evaluator.evaluateLong(repeatCountExpr);
+		long repeatCount = (long) Evaluator.evaluateDouble(repeatCountExpr);
 		for(int x=0;x<repeatCount;x++){
 			super.execute(buffer, eventDispatcher);
 		}
