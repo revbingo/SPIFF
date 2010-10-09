@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
 
 public class TestCaseInstructions {
@@ -33,14 +33,14 @@ public class TestCaseInstructions {
 	byte[] testData;
 	
 	Mockery context = new Mockery();
-	EventDispatcher ed;
+	EventListener ed;
 	
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
-		ed = context.mock(EventDispatcher.class);
-		final EventDispatcher dispatcher = ed;
+		ed = context.mock(EventListener.class);
+		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
 			ignoring(dispatcher).notifyData(with(any(ReferencedInstruction.class)));
 			ignoring(dispatcher).notifyGroup(with(any(String.class)), with(any(boolean.class)));
@@ -311,7 +311,7 @@ public class TestCaseInstructions {
 	public void testRepeatBlock() throws Exception {
 		context = new Mockery();
 		
-		final EventDispatcher dispatcher = context.mock(EventDispatcher.class);
+		final EventListener dispatcher = context.mock(EventListener.class);
 		final ReferencedInstruction theInstruction = new ByteInstruction();
 		
 		context.checking(new Expectations() {{
@@ -331,7 +331,7 @@ public class TestCaseInstructions {
 	public void testNestedRepeatBlock() throws Exception {
 		context = new Mockery();
 		
-		final EventDispatcher dispatcher = context.mock(EventDispatcher.class);
+		final EventListener dispatcher = context.mock(EventListener.class);
 		final ReferencedInstruction theInstruction = new ByteInstruction();
 		
 		context.checking(new Expectations() {{
@@ -365,7 +365,7 @@ public class TestCaseInstructions {
 	@Test
 	public void testGroupAndEndGroupInstruction() throws Exception {
 		context = new Mockery();
-		final EventDispatcher dispatcher = context.mock(EventDispatcher.class);
+		final EventListener dispatcher = context.mock(EventListener.class);
 		final String groupName = "theGroup";
 		
 		context.checking(new Expectations() {{

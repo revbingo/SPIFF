@@ -10,13 +10,13 @@ import org.junit.Test;
 import com.revbingo.spiff.AdfFormatException;
 import com.revbingo.spiff.BinaryParser;
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.events.ClassBindingEventDispatcher;
+import com.revbingo.spiff.events.ClassBindingEventListener;
 
 public class TestCaseBitmapAdf {
 
 	@Test
 	public void parses1BitBitmap() throws ExecutionException, AdfFormatException {
-		ClassBindingEventDispatcher<Bitmap> ed = new ClassBindingEventDispatcher<Bitmap>(Bitmap.class);
+		ClassBindingEventListener<Bitmap> ed = new ClassBindingEventListener<Bitmap>(Bitmap.class);
 		ed.isStrict(false);
 		
 		BinaryParser parser = new BinaryParser(ed);

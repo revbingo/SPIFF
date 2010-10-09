@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
 
 public class IfBlock extends Block {
@@ -15,7 +15,7 @@ public class IfBlock extends Block {
 	private Block elseInsts;
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		boolean result = Evaluator.evaluateBoolean(expression);
 		if(result){
 			super.execute(buffer, eventDispatcher);

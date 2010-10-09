@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 
 public class SetOrderInstruction implements Instruction {
 
@@ -21,7 +21,7 @@ public class SetOrderInstruction implements Instruction {
 	}
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		buffer.order(order);
 	}
 

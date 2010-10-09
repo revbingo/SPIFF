@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 
 public class MarkInstruction implements Instruction {
 
@@ -15,7 +15,7 @@ public class MarkInstruction implements Instruction {
 	}
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher)
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher)
 			throws ExecutionException {
 		Evaluator.addVariable(name, buffer.position());
 		Evaluator.addVariable(name + ".address", buffer.position());

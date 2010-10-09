@@ -6,7 +6,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.binders.Binder;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
 
-public class ClassBindingEventDispatcher<T> implements EventDispatcher {
+public class ClassBindingEventListener<T> implements EventListener {
 
 	private T rootBinding;
 	private Object currentBinding;
@@ -16,7 +16,7 @@ public class ClassBindingEventDispatcher<T> implements EventDispatcher {
 	
 	private BindingFactory bindingFactory = new BindingFactory();
 	
-	public ClassBindingEventDispatcher(Class<T> clazz) {
+	public ClassBindingEventListener(Class<T> clazz) {
 		try {
 			this.rootBinding = clazz.newInstance();
 			this.currentBinding = this.rootBinding;

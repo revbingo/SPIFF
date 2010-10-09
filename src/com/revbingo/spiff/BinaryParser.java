@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
 import com.revbingo.spiff.parser.ParseException;
@@ -16,9 +16,9 @@ import com.revbingo.spiff.parser.SpiffParser;
 
 public class BinaryParser {
 
-	private EventDispatcher eventDispatcher;
+	private EventListener eventDispatcher;
 	
-	public BinaryParser(EventDispatcher ed){	
+	public BinaryParser(EventListener ed){	
 		this.eventDispatcher = ed;
 	}
 	

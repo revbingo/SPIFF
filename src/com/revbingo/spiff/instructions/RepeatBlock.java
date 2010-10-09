@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
 
 public class RepeatBlock extends Block {
@@ -20,7 +20,7 @@ public class RepeatBlock extends Block {
 	}
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		long repeatCount = (long) Evaluator.evaluateDouble(repeatCountExpr);
 		for(int x=0;x<repeatCount;x++){
 			super.execute(buffer, eventDispatcher);

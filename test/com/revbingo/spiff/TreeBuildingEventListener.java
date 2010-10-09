@@ -5,15 +5,15 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.ReferencedInstruction;
 
-public class TreeBuildingEventDispatcher implements EventDispatcher {
+public class TreeBuildingEventListener implements EventListener {
 
 	DefaultTreeModel model;
 	MutableTreeNode currentNode;
 	
-	public TreeBuildingEventDispatcher() {
+	public TreeBuildingEventListener() {
 		currentNode = new DefaultMutableTreeNode("root");
 		model = new DefaultTreeModel(currentNode);
 	}

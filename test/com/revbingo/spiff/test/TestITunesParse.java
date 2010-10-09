@@ -18,14 +18,14 @@ import org.junit.Test;
 
 import com.mark.spiff.mp3.SongList;
 import com.revbingo.spiff.BinaryParser;
-import com.revbingo.spiff.TreeBuildingEventDispatcher;
-import com.revbingo.spiff.events.ClassBindingEventDispatcher;
+import com.revbingo.spiff.TreeBuildingEventListener;
+import com.revbingo.spiff.events.ClassBindingEventListener;
 
 public class TestITunesParse {
 
 	@Test
 	public void testITunesParse() throws Exception {
-		ClassBindingEventDispatcher<SongList> ed = new ClassBindingEventDispatcher<SongList>(SongList.class);
+		ClassBindingEventListener<SongList> ed = new ClassBindingEventListener<SongList>(SongList.class);
 		BinaryParser parser = new BinaryParser(ed);
 		ed.isStrict(false);
 		parser.parse(new File("samples/itunesdb.adf"), new File("test-resources/iTunesDB"));
@@ -40,7 +40,7 @@ public class TestITunesParse {
 	}
 	
 	public void testITunesParseTree() throws Exception {
-		TreeBuildingEventDispatcher ed = new TreeBuildingEventDispatcher();
+		TreeBuildingEventListener ed = new TreeBuildingEventListener();
 		BinaryParser parser = new BinaryParser(ed);
 		
 		parser.parse(new File("itunesdb.adf"), new File("iTunesDB"));

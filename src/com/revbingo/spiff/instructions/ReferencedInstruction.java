@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 
 public abstract class ReferencedInstruction implements Instruction {
 
@@ -31,7 +31,7 @@ public abstract class ReferencedInstruction implements Instruction {
 	}
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		address = buffer.position();
 		this.value = this.evaluate(buffer);
 		if(isReferenced){

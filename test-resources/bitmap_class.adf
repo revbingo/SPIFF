@@ -13,8 +13,9 @@
 			ubyte rgbRed
 		}
 	}
+	.mark rowEnd
 	#Each row is zero padded to a multiple of 4
-	.skip (&rgbRed - &rowStart - 1) % 4
+	.skip 4 - ((&rowEnd - &rowStart) % 4)
 }
 
 # In a 1-bit bitmap, each bit corresponds to the colour table

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
 
 public class SetInstruction implements Instruction {
@@ -21,7 +21,7 @@ public class SetInstruction implements Instruction {
 	}
 
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		Object result = Evaluator.evaluate(expression);
 		Evaluator.addVariable(varname, result);
 	}

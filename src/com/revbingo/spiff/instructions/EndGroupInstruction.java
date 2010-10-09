@@ -3,7 +3,7 @@ package com.revbingo.spiff.instructions;
 import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 
 public class EndGroupInstruction implements Instruction {
 
@@ -16,7 +16,7 @@ public class EndGroupInstruction implements Instruction {
 	}
 	
 	@Override
-	public void execute(ByteBuffer buffer, EventDispatcher eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
 		eventDispatcher.notifyGroup(groupName, false);
 	}
 	

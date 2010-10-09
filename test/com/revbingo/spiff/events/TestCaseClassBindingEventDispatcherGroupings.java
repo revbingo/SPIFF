@@ -18,7 +18,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 
 	@Test
 	public void startingAndEndingGroupCreatesBoundObject() {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		unit.notifyGroup("inner", false);
 		
@@ -30,7 +30,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void fieldsSetOnInnerObjectWhenInGroup() {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		
 		ReferencedInstruction xInst = new IntegerInstruction();
@@ -56,7 +56,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void restoresPreviousBindingAtEndOfGroup() {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 		
 		ReferencedInstruction xInst = new IntegerInstruction();
@@ -88,7 +88,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test
 	public void bindingToCollectionOfObjects() {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		
 		for(int i = 0; i < 3; i++) {
 			unit.notifyGroup("listOfObjects", true);
@@ -119,7 +119,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfStrictAndNoBindingForGroup() {
-		ClassBindingEventDispatcher<RootBinding> unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		
 		unit.isStrict(true);
 		

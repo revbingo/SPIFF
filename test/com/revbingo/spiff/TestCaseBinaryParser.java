@@ -15,7 +15,7 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.revbingo.spiff.events.EventDispatcher;
+import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
@@ -84,7 +84,7 @@ public class TestCaseBinaryParser {
 		context = new Mockery();
 		
 		final Instruction mockInstruction = context.mock(Instruction.class);
-		final EventDispatcher eventDispatcher = context.mock(EventDispatcher.class);
+		final EventListener eventDispatcher = context.mock(EventListener.class);
 		
 		context.checking(new Expectations() {{
 			exactly(3).of(mockInstruction).execute(with(aNonNull(ByteBuffer.class)), with(same(eventDispatcher)));

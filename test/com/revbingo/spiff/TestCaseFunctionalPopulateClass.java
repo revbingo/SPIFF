@@ -18,13 +18,13 @@ import com.revbingo.spiff.bitmap.BitmapInfoHeader;
 import com.revbingo.spiff.bitmap.IncompleteBitmap;
 import com.revbingo.spiff.bitmap.IncompleteBitmapFileHeader;
 import com.revbingo.spiff.bitmap.PixelData;
-import com.revbingo.spiff.events.ClassBindingEventDispatcher;
+import com.revbingo.spiff.events.ClassBindingEventListener;
 
 public class TestCaseFunctionalPopulateClass {
 
 	@Test
 	public void testPopulateBeans() throws Exception {
-		ClassBindingEventDispatcher<Bitmap> eventDispatcher = new ClassBindingEventDispatcher<Bitmap>(Bitmap.class);  //BindingEventDispatcher.getInstance(Bitmap.class);
+		ClassBindingEventListener<Bitmap> eventDispatcher = new ClassBindingEventListener<Bitmap>(Bitmap.class);  //BindingEventDispatcher.getInstance(Bitmap.class);
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
 		unit.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/mono.bmp"));
@@ -74,7 +74,7 @@ public class TestCaseFunctionalPopulateClass {
 	
 	@Test
 	public void testNonStrictMode() throws Exception {
-		ClassBindingEventDispatcher<IncompleteBitmap> eventDispatcher = new ClassBindingEventDispatcher<IncompleteBitmap>(IncompleteBitmap.class);
+		ClassBindingEventListener<IncompleteBitmap> eventDispatcher = new ClassBindingEventListener<IncompleteBitmap>(IncompleteBitmap.class);
 		eventDispatcher.isStrict(false);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);
@@ -93,7 +93,7 @@ public class TestCaseFunctionalPopulateClass {
 	
 	@Test(expected=ExecutionException.class)
 	public void testThrowsExceptionInStrictMode() throws Exception {
-		ClassBindingEventDispatcher<IncompleteBitmap> eventDispatcher = new ClassBindingEventDispatcher<IncompleteBitmap>(IncompleteBitmap.class);
+		ClassBindingEventListener<IncompleteBitmap> eventDispatcher = new ClassBindingEventListener<IncompleteBitmap>(IncompleteBitmap.class);
 		eventDispatcher.isStrict(true);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);

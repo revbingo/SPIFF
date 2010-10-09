@@ -22,11 +22,11 @@ import com.revbingo.spiff.instructions.ReferencedInstruction;
 
 public class TestCaseClassBindingEventDispatcherBasicCases {
 
-	ClassBindingEventDispatcher<RootBinding> unit;
+	ClassBindingEventListener<RootBinding> unit;
 	
 	@Before
 	public void setUp() {
-		unit = new ClassBindingEventDispatcher<RootBinding>(RootBinding.class);
+		unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 	}
 	
 	@Test
@@ -38,12 +38,12 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	
 	@Test(expected=ExecutionException.class)
 	public void executionExceptionThrownIfClassCannotBeInstantiatedWithNoArgs() throws Exception {
-		new ClassBindingEventDispatcher<ArgsRequired>(ArgsRequired.class);
+		new ClassBindingEventListener<ArgsRequired>(ArgsRequired.class);
 	}
 	
 	@Test(expected=ExecutionException.class)
 	public void executionExceptionThrownIfClassHasPrivateConstructor() throws Exception {
-		new ClassBindingEventDispatcher<Private>(Private.class);
+		new ClassBindingEventListener<Private>(Private.class);
 	}
 	
 	@Test
