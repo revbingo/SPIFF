@@ -6,7 +6,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
@@ -23,14 +25,34 @@ public class BindingFactory {
 	
 	private static final List<Class<?>> primitiveTypes = Arrays.asList(new Class<?>[] { Integer.class, Float.class, Double.class, Short.class, Long.class, Byte.class, Character.class, String.class});
 	
+	private Map<Class<?>, Map<String, Binder>> binderCache = new HashMap<Class<?>, Map<String, Binder>>(); 
+
 	public Binder getBindingFor(String name, Class<?> clazz) {
+		Map<String, Binder> classCache = binderCache.get(clazz);
+		if(classCache != null) {
+			Binder cachedBinder = classCache.get(name);
+			if(cachedBinder != null) return cachedBinder;
+		}
+
 		for(Matcher matcher : matchers) {
 			Binder b = matcher.match(name, clazz);
-			if(b != null) return b;
+			if(b != null) {
+				addToCache(clazz, name, b);
+				return b;
+			}
 		}
 		return null;
 	}
 	
+	private void addToCache(Class<?> clazz, String name, Binder b) {
+		Map<String, Binder> classCache = binderCache.get(clazz);
+		if(classCache == null) {
+			classCache = new HashMap<String, Binder>();
+			binderCache.put(clazz, classCache);
+		}
+		classCache.put(name, b);
+	}
+
 	private abstract static class Matcher {
 		public abstract Binder match(String name, Class<?> clazz) throws ExecutionException;
 	}
@@ -96,8 +118,9 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
+			String setterName = createSetterName(name);
 			for(Method m : clazz.getMethods()) {
-				if(m.getName().equals(createSetterName(name))) {
+				if(m.getName().equals(setterName)) {
 					return new MethodBinder(m);
 				}
 			}

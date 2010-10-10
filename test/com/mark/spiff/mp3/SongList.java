@@ -10,7 +10,6 @@ public class SongList {
 	public List<Song> songs;
 	
 	public void printSongs() {
-		System.out.println("!!!" + songs.size());
 		for(Song s: songs) {
 			s.printStrings();
 		}

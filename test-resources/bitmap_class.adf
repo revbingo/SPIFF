@@ -7,7 +7,7 @@
 # In a 24-bit bitmap, each byte is a colour channel
 .define(PIXELS24) {
 	.repeat(biWidth) {
-		.group(PIXELDATA) {
+		.group(pixelData) {
 			ubyte rgbBlue
 			ubyte rgbGreen
 			ubyte rgbRed

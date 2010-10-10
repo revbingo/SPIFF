@@ -44,7 +44,6 @@ public class TestITunesParse {
 		BinaryParser parser = new BinaryParser(ed);
 		
 		parser.parse(new File("itunesdb.adf"), new File("iTunesDB"));
-		//parser.parse(new File("test-resources/bitmap_class.adf"), new File("mono.bmp"));
 		
 		TreeModel model = ed.getTree();
 		JFrame frame = new JFrame("Tree");

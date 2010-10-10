@@ -15,7 +15,7 @@ public class ClassBindingEventListener<T> implements EventListener {
 	private boolean isStrict = true;
 	
 	private BindingFactory bindingFactory = new BindingFactory();
-	
+
 	public ClassBindingEventListener(Class<T> clazz) {
 		try {
 			this.rootBinding = clazz.newInstance();
