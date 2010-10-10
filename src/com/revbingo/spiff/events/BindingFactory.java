@@ -22,28 +22,28 @@ import com.revbingo.spiff.binders.PrimitiveCollectionBinder;
 public class BindingFactory {
 
 	private static final List<Matcher> matchers = Arrays.asList(new BoundMethodMatcher(), new BoundFieldMatcher(), new SetterMatcher(), new FieldMatcher());
-	
+
 	private static final List<Class<?>> primitiveTypes = Arrays.asList(new Class<?>[] { Integer.class, Float.class, Double.class, Short.class, Long.class, Byte.class, Character.class, String.class});
-	
-	private Map<Class<?>, Map<String, Binder>> binderCache = new HashMap<Class<?>, Map<String, Binder>>(); 
+
+	private final Map<Class<?>, Map<String, Binder>> binderCache = new HashMap<Class<?>, Map<String, Binder>>();
 
 	public Binder getBindingFor(String name, Class<?> clazz) {
 		Map<String, Binder> classCache = binderCache.get(clazz);
-		if(classCache != null) {
-			Binder cachedBinder = classCache.get(name);
-			if(cachedBinder != null) return cachedBinder;
+		if(classCache != null && classCache.containsKey(name)) {
+			return classCache.get(name);
 		}
 
+		Binder b = null;
 		for(Matcher matcher : matchers) {
-			Binder b = matcher.match(name, clazz);
+			b = matcher.match(name, clazz);
 			if(b != null) {
-				addToCache(clazz, name, b);
-				return b;
+				break;
 			}
 		}
-		return null;
+		addToCache(clazz, name, b);
+		return b;
 	}
-	
+
 	private void addToCache(Class<?> clazz, String name, Binder b) {
 		Map<String, Binder> classCache = binderCache.get(clazz);
 		if(classCache == null) {
@@ -56,7 +56,7 @@ public class BindingFactory {
 	private abstract static class Matcher {
 		public abstract Binder match(String name, Class<?> clazz) throws ExecutionException;
 	}
-	
+
 	private static class BoundMethodMatcher extends Matcher {
 
 		@Override
@@ -73,12 +73,12 @@ public class BindingFactory {
 			}
 		}
 	}
-	
+
 	private static class BoundFieldMatcher extends Matcher {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
-			
+
 			for(Field f : clazz.getDeclaredFields()) {
 				if(f.isAnnotationPresent(Binding.class) && f.getAnnotation(Binding.class).value().equals(name)) {
 					if(Collection.class.isAssignableFrom(f.getType())) {
@@ -87,7 +87,7 @@ public class BindingFactory {
 						if(fieldType instanceof ParameterizedType) {
 							genericType = (Class) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 						}
-						
+
 						if(primitiveTypes.contains(genericType)) {
 							return new PrimitiveCollectionBinder(f);
 						} else {
@@ -96,12 +96,12 @@ public class BindingFactory {
 					} else {
 						return new FieldBinder(f);
 					}
-				} else if(f.isAnnotationPresent(BindingCollection.class) 
+				} else if(f.isAnnotationPresent(BindingCollection.class)
 						&& (f.getAnnotation(BindingCollection.class).value().equals(name)
 								| f.getName().equals(name))) {
-					
+
 					Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
-					
+
 					if(primitiveTypes.contains(genericType)) {
 						return new PrimitiveCollectionBinder(f);
 					} else {
@@ -111,9 +111,9 @@ public class BindingFactory {
 			}
 			return null;
 		}
-		
+
 	}
-	
+
 	private static class SetterMatcher extends Matcher {
 
 		@Override
@@ -126,12 +126,12 @@ public class BindingFactory {
 			}
 			return null;
 		}
-		
+
 		private String createSetterName(String str) {
 			return "set" + str.substring(0,1).toUpperCase() + str.substring(1, str.length());
 		}
 	}
-	
+
 	private static class FieldMatcher extends Matcher {
 
 		@Override
@@ -139,13 +139,13 @@ public class BindingFactory {
 			for(Field f : clazz.getDeclaredFields()) {
 				if(f.getName().equals(name)) {
 					if(Collection.class.isAssignableFrom(f.getType())) {
-						
+
 						Class<?> genericType = null;
 						Type fieldType = f.getGenericType();
 						if(fieldType instanceof ParameterizedType) {
 							genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 						}
-						
+
 						if(primitiveTypes.contains(genericType)) {
 							return new PrimitiveCollectionBinder(f);
 						} else {
@@ -157,6 +157,6 @@ public class BindingFactory {
 			}
 			return null;
 		}
-		
+
 	}
 }
