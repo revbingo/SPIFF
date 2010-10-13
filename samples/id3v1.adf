@@ -1,0 +1,11 @@
+.jump fileLength - 128
+string('TAG')  tagLiteral
+string(30) title
+string(30) artist
+string(30) album
+string(4)  year
+string(28) comment
+.skip 1
+byte		trackNumber
+byte 		genre
+END
