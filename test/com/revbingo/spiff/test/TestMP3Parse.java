@@ -15,7 +15,7 @@ import com.revbingo.spiff.events.ClassBindingEventListener;
 public class TestMP3Parse {
 
 	@Test
-	public void parsesId3Tags() throws Exception {
+	public void parsesId3v1_1Tags() throws Exception {
 		ClassBindingEventListener<Id3v1> listener = new ClassBindingEventListener<Id3v1>(Id3v1.class);
 		listener.isStrict(false);
 
@@ -25,11 +25,11 @@ public class TestMP3Parse {
 		Id3v1 tag = listener.getResult();
 
 		assertThat(tag, is(notNullValue()));
-		assertThat(tag.title.trim(), is("Shaking Through"));
-		assertThat(tag.artist.trim(), is("R.E.M."));
-		assertThat(tag.album.trim(), is("Murmur"));
+		assertThat(tag.title, is("Shaking Through"));
+		assertThat(tag.artist, is("R.E.M."));
+		assertThat(tag.album, is("Murmur"));
 		assertThat(tag.year, is("1983"));
-		assertThat(tag.comment.trim(), is(""));
+		assertThat(tag.comment, is(""));
 		assertThat(tag.trackNumber, is((byte) 10));
 		assertThat(tag.genre, is("Rock"));
 	}

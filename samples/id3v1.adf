@@ -1,11 +1,34 @@
+# Parses ID3v1 tags
+
+# fileLength is a special variable that is made available
+
+# Jump to 128 bytes before the end of the file
 .jump fileLength - 128
+
 string('TAG')  tagLiteral
 string(30) title
 string(30) artist
 string(30) album
 string(4)  year
+
+# Tricky! ID3v1.1 hijacks the last two bytes of the comment field, one for a null byte
+# and one for the track number
+
+# Assume it's v1.1
 string(28) comment
-.skip 1
-byte		trackNumber
+byte       zeroByte
+
+# if the last byte was not a null byte, it must have been a v1.0 comment
+.if(zeroByte != 0) {
+
+	# go back to where the comment started, and read 30 bytes instead
+	.jump &comment
+	string(30) comment
+	
+} .else {
+
+	# otherwise just carry on
+	byte		trackNumber
+}
 byte 		genre
 END

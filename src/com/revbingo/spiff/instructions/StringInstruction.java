@@ -8,7 +8,7 @@ import com.revbingo.spiff.ExecutionException;
 public abstract class StringInstruction extends ReferencedInstruction {
 
 	private String encoding;
-	
+
 	@Override
 	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
 		byte[] bytes = getBytes(buffer);
@@ -20,7 +20,7 @@ public abstract class StringInstruction extends ReferencedInstruction {
 				//use platform default
 				result = new String(bytes);
 			}
-			return result;
+			return result.trim();
 		} catch (UnsupportedEncodingException e) {
 			throw new ExecutionException(name + ": Unknown encoding " + encoding, e);
 		}
@@ -29,11 +29,11 @@ public abstract class StringInstruction extends ReferencedInstruction {
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
-	
+
 	public String getEncoding() {
 		return encoding;
 	}
-	
+
 	abstract byte[] getBytes(ByteBuffer buffer);
-	
+
 }
