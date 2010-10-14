@@ -53,7 +53,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
 
   final public void start() throws ParseException {
     list();
-    jj_consume_token(END);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
