@@ -30,7 +30,7 @@
 
 # In an 8-bit bitmap, each byte is a pixel
 .define(PIXELS8) {
-   .repeat(biWdith) {
+   .repeat(biWidth) {
 		byte pixel8
    }
 }
@@ -46,7 +46,7 @@
 
 .group(BITMAPINFOHEADER) {
 	int		biSize
-	int		biWidth
+	int 	biWidth
 	int		biHeight 
 	short	biPlanes
 	short	biBitCount
@@ -90,5 +90,3 @@
 		.include PIXELS8
 	}
 }
-
-
