@@ -11,16 +11,18 @@ public class ClassBindingEventListener<T> implements EventListener {
 	private T rootBinding;
 	private Object currentBinding;
 	private Stack<Object> bindingStack;
-	
+
 	private boolean isStrict = true;
-	
+
 	private BindingFactory bindingFactory = new BindingFactory();
+	private boolean skipUnbound;
+	private int skipCount;
 
 	public ClassBindingEventListener(Class<T> clazz) {
 		try {
 			this.rootBinding = clazz.newInstance();
 			this.currentBinding = this.rootBinding;
-			
+
 			bindingStack = new Stack<Object>();
 		} catch (InstantiationException e) {
 			throw new ExecutionException("Could not instantiate " + clazz.getCanonicalName(), e);
@@ -35,6 +37,7 @@ public class ClassBindingEventListener<T> implements EventListener {
 
 	@Override
 	public void notifyData(ReferencedInstruction ins) {
+		if(skipUnbound && skipCount > 0) return;
 		Binder binder = bindingFactory.getBindingFor(ins.name, currentBinding.getClass());
 		if(binder == null) {
 			if(isStrict) {
@@ -51,24 +54,30 @@ public class ClassBindingEventListener<T> implements EventListener {
 	public void notifyGroup(String groupName, boolean start) throws ExecutionException {
 		if(start) {
 			bindingStack.push(currentBinding);
-			
+
 			Binder binder = bindingFactory.getBindingFor(groupName, currentBinding.getClass());
 			if(binder == null) {
 				if(isStrict) {
 					throw new ExecutionException("Could not get binding for group " + groupName);
 				} else {
+					if(skipUnbound) skipCount++;
 					return;
 				}
 			} else {
 				currentBinding = binder.createAndBind(currentBinding);
 			}
 		} else {
+			if(skipUnbound && skipCount > 0) skipCount--;
 			currentBinding = bindingStack.pop();
 		}
 	}
 
 	public T getResult() {
 		return rootBinding;
+	}
+
+	public void setSkipUnboundGroups(boolean b) {
+		this.skipUnbound = b;
 	}
 
 }
