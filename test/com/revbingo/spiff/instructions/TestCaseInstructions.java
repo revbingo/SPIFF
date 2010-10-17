@@ -295,24 +295,50 @@ public class TestCaseInstructions {
 	}
 
 	@Test
-	public void testUnsignedShortInstruction() throws Exception {
+	public void testUnsignedShortInstructionWithLittleEndianOrder() throws Exception {
 		UnsignedShortInstruction unit = new UnsignedShortInstruction();
 		unit.address = -1;
 
-		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xFF, (byte) 0xFF });
+		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
+		unsignedByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed);
-		assertThat((Integer) unit.value, is(equalTo(0xFFFF)));
+		assertThat((Integer) unit.value, is(equalTo(0xFF00)));
 		assertThat(unit.address, is(equalTo(0)));
 	}
 
 	@Test
-	public void testUnsignedIntegerInstruction() throws Exception {
+	public void testUnsignedShortInstructionWithBigEndianOrder() throws Exception {
+		UnsignedShortInstruction unit = new UnsignedShortInstruction();
+		unit.address = -1;
+
+		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
+		unsignedByteBuffer.order(ByteOrder.BIG_ENDIAN);
+		unit.execute(unsignedByteBuffer, ed);
+		assertThat((Integer) unit.value, is(equalTo(0x00FF)));
+		assertThat(unit.address, is(equalTo(0)));
+	}
+
+	@Test
+	public void testUnsignedIntegerInstructionWithBigEndianOrder() throws Exception {
 		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
 		unit.address = -1;
 
-		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF });
+		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
+		unsignedByteBuffer.order(ByteOrder.BIG_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed);
-		assertThat((Long) unit.value, is(equalTo((long) 0xFFFFFFFF)));
+		assertThat((Long) unit.value, is(equalTo((long) 0xCAFEBABE)));
+		assertThat(unit.address, is(equalTo(0)));
+	}
+
+	@Test
+	public void testUnsignedIntegerInstructionWithLittleEndianOrder() throws Exception {
+		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
+		unit.address = -1;
+
+		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
+		unsignedByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+		unit.execute(unsignedByteBuffer, ed);
+		assertThat((Long) unit.value, is(equalTo((long) 0xBEBAFECA)));
 		assertThat(unit.address, is(equalTo(0)));
 	}
 
