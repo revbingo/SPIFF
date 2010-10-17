@@ -1,0 +1,119 @@
+.setencoding UTF-8
+
+.define(ATTRINFO) {
+	ushort		attributesCount
+	.repeat(attributesCount) {
+		.group(attributeInfo) {
+			ushort	attributeNameIndex
+			uint	attributeLength
+			.repeat(attributeLength) {
+				byte	attrInfo
+			}
+		}
+	}
+}
+
+uint		cafebabe
+ushort		minorVersion
+ushort		majorVersion
+ushort		constPoolCount
+
+.repeat(constPoolCount - 1) {
+	.group(cpInfo) {
+	   ubyte	tag
+	   
+	   .if(tag == 1) {
+	   		ushort	length
+	   		# not quite true
+	   		string(length, UTF-8) theString
+	   		#.repeat(length) {
+	   	#		ubyte	bytes
+	   #		}
+	   }
+	   
+	   .if(tag == 3) {
+	   		# int
+	   		uint	bytes
+	   }
+	   
+	   .if(tag == 4) {
+	   		# float
+	   		uint	bytes
+	   }
+	   
+	   .if(tag == 5) {
+	   		# long
+	   		uint	highBytes
+	   		uint	lowBytes
+	   }
+	   
+	   .if(tag == 6) {
+	   		# double
+	   		uint	highBytes
+	   		uint	lowBytes
+	   }
+	   
+	   .if(tag == 7) {
+	   		# class
+	   		ushort	nameIndex
+	   }
+	 
+	   .if(tag == 8) {
+	   		# string
+	   		ushort	stringIndex
+	   }
+	   
+	   .if(tag == 9) {
+	   		# field
+	   		ushort	classIndex
+	   		ushort	nameAndTypeIndex
+	   }
+	   
+	   .if(tag == 10) {
+	   		# method
+	   		ushort	classIndex
+	   		ushort	nameAndTypeIndex
+	   }
+	   
+	   .if(tag == 11) {
+	   		# interface method
+	   		ushort	classIndex
+	   		ushort	nameAndTypeIndex
+	   }
+	   
+	   .if(tag == 12) {
+	   		# name and type
+	   		ushort	nameIndex
+	   		ushort	descriptorIndex
+	   }
+	}
+}
+ushort		accessFlags
+ushort		thisClass
+ushort		superClass
+ushort		interfacesCount
+.repeat(interfacesCount) {
+	ushort	interfaceIndex
+}
+
+ushort		fieldsCount
+.repeat(fieldsCount) {
+	.group(fieldInfo) {
+		ushort 	fieldAccessFlags
+		ushort	nameIndex
+		ushort	descriptorIndex
+		.include ATTRINFO
+	}
+}
+
+ushort		methodsCount
+.repeat(methodsCount) {
+	.group(methodInfo) {
+		ushort	methodAccessFlags
+		ushort	nameIndex
+		ushort	descriptorIndex
+		.include ATTRINFO
+	}
+}
+
+.include ATTRINFO
