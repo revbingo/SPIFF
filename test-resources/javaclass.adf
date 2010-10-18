@@ -26,19 +26,16 @@ ushort		constPoolCount
 	   		ushort	length
 	   		# not quite true
 	   		string(length, UTF-8) theString
-	   		#.repeat(length) {
-	   	#		ubyte	bytes
-	   #		}
 	   }
 	   
 	   .if(tag == 3) {
 	   		# int
-	   		uint	bytes
+	   		uint	intBytes
 	   }
 	   
 	   .if(tag == 4) {
 	   		# float
-	   		uint	bytes
+	   		uint	floatBytes
 	   }
 	   
 	   .if(tag == 5) {

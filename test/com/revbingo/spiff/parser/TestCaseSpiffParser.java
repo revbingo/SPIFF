@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.revbingo.spiff.instructions.BitsInstruction;
 import com.revbingo.spiff.instructions.ByteInstruction;
+import com.revbingo.spiff.instructions.BytesInstruction;
 import com.revbingo.spiff.instructions.DoubleInstruction;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthString;
@@ -92,9 +93,21 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(1));
 		assertThat(insts.get(0), instanceOf(BitsInstruction.class));
-
-
 	}
+
+	@Test
+	public void bytesTakesArgForNumberOfBytes() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("bytes(length + 1) theBytes")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(BytesInstruction.class));
+		assertThat(((BytesInstruction) insts.get(0)).getLengthExpr(), is("length+1"));
+	}
+
 	@Test
 	public void parenthesesWithExpressionAfterKeywordIndicatesFixedLengthString() throws Exception {
 		AdfFile adf = AdfFile.start()

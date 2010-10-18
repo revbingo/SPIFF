@@ -49,6 +49,19 @@ public class TestCaseDataTypes {
 	}
 
 	@Test
+	public void testBytesInstruction() throws Exception {
+		BytesInstruction unit = new BytesInstruction();
+		unit.setLengthExpr("5");
+		unit.execute(testBuffer, ed);
+
+		assertThat(unit.value, instanceOf(byte[].class));
+		byte[] bytes = (byte[]) unit.value;
+		assertThat(bytes.length, is(5));
+		assertThat(bytes, is(new byte[] { 0x54,0x65,0x73,0x74,0x44}));
+		assertThat(testBuffer.position(), is(5));
+	}
+
+	@Test
 	public void testShortInstruction() throws Exception {
 		ShortInstruction unit = new ShortInstruction();
 
