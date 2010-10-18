@@ -24,7 +24,8 @@ ushort		constPoolCount
 	   
 	   .if(tag == 1) {
 	   		ushort	length
-	   		# not quite true
+	   		# not quite true (see http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#7963)
+	   		# but true enough for our purposes
 	   		string(length, UTF-8) theString
 	   }
 	   

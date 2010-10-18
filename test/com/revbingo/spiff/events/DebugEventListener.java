@@ -11,7 +11,7 @@ public class DebugEventListener implements EventListener {
 		for(int i=0;i<tabCount;i++) {
 			System.out.print("\t");
 		}
-		System.out.println(ins.name + ":" + ins.value);
+		System.out.println("[" + ins.name + "] " + ins.value);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class DebugEventListener implements EventListener {
 		for(int i=0;i<tabCount;i++) {
 			System.out.print("\t");
 		}
-		System.out.println((start ? "start " : "end ") + groupName);
+		System.out.println((start ? ">> " : "<< ") + "[" + groupName + "]");
 
 		if(start) {
 			tabCount++;
