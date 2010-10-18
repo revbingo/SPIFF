@@ -157,10 +157,9 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithExplicitEncoding() throws Exception {
-		FixedLengthString unit = new FixedLengthString();
+		FixedLengthString unit = new FixedLengthString("US-ASCII");
 		unit.address = -1;
 
-		unit.setEncoding("US-ASCII");
 		unit.setLengthExpr("4");
 		unit.execute(testBuffer, ed);
 
@@ -170,7 +169,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithNoExplicitEncodingDropsToASystemDefault() throws Exception {
-		FixedLengthString unit = new FixedLengthString();
+		FixedLengthString unit = new FixedLengthString("US-ASCII");
 		unit.address = -1;
 
 		unit.setLengthExpr("4");
@@ -184,7 +183,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void fixedLengthStringIsTrimmed() throws Exception {
-		FixedLengthString unit = new FixedLengthString();
+		FixedLengthString unit = new FixedLengthString("US-ASCII");
 
 		byte[] paddedData = new byte[testData.length + 3];
 		System.arraycopy(testData, 0, paddedData, 0, testData.length);
@@ -199,48 +198,49 @@ public class TestCaseDataTypes {
 
 	@Test(expected=ExecutionException.class)
 	public void testBadEncodingForStringThrowsException() throws Exception {
-		FixedLengthString unit = new FixedLengthString();
-		unit.address = -1;
-
-		unit.setEncoding("WTF-8");
-		unit.setLengthExpr("4");
-		unit.execute(testBuffer, ed);
-	}
-
-	@Test
-	public void testTerminatedStringWithNoExplicitEncodingDropsToASystemDefault() throws Exception {
-		TerminatedString unit = new TerminatedString();
-		unit.address = -1;
-
-		unit.execute(testBuffer, ed);
-
-		assertThat((String) unit.value, is(equalTo("TestData!")));
-		String s = new String();
-
-		assertThat(unit.address, is(equalTo(0)));
+		new FixedLengthString("HMMM");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void testBadEncodingForTerminatedStringThrowsException() throws Exception {
-		TerminatedString unit = new TerminatedString();
-		unit.address = -1;
-
-		unit.setEncoding("WTF-8");
-		unit.execute(testBuffer, ed);
+		new TerminatedString("HMMM");
 	}
 
 	@Test
 	public void testLiteralStringInstructionConsumesIfStringMatches() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction();
+		LiteralStringInstruction unit = new LiteralStringInstruction("US-ASCII");
 		unit.setLiteral("TestData!");
 		unit.execute(testBuffer, ed);
 
 		assertThat((String) unit.value, is("TestData!"));
 	}
 
+	@Test
+	public void literalStringWorksForAllEncodings() throws Exception {
+		String testString = "Hello";
+
+		ByteBuffer utf8 = ByteBuffer.wrap(testString.getBytes("UTF-8"));
+		ByteBuffer utf16 = ByteBuffer.wrap(testString.getBytes("UTF-16BE"));
+		ByteBuffer utf16le = ByteBuffer.wrap(testString.getBytes("UTF-16LE"));
+		ByteBuffer ascii = ByteBuffer.wrap(testString.getBytes("US-ASCII"));
+
+		LiteralStringInstruction strInst = new LiteralStringInstruction("US-ASCII");
+		strInst.setLiteral("Hello");
+		strInst.evaluate(ascii);
+
+		strInst.setEncoding("UTF-8");
+		strInst.evaluate(utf8);
+
+		strInst.setEncoding("UTF-16BE");
+		strInst.evaluate(utf16);
+
+		strInst.setEncoding("UTF-16LE");
+		strInst.evaluate(utf16le);
+	}
+
 	@Test(expected=ExecutionException.class)
 	public void testLiteralStringInstructionThrowsExecutionInstructionIfStringDoesNotMatch() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction();
+		LiteralStringInstruction unit = new LiteralStringInstruction("US-ASCII");
 		unit.setLiteral("notData");
 		unit.execute(testBuffer, ed);
 
@@ -249,9 +249,8 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testTerminatedString() throws Exception {
-		TerminatedString unit = new TerminatedString();
+		TerminatedString unit = new TerminatedString("US-ASCII");
 		unit.address = -1;
-		unit.setEncoding("US-ASCII");
 		unit.execute(testBuffer, ed);
 
 		assertThat((String) unit.value, is(equalTo("TestData!")));

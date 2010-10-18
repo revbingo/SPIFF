@@ -5,13 +5,14 @@ import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.parser.InstructionParser;
 import java.util.*;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
 public class SpiffParser implements InstructionParser, SpiffParserConstants {
   List < Instruction > instructions = new ArrayList < Instruction > ();
   Stack < List < Instruction > > instructionStack = new Stack < List < Instruction > > ();
   Map < String, List < Instruction > > defines = new HashMap < String, List < Instruction > > ();
 
-  private String defaultEncoding = "UTF-8";
+  private String defaultEncoding = Charset.defaultCharset().displayName();
 
   public List < Instruction > getInstructions()
   {
@@ -485,8 +486,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   final public void fixedString() throws ParseException {
   Token t4, t5;
   String s;
-    FixedLengthString ins = new FixedLengthString();
-    ins.setEncoding(defaultEncoding);
+        String encoding = defaultEncoding;
     jj_consume_token(TY_STRING);
     jj_consume_token(OPEN_PAR);
     s = expression();
@@ -494,7 +494,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     case COMMA:
       jj_consume_token(COMMA);
       t5 = jj_consume_token(ENCODING);
-      ins.setEncoding(t5.image);
+        encoding = t5.image;
       break;
     default:
       jj_la1[9] = jj_gen;
@@ -502,6 +502,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     }
     jj_consume_token(CLOSE_PAR);
     t4 = jj_consume_token(IDENTIFIER);
+        FixedLengthString ins = new FixedLengthString(encoding);
     ins.setLengthExpr(s);
     ins.setName(t4.image);
     instructions.add(ins);
@@ -510,8 +511,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   final public void literalString() throws ParseException {
    Token t1, t4, t5;
     jj_consume_token(TY_STRING);
-        LiteralStringInstruction ins = new LiteralStringInstruction();
-        instructions.add(ins);
+        String encoding = defaultEncoding;
     jj_consume_token(OPEN_PAR);
     jj_consume_token(QUOTE);
     t1 = jj_consume_token(IDENTIFIER);
@@ -520,7 +520,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     case COMMA:
       jj_consume_token(COMMA);
       t5 = jj_consume_token(ENCODING);
-              ins.setEncoding(t5.image);
+              encoding = t5.image;
       break;
     default:
       jj_la1[10] = jj_gen;
@@ -528,27 +528,29 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     }
     jj_consume_token(CLOSE_PAR);
     t4 = jj_consume_token(IDENTIFIER);
+        LiteralStringInstruction ins = new LiteralStringInstruction(encoding);
+        instructions.add(ins);
         ins.setName(t4.image);
         ins.setLiteral(t1.image);
   }
 
   final public void terminatedString() throws ParseException {
   Token t2, t3;
-    TerminatedString ins = new TerminatedString();
-    ins.setEncoding(defaultEncoding);
+        String encoding = defaultEncoding;
     jj_consume_token(TY_STRING);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OPEN_PAR:
       jj_consume_token(OPEN_PAR);
       t3 = jj_consume_token(ENCODING);
       jj_consume_token(CLOSE_PAR);
-      ins.setEncoding(t3.image);
+      encoding = t3.image;
       break;
     default:
       jj_la1[11] = jj_gen;
       ;
     }
     t2 = jj_consume_token(IDENTIFIER);
+        TerminatedString ins = new TerminatedString(encoding);
     ins.setName(t2.image);
     instructions.add(ins);
   }
@@ -964,16 +966,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3_5() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  private boolean jj_3_8() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   private boolean jj_3R_21() {
     if (jj_scan_token(PL_MI_OPERATOR)) return true;
     if (jj_3R_20()) return true;
@@ -1150,12 +1142,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_23() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_scan_token(ENCODING)) return true;
-    return false;
-  }
-
   private boolean jj_3R_25() {
     Token xsp;
     xsp = jj_scanpos;
@@ -1175,6 +1161,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     }
     }
     }
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_scan_token(ENCODING)) return true;
     return false;
   }
 
@@ -1278,16 +1270,16 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_7()) return true;
-    return false;
-  }
-
   private boolean jj_3R_14() {
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(OPEN_PAR)) return true;
     if (jj_3R_32()) return true;
     if (jj_scan_token(CLOSE_PAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_7()) return true;
     return false;
   }
 
@@ -1326,6 +1318,16 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
 
   private boolean jj_3_4() {
     if (jj_3R_10()) return true;
+    return false;
+  }
+
+  private boolean jj_3_5() {
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  private boolean jj_3_8() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 

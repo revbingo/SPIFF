@@ -1,12 +1,13 @@
 package com.revbingo.spiff.instructions;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-import com.revbingo.spiff.ExecutionException;
-
 public class TerminatedString extends StringInstruction {
+
+	public TerminatedString(String charsetName) {
+		super(charsetName);
+	}
 
 	@Override
 	public byte[] getBytes(ByteBuffer buffer) {
@@ -15,7 +16,7 @@ public class TerminatedString extends StringInstruction {
 		while((nextByte = buffer.get()) != 0x00) {
 			baos.write(nextByte);
 		}
-		
+
 		return baos.toByteArray();
 	}
 }

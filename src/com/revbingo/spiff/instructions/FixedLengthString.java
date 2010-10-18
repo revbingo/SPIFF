@@ -8,6 +8,10 @@ public class FixedLengthString extends StringInstruction {
 
 	private String lengthExpr;
 
+	public FixedLengthString(String charsetName) {
+		super(charsetName);
+	}
+
 	@Override
 	public byte[] getBytes(ByteBuffer buffer) {
 		int length = ((Number) Evaluator.evaluate(lengthExpr)).intValue();

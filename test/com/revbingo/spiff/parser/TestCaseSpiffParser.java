@@ -136,7 +136,7 @@ public class TestCaseSpiffParser {
 
 		FixedLengthString inst = (FixedLengthString) insts.get(0);
 		assertThat(inst.getLengthExpr(), is("expr"));
-		assertThat(inst.getEncoding(), is("UTF-8"));
+		assertThat(inst.getEncoding().displayName(), is("UTF-8"));
 	}
 
 	@Test(expected=ParseException.class)
@@ -170,7 +170,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(TerminatedString.class));
 
 		TerminatedString str = (TerminatedString) insts.get(0);
-		assertThat(str.getEncoding(), is("UTF-8"));
+		assertThat(str.getEncoding().displayName(), is("UTF-8"));
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class TestCaseSpiffParser {
 
 		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
 		assertThat(litStr.getLiteral(), is("mhbd"));
-		assertThat(litStr.getEncoding(), is("UTF-8"));
+		assertThat(litStr.getEncoding().displayName(), is("UTF-8"));
 	}
 
 	@Test
@@ -237,8 +237,8 @@ public class TestCaseSpiffParser {
 		AdfFile adf = AdfFile.start()
 			.add(".setencoding UTF-16LE")
 			.add("string utf16le")
-			.add(".setencoding UTF-16")
-			.add("string utf16")
+			.add(".setencoding UTF-16BE")
+			.add("string utf16be")
 			.add(".setencoding UTF-8")
 			.add("string utf8")
 			.add(".setencoding US-ASCII")
@@ -250,16 +250,16 @@ public class TestCaseSpiffParser {
 		assertThat(insts.size(), is(4));
 
 		assertThat(insts.get(0), instanceOf(TerminatedString.class));
-		assertThat(((TerminatedString) insts.get(0)).getEncoding(), is("UTF-16LE"));
+		assertThat(((TerminatedString) insts.get(0)).getEncoding().displayName(), is("UTF-16LE"));
 
 		assertThat(insts.get(1), instanceOf(TerminatedString.class));
-		assertThat(((TerminatedString) insts.get(1)).getEncoding(), is("UTF-16"));
+		assertThat(((TerminatedString) insts.get(1)).getEncoding().displayName(), is("UTF-16BE"));
 
 		assertThat(insts.get(2), instanceOf(TerminatedString.class));
-		assertThat(((TerminatedString) insts.get(2)).getEncoding(), is("UTF-8"));
+		assertThat(((TerminatedString) insts.get(2)).getEncoding().displayName(), is("UTF-8"));
 
 		assertThat(insts.get(3), instanceOf(TerminatedString.class));
-		assertThat(((TerminatedString) insts.get(3)).getEncoding(), is("US-ASCII"));
+		assertThat(((TerminatedString) insts.get(3)).getEncoding().displayName(), is("US-ASCII"));
 	}
 
 	@Test
@@ -272,7 +272,7 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(1));
-		assertThat(((TerminatedString) insts.get(0)).getEncoding(), is("UTF-8"));
+		assertThat(((TerminatedString) insts.get(0)).getEncoding().displayName(), is("UTF-8"));
 	}
 
 	@Test

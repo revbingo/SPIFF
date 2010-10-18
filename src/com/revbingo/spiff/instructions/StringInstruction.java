@@ -1,36 +1,35 @@
 package com.revbingo.spiff.instructions;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import com.revbingo.spiff.ExecutionException;
 
 public abstract class StringInstruction extends ReferencedInstruction {
 
-	private String encoding;
+	protected Charset encoding;
+
+	public StringInstruction(String charsetName) {
+		setEncoding(charsetName);
+	}
 
 	@Override
 	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
 		byte[] bytes = getBytes(buffer);
+		String result = "";
+		result = new String(bytes, encoding);
+		return result.trim();
+	}
+
+	public void setEncoding(String charsetName) {
 		try {
-			String result = "";
-			if(encoding != null){
-				result = new String(bytes, encoding);
-			}else{
-				//use platform default
-				result = new String(bytes);
-			}
-			return result.trim();
-		} catch (UnsupportedEncodingException e) {
-			throw new ExecutionException(name + ": Unknown encoding " + encoding, e);
+			this.encoding = Charset.forName(charsetName);
+		} catch(Exception e) {
+			throw new ExecutionException("Unknown or unsupported charset :" + charsetName);
 		}
 	}
 
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
-
-	public String getEncoding() {
+	public Charset getEncoding() {
 		return encoding;
 	}
 
