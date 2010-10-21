@@ -720,8 +720,7 @@ public class TestCaseSpiffParser {
 
 	private List<Instruction> parse(AdfFile adf) throws Exception {
 		SpiffParser unit = new SpiffParser(adf.asReader());
-		unit.start();
-		return unit.getInstructions();
+		return unit.parse();
 	}
 
 	private static class AdfFile {

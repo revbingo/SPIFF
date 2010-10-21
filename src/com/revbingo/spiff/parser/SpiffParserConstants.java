@@ -102,27 +102,27 @@ public interface SpiffParserConstants {
   /** RegularExpression Id. */
   int MUL_DIV_OPERATOR = 47;
   /** RegularExpression Id. */
-  int DIGIT = 48;
+  int IDENTIFIER = 48;
   /** RegularExpression Id. */
-  int ALPHA = 49;
+  int ID_VALUE = 49;
   /** RegularExpression Id. */
-  int ALPHANUM = 50;
+  int CLASS = 50;
   /** RegularExpression Id. */
-  int INTEGER = 51;
+  int ID_ADDRESS = 51;
   /** RegularExpression Id. */
-  int HEX_INTEGER = 52;
+  int COMMENT = 52;
   /** RegularExpression Id. */
   int FLOAT = 53;
   /** RegularExpression Id. */
-  int IDENTIFIER = 54;
+  int HEX_INTEGER = 54;
   /** RegularExpression Id. */
-  int ID_VALUE = 55;
+  int INTEGER = 55;
   /** RegularExpression Id. */
-  int CLASS = 56;
+  int ALPHANUM = 56;
   /** RegularExpression Id. */
-  int ID_ADDRESS = 57;
+  int DIGIT = 57;
   /** RegularExpression Id. */
-  int COMMENT = 58;
+  int ALPHA = 58;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -177,17 +177,17 @@ public interface SpiffParserConstants {
     "\"<=\"",
     "<PL_MI_OPERATOR>",
     "<MUL_DIV_OPERATOR>",
-    "<DIGIT>",
-    "<ALPHA>",
-    "<ALPHANUM>",
-    "<INTEGER>",
-    "<HEX_INTEGER>",
-    "<FLOAT>",
     "<IDENTIFIER>",
     "<ID_VALUE>",
     "<CLASS>",
     "<ID_ADDRESS>",
     "<COMMENT>",
+    "<FLOAT>",
+    "<HEX_INTEGER>",
+    "<INTEGER>",
+    "<ALPHANUM>",
+    "<DIGIT>",
+    "<ALPHA>",
   };
 
 }

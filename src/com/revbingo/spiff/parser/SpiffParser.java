@@ -17,10 +17,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
 
   private String defaultEncoding = Charset.defaultCharset().displayName();
 
-  public List <Instruction> getInstructions() {
-    return instructions;
-  }
-
   public void optimise() {
     List <Instruction> allInsts = flatten(instructions);
     for (Instruction i : allInsts) {
@@ -45,7 +41,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return a;
   }
 
-  final public void start() throws ParseException {
+  final public List<Instruction> parse() throws ParseException {
     datatypeDefs();
     list();
     label_1:
@@ -62,6 +58,8 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     }
     jj_consume_token(0);
     this.optimise();
+    {if (true) return instructions;}
+    throw new Error("Missing return statement in function");
   }
 
   final public void datatypeDefs() throws ParseException {
@@ -813,12 +811,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     b.append("(");
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OPEN_PAR:
-    case INTEGER:
-    case HEX_INTEGER:
-    case FLOAT:
     case IDENTIFIER:
     case ID_VALUE:
     case ID_ADDRESS:
+    case FLOAT:
+    case HEX_INTEGER:
+    case INTEGER:
       ex = FormalParameter();
       b.append(ex);
       label_7:
@@ -1011,6 +1009,43 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     try { return !jj_3_11(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(10, xla); }
+  }
+
+  private boolean jj_3R_13() {
+    if (jj_scan_token(TY_STRING)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_18()) jj_scanpos = xsp;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(41)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(45)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(44)) return true;
+    }
+    }
+    }
+    }
+    }
+    return false;
   }
 
   private boolean jj_3_10() {
@@ -1317,7 +1352,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_37()) {
     jj_scanpos = xsp;
-    if (jj_scan_token(51)) {
+    if (jj_scan_token(55)) {
     jj_scanpos = xsp;
     if (jj_scan_token(53)) {
     jj_scanpos = xsp;
@@ -1349,43 +1384,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_13() {
-    if (jj_scan_token(TY_STRING)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_18()) jj_scanpos = xsp;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_40() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_23() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(40)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(41)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(43)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(45)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(44)) return true;
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
   /** Generated Token Manager. */
   public SpiffParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -1408,7 +1406,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       jj_la1_0 = new int[] {0x10000,0x0,0xfc01fff8,0xfc00fff8,0xfc00fff8,0x0,0xc000,0xfc000000,0x10000,0x10000,0x1000000,0x1000000,0x100000,0x0,0x0,0x0,0x0,0x100000,0x1000000,0x100000,0x0,0x3f0,0x3c00,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x80,0x440007b,0x40007b,0x40007b,0x4000000,0x400000,0x7b,0x0,0x0,0x0,0x0,0x0,0x3f00,0x3f00,0x4000,0x8000,0x2d80000,0x0,0x2f80000,0x2e80000,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x80,0x11007b,0x1007b,0x1007b,0x100000,0x10000,0x7b,0x0,0x0,0x0,0x0,0x0,0x3f00,0x3f00,0x4000,0x8000,0xcb0000,0x0,0xeb0000,0xab0000,0x0,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[11];
   private boolean jj_rescan = false;
