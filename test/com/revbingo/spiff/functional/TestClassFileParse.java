@@ -31,7 +31,5 @@ public class TestClassFileParse {
 
 		BinaryParser parser = new BinaryParser(listener);
 		parser.parse(new File("test-resources/javaclass.adf"), new File("bin-test/com/revbingo/spiff/functional/TestClassFileParse.class"));
-
-
 	}
 }

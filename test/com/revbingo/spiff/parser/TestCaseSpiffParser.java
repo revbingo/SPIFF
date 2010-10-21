@@ -708,8 +708,8 @@ public class TestCaseSpiffParser {
 	@Test
 	public void canReferenceUserDefinedDataType() throws Exception {
 		AdfFile adf = AdfFile.start()
-			.add(".datatype myint com.revbingo.spiff.instructions.StringReversingInstruction")
-			.add("myint  customInt")
+			.add(".datatype mystring com.revbingo.spiff.instructions.StringReversingInstruction")
+			.add("mystring  customInt")
 			.end();
 
 		List<Instruction> insts = parse(adf);
