@@ -1,16 +1,16 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -31,6 +31,7 @@ import org.junit.Test;
 import com.revbingo.spiff.instructions.BitsInstruction;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.BytesInstruction;
+import com.revbingo.spiff.instructions.CustomInstruction;
 import com.revbingo.spiff.instructions.DoubleInstruction;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthString;
@@ -678,6 +679,43 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(1));
 		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("byteOne.address==3"));
+	}
+
+	@Test
+	public void canUseHexNotationInExpressions() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".skip 0xFF")
+			.add(".skip 0xCA01FF0")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(2));
+	}
+
+	@Test
+	public void hexNotationIsCaseInsensitive() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".skip 0xFf")
+			.add(".skip 0xcafebabe")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(2));
+	}
+
+	@Test
+	public void canReferenceUserDefinedDataType() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".datatype myint com.revbingo.spiff.instructions.CustomInstruction")
+			.add("myint  customInt")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(1));
+		assertThat(insts.get(0), instanceOf(CustomInstruction.class));
 	}
 
 	private List<Instruction> parse(AdfFile adf) throws Exception {
