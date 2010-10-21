@@ -31,7 +31,6 @@ import org.junit.Test;
 import com.revbingo.spiff.instructions.BitsInstruction;
 import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.BytesInstruction;
-import com.revbingo.spiff.instructions.CustomInstruction;
 import com.revbingo.spiff.instructions.DoubleInstruction;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthString;
@@ -50,6 +49,7 @@ import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.ShortInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
+import com.revbingo.spiff.instructions.StringReversingInstruction;
 import com.revbingo.spiff.instructions.TerminatedString;
 import com.revbingo.spiff.instructions.UnsignedByteInstruction;
 import com.revbingo.spiff.instructions.UnsignedIntegerInstruction;
@@ -708,14 +708,14 @@ public class TestCaseSpiffParser {
 	@Test
 	public void canReferenceUserDefinedDataType() throws Exception {
 		AdfFile adf = AdfFile.start()
-			.add(".datatype myint com.revbingo.spiff.instructions.CustomInstruction")
+			.add(".datatype myint com.revbingo.spiff.instructions.StringReversingInstruction")
 			.add("myint  customInt")
 			.end();
 
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(1));
-		assertThat(insts.get(0), instanceOf(CustomInstruction.class));
+		assertThat(insts.get(0), instanceOf(StringReversingInstruction.class));
 	}
 
 	private List<Instruction> parse(AdfFile adf) throws Exception {

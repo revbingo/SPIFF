@@ -1,0 +1,4 @@
+.datatype reversedString com.revbingo.spiff.instructions.StringReversingInstruction
+
+reversedString    myCustomVar
+

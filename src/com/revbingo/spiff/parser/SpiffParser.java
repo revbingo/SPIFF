@@ -9,19 +9,19 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
 public class SpiffParser implements InstructionParser, SpiffParserConstants {
-  List <Instruction > instructions = new ArrayList <Instruction> ();
+  List <Instruction> instructions = new ArrayList <Instruction> ();
   Stack <List<Instruction>> instructionStack = new Stack <List <Instruction>> ();
   Map <String, List<Instruction>> defines = new HashMap <String, List<Instruction>> ();
   Map <String, Class<ReferencedInstruction>> datatypes = new HashMap<String, Class<ReferencedInstruction>>();
 
   private String defaultEncoding = Charset.defaultCharset().displayName();
 
-  public List < Instruction > getInstructions() {
+  public List <Instruction> getInstructions() {
     return instructions;
   }
 
   public void optimise() {
-    List < Instruction > allInsts = flatten(instructions);
+    List <Instruction> allInsts = flatten(instructions);
     for (Instruction i : allInsts) {
       if (i instanceof ReferencedInstruction) {
         ReferencedInstruction ri = (ReferencedInstruction) i;
@@ -32,8 +32,8 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     }
   }
 
-  private List < Instruction > flatten(List < Instruction > insts) {
-    List < Instruction > a = new ArrayList < Instruction > ();
+  private List <Instruction> flatten(List <Instruction> insts) {
+    List <Instruction> a = new ArrayList <Instruction> ();
     for (Instruction i : insts) {
       if (i instanceof Block) {
         a.addAll(flatten(((Block) i).getInstructions()));
