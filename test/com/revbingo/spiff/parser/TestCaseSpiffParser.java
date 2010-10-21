@@ -23,14 +23,18 @@ import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
 import org.junit.Test;
 
+import com.revbingo.spiff.AdfFormatException;
+import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.datatypes.BitsInstruction;
 import com.revbingo.spiff.datatypes.ByteInstruction;
 import com.revbingo.spiff.datatypes.BytesInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.datatypes.DoubleInstruction;
 import com.revbingo.spiff.datatypes.FixedLengthString;
 import com.revbingo.spiff.datatypes.FloatInstruction;
@@ -718,11 +722,58 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(StringReversingInstruction.class));
 	}
 
+	@Test(expected=AdfFormatException.class)
+	public void unknownClassTypeThrowsException() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".datatype badClass bad.classname")
+			.end();
+
+		parse(adf);
+	}
+
+	@Test(expected=AdfFormatException.class)
+	public void classNotExtendingDatatypeCannotBeUsedForCustomDatatype() throws Exception {
+		AdfFile adf = AdfFile.start()
+		.add(".datatype badClass java.lang.String")
+		.end();
+
+		parse(adf);
+	}
+
+	@Test(expected=AdfFormatException.class)
+	public void classWithoutNoArgsConstructorCannotBeUsedForCustomDatatype() throws Exception {
+		AdfFile adf = AdfFile.start()
+		.add(".datatype badClass com.revbingo.spiff.datatypes.FixedLengthString")
+		.add("badClass  wotNoArgs")
+		.end();
+
+		parse(adf);
+	}
+
+	@Test(expected=AdfFormatException.class)
+	public void classWithoutPublicConstructorCannotBeUsedForCustomDatatype() throws Exception {
+		AdfFile adf = AdfFile.start()
+		.add(".datatype badClass com.revbingo.spiff.parser.TestCaseSpiffParser.PrivateConstructor")
+		.add("badClass  wotNoArgs")
+		.end();
+
+		parse(adf);
+	}
+
 	private List<Instruction> parse(AdfFile adf) throws Exception {
 		SpiffParser unit = new SpiffParser(adf.asReader());
 		return unit.parse();
 	}
 
+	public static class PrivateConstructor extends Datatype {
+
+		private PrivateConstructor() { }
+
+		@Override
+		public Object evaluate(ByteBuffer buffer) throws ExecutionException {
+			return null;
+		}
+	}
 	private static class AdfFile {
 
 		private StringBuffer buffer = new StringBuffer();
