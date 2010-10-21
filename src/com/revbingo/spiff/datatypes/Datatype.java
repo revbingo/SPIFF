@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package com.revbingo.spiff.instructions;
+package com.revbingo.spiff.datatypes;
 
 import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
+import com.revbingo.spiff.instructions.Instruction;
 
-public abstract class ReferencedInstruction implements Instruction {
+public abstract class Datatype implements Instruction {
 
 	public int address;  //address this instruction was executed
 	public String name;  //name given in map

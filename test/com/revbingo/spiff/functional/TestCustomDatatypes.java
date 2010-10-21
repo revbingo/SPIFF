@@ -13,8 +13,8 @@ import org.junit.Test;
 import com.revbingo.spiff.AdfFormatException;
 import com.revbingo.spiff.BinaryParser;
 import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
 
 public class TestCustomDatatypes {
 
@@ -36,7 +36,7 @@ public class TestCustomDatatypes {
 		public List<Object> captures = new ArrayList<Object>();
 
 		@Override
-		public void notifyData(ReferencedInstruction ins) {
+		public void notifyData(Datatype ins) {
 			captures.add(ins.value);
 		}
 

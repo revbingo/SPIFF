@@ -38,6 +38,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.ByteInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
@@ -57,7 +60,7 @@ public class TestCaseInstructions {
 		ed = context.mock(EventListener.class);
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
-			ignoring(dispatcher).notifyData(with(any(ReferencedInstruction.class)));
+			ignoring(dispatcher).notifyData(with(any(Datatype.class)));
 			ignoring(dispatcher).notifyGroup(with(any(String.class)), with(any(boolean.class)));
 		}});
 	}
@@ -88,7 +91,7 @@ public class TestCaseInstructions {
 		context = new Mockery();
 
 		final EventListener dispatcher = context.mock(EventListener.class);
-		final ReferencedInstruction theInstruction = new ByteInstruction();
+		final Datatype theInstruction = new ByteInstruction();
 
 		context.checking(new Expectations() {{
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));
@@ -108,7 +111,7 @@ public class TestCaseInstructions {
 		context = new Mockery();
 
 		final EventListener dispatcher = context.mock(EventListener.class);
-		final ReferencedInstruction theInstruction = new ByteInstruction();
+		final Datatype theInstruction = new ByteInstruction();
 
 		context.checking(new Expectations() {{
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));

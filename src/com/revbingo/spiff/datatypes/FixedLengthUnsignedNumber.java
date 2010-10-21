@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package com.revbingo.spiff.instructions;
+package com.revbingo.spiff.datatypes;
 
-public abstract class FixedLengthUnsignedNumber extends ReferencedInstruction {
+public abstract class FixedLengthUnsignedNumber extends Datatype {
 
 	protected int[] convertBytesToInts(byte[] bytes){
 		int[] ubytes=new int[bytes.length];

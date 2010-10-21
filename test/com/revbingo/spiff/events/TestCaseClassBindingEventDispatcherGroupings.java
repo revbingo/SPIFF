@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.BindingCollection;
-import com.revbingo.spiff.instructions.IntegerInstruction;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
 
 public class TestCaseClassBindingEventDispatcherGroupings {
 
@@ -49,13 +49,13 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 
-		ReferencedInstruction xInst = new IntegerInstruction();
+		Datatype xInst = new IntegerInstruction();
 		xInst.name = "x";
 		xInst.value = new Integer(3);
 
 		unit.notifyData(xInst);
 
-		ReferencedInstruction yInst = new IntegerInstruction();
+		Datatype yInst = new IntegerInstruction();
 		yInst.name = "y";
 		yInst.value = 21;
 
@@ -75,13 +75,13 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 
-		ReferencedInstruction xInst = new IntegerInstruction();
+		Datatype xInst = new IntegerInstruction();
 		xInst.name = "x";
 		xInst.value = new Integer(3);
 
 		unit.notifyData(xInst);
 
-		ReferencedInstruction yInst = new IntegerInstruction();
+		Datatype yInst = new IntegerInstruction();
 		yInst.name = "y";
 		yInst.value = 21;
 
@@ -89,7 +89,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 
 		unit.notifyGroup("inner", false);
 
-		ReferencedInstruction rootX = new IntegerInstruction();
+		Datatype rootX = new IntegerInstruction();
 		rootX.name = "x";
 		rootX.value = new Integer(30);
 		unit.notifyData(rootX);
@@ -108,13 +108,13 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 
 		for(int i = 0; i < 3; i++) {
 			unit.notifyGroup("listOfObjects", true);
-			ReferencedInstruction xInst = new IntegerInstruction();
+			Datatype xInst = new IntegerInstruction();
 			xInst.name = "x";
 			xInst.value = new Integer(i);
 
 			unit.notifyData(xInst);
 
-			ReferencedInstruction yInst = new IntegerInstruction();
+			Datatype yInst = new IntegerInstruction();
 			yInst.name = "y";
 			yInst.value = 21;
 

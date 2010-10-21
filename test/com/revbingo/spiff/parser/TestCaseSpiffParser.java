@@ -28,33 +28,33 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.revbingo.spiff.instructions.BitsInstruction;
-import com.revbingo.spiff.instructions.ByteInstruction;
-import com.revbingo.spiff.instructions.BytesInstruction;
-import com.revbingo.spiff.instructions.DoubleInstruction;
+import com.revbingo.spiff.datatypes.BitsInstruction;
+import com.revbingo.spiff.datatypes.ByteInstruction;
+import com.revbingo.spiff.datatypes.BytesInstruction;
+import com.revbingo.spiff.datatypes.DoubleInstruction;
+import com.revbingo.spiff.datatypes.FixedLengthString;
+import com.revbingo.spiff.datatypes.FloatInstruction;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
+import com.revbingo.spiff.datatypes.LiteralStringInstruction;
+import com.revbingo.spiff.datatypes.LongInstruction;
+import com.revbingo.spiff.datatypes.ShortInstruction;
+import com.revbingo.spiff.datatypes.TerminatedString;
+import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
+import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
+import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
+import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
-import com.revbingo.spiff.instructions.FixedLengthString;
-import com.revbingo.spiff.instructions.FloatInstruction;
 import com.revbingo.spiff.instructions.GroupInstruction;
 import com.revbingo.spiff.instructions.IfBlock;
 import com.revbingo.spiff.instructions.Instruction;
-import com.revbingo.spiff.instructions.IntegerInstruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
-import com.revbingo.spiff.instructions.LiteralStringInstruction;
-import com.revbingo.spiff.instructions.LongInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
 import com.revbingo.spiff.instructions.PrintInstruction;
 import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
-import com.revbingo.spiff.instructions.ShortInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.instructions.StringReversingInstruction;
-import com.revbingo.spiff.instructions.TerminatedString;
-import com.revbingo.spiff.instructions.UnsignedByteInstruction;
-import com.revbingo.spiff.instructions.UnsignedIntegerInstruction;
-import com.revbingo.spiff.instructions.UnsignedLongInstruction;
-import com.revbingo.spiff.instructions.UnsignedShortInstruction;
 
 public class TestCaseSpiffParser {
 

@@ -16,14 +16,14 @@
  ******************************************************************************/
 package com.revbingo.spiff.events;
 
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
 
 public class DebugEventListener implements EventListener {
 
 	int tabCount = 0;
 
 	@Override
-	public void notifyData(ReferencedInstruction ins) {
+	public void notifyData(Datatype ins) {
 		for(int i=0;i<tabCount;i++) {
 			System.out.print("\t");
 		}

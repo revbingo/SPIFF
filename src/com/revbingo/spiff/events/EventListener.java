@@ -16,10 +16,10 @@
  ******************************************************************************/
 package com.revbingo.spiff.events;
 
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
 
 public interface EventListener {
 
-	public void notifyData(ReferencedInstruction ins);
+	public void notifyData(Datatype ins);
 	public void notifyGroup(String groupName, boolean start);
 }

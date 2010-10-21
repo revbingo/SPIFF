@@ -2,6 +2,7 @@
 /******************************************************************************* * This file is part of SPIFF. *  * SPIFF is free software: you can redistribute it and/or modify * it under the terms of the GNU General Public License as published by * the Free Software Foundation, either version 3 of the License, or * (at your option) any later version. *  * SPIFF is distributed in the hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the * GNU General Public License for more details. *  * You should have received a copy of the GNU General Public License * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>. ******************************************************************************/
 package com.revbingo.spiff.parser;
 import com.revbingo.spiff.instructions.*;
+import com.revbingo.spiff.datatypes.*;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.parser.InstructionParser;
 import java.util.*;
@@ -12,7 +13,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   List <Instruction> instructions = new ArrayList <Instruction> ();
   Stack <List<Instruction>> instructionStack = new Stack <List <Instruction>> ();
   Map <String, List<Instruction>> defines = new HashMap <String, List<Instruction>> ();
-  Map <String, Class<ReferencedInstruction>> datatypes = new HashMap<String, Class<ReferencedInstruction>>();
+  Map <String, Class<Datatype>> datatypes = new HashMap<String, Class<Datatype>>();
 
   private String defaultEncoding = Charset.defaultCharset().displayName();
 
@@ -23,8 +24,8 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   public void optimise() {
     List <Instruction> allInsts = flatten(instructions);
     for (Instruction i : allInsts) {
-      if (i instanceof ReferencedInstruction) {
-        ReferencedInstruction ri = (ReferencedInstruction) i;
+      if (i instanceof Datatype) {
+        Datatype ri = (Datatype) i;
         if (!Evaluator.isReferenced(ri.getName())) {
           ri.setReferenced(false);
         }
@@ -80,7 +81,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       clazz = jj_consume_token(CLASS);
       jj_consume_token(EOL);
                         try {
-                                Class<ReferencedInstruction> datatypeClass = (Class<ReferencedInstruction>) Class.forName(clazz.image);
+                                Class<Datatype> datatypeClass = (Class<Datatype>) Class.forName(clazz.image);
                                 datatypes.put(id.image, datatypeClass);
                         } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
@@ -225,12 +226,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       case IDENTIFIER:
         t1 = jj_consume_token(IDENTIFIER);
         t2 = jj_consume_token(IDENTIFIER);
-                Class<ReferencedInstruction> userType = datatypes.get(t1.image);
+                Class<Datatype> userType = datatypes.get(t1.image);
                 if(userType == null) {
                         {if (true) throw new ParseException("Undefined datatype " + t1.image);}
                 }
                 try {
-                        ReferencedInstruction inst = userType.newInstance();
+                        Datatype inst = userType.newInstance();
                         inst.setName(t1.image);
                         instructions.add(inst);
                 } catch (InstantiationException e) {
@@ -601,7 +602,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     t2 = numberType();
     t4 = jj_consume_token(IDENTIFIER);
     FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
-    ReferencedInstruction ins = insF.getInstruction(t2.image);
+    Datatype ins = insF.getInstruction(t2.image);
     ins.setName(t4.image);
     instructions.add(ins);
   }
@@ -1012,34 +1013,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_40() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_23() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(40)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(41)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(43)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(45)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(44)) return true;
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
   private boolean jj_3_10() {
     if (jj_3R_15()) return true;
     return false;
@@ -1382,6 +1355,34 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     xsp = jj_scanpos;
     if (jj_3R_18()) jj_scanpos = xsp;
     if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(41)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(45)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(44)) return true;
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 

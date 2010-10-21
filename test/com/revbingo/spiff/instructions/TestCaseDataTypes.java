@@ -31,6 +31,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.BitsInstruction;
+import com.revbingo.spiff.datatypes.ByteInstruction;
+import com.revbingo.spiff.datatypes.BytesInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.DoubleInstruction;
+import com.revbingo.spiff.datatypes.FixedLengthString;
+import com.revbingo.spiff.datatypes.FloatInstruction;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
+import com.revbingo.spiff.datatypes.LiteralStringInstruction;
+import com.revbingo.spiff.datatypes.LongInstruction;
+import com.revbingo.spiff.datatypes.ShortInstruction;
+import com.revbingo.spiff.datatypes.TerminatedString;
+import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
+import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
+import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
+import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.parser.ParseException;
 
@@ -48,7 +64,7 @@ public class TestCaseDataTypes {
 		ed = context.mock(EventListener.class);
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
-			ignoring(dispatcher).notifyData(with(any(ReferencedInstruction.class)));
+			ignoring(dispatcher).notifyData(with(any(Datatype.class)));
 			ignoring(dispatcher).notifyGroup(with(any(String.class)), with(any(boolean.class)));
 		}});
 	}
@@ -354,7 +370,7 @@ public class TestCaseDataTypes {
 	@Test
 	public void referencedInstructionStoresAddressWhenExecuted() throws Exception {
 		IntegerInstruction previousInstruction = new IntegerInstruction();
-		ReferencedInstruction unit = new ReferencedInstruction() {
+		Datatype unit = new Datatype() {
 			@Override
 			public Object evaluate(ByteBuffer buffer) throws ExecutionException {
 				return null;

@@ -31,8 +31,8 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.revbingo.spiff.datatypes.ByteInstruction;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.instructions.ByteInstruction;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
 

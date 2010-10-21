@@ -31,10 +31,10 @@ import org.junit.Test;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.annotations.Binding;
-import com.revbingo.spiff.instructions.ByteInstruction;
-import com.revbingo.spiff.instructions.FixedLengthString;
-import com.revbingo.spiff.instructions.IntegerInstruction;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.datatypes.ByteInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.FixedLengthString;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
 
 public class TestCaseClassBindingEventDispatcherBasicCases {
 
@@ -64,7 +64,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPublicFieldWhenInstructionNameMatchesField() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("byteOne");
+		Datatype ri = new ByteInstruction("byteOne");
 		ri.value = (byte) 3;
 
 		unit.notifyData(ri);
@@ -76,7 +76,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPrivateFieldUsingPublicSetterWhenInstructionNameMatchesSetter() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("privateByte");
+		Datatype ri = new ByteInstruction("privateByte");
 		ri.value = (byte) 3;
 
 		unit.notifyData(ri);
@@ -87,7 +87,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfSecurityManagerPreventsFieldBeingSet() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("byteOne");
+		Datatype ri = new ByteInstruction("byteOne");
 		ri.value = (byte) 3;
 
 		SecurityManager oldManager = System.getSecurityManager();
@@ -126,7 +126,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("setterWithADifferentName");
+		Datatype ri = new ByteInstruction("setterWithADifferentName");
 		ri.value = new Byte((byte) 3);
 		unit.notifyData(ri);
 
@@ -135,7 +135,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfWrongType() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name = "byteOne";
 		ri.value = "oops";
 		unit.notifyData(ri);
@@ -143,7 +143,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void finalFieldsCanBeAltered() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("finalByte");
+		Datatype ri = new ByteInstruction("finalByte");
 		ri.value = new Byte((byte) 3);
 		unit.notifyData(ri);
 
@@ -152,14 +152,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfMethodThrowsException() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("exceptionThrower");
+		Datatype ri = new ByteInstruction("exceptionThrower");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 	}
 
 	@Test
 	public void canMakePrivateFieldAccessible() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("notSoPrivateByte");
+		Datatype ri = new ByteInstruction("notSoPrivateByte");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 
@@ -169,7 +169,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void fieldWithBindingAnnotationIsCalled() throws Exception {
-		ReferencedInstruction ri = new ByteInstruction("boundField");
+		Datatype ri = new ByteInstruction("boundField");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 
@@ -179,7 +179,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionTypesArePopulated() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name = "stringList";
 
 		for(int i=0;i<3;i++) {
@@ -196,7 +196,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void setInterfaceHasConcreteImplementationMapped() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name= "aSet";
 		ri.value = "one";
 
@@ -208,7 +208,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void queueInterfaceHasConcreteImplementationMapped() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name= "aQueue";
 		ri.value = "one";
 
@@ -220,7 +220,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionsWorkWithRenamedBinding() throws Exception {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name = "notTheList";
 
 		for(int i=0;i<3;i++) {
@@ -237,7 +237,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void existingCollectionIsAddedTo() {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name = "existingStringList";
 		ri.value = "anotherElement";
 		unit.notifyData(ri);
@@ -250,7 +250,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void strictModeIgnoresUnboundedFields() {
-		ReferencedInstruction ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("US-ASCII");
 		ri.name = "existingStringList";
 		ri.value = "anotherElement";
 		unit.notifyData(ri);
@@ -258,7 +258,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void autoboxedTypesAreHandled() {
-		ReferencedInstruction ri = new IntegerInstruction();
+		Datatype ri = new IntegerInstruction();
 		ri.name = "primitiveInt";
 		ri.value = new Integer(10);
 

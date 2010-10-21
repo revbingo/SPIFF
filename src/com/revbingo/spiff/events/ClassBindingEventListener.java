@@ -20,7 +20,7 @@ import java.util.Stack;
 
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.binders.Binder;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
 
 public class ClassBindingEventListener<T> implements EventListener {
 
@@ -52,7 +52,7 @@ public class ClassBindingEventListener<T> implements EventListener {
 	}
 
 	@Override
-	public void notifyData(ReferencedInstruction ins) {
+	public void notifyData(Datatype ins) {
 		if(skipUnbound && skipCount > 0) return;
 		Binder binder = bindingFactory.getBindingFor(ins.name, currentBinding.getClass());
 		if(binder == null) {

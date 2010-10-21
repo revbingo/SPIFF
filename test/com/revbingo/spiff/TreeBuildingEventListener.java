@@ -21,8 +21,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 
+import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.instructions.ReferencedInstruction;
 
 public class TreeBuildingEventListener implements EventListener {
 
@@ -35,7 +35,7 @@ public class TreeBuildingEventListener implements EventListener {
 	}
 	
 	@Override
-	public void notifyData(ReferencedInstruction ins) {
+	public void notifyData(Datatype ins) {
 		MutableTreeNode thisNode = new DefaultMutableTreeNode("<html><i>"  + ins.name + "</i> : <b>" + ins.value + "</b></html>");
 		model.insertNodeInto(thisNode, currentNode, currentNode.getChildCount());
 	}

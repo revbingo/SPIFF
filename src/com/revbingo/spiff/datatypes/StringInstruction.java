@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package com.revbingo.spiff.instructions;
+package com.revbingo.spiff.datatypes;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import com.revbingo.spiff.ExecutionException;
 
-public abstract class StringInstruction extends ReferencedInstruction {
+public abstract class StringInstruction extends Datatype {
 
 	protected Charset encoding;
 

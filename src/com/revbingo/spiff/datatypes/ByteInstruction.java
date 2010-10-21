@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package com.revbingo.spiff.instructions;
+package com.revbingo.spiff.datatypes;
 
 import java.nio.ByteBuffer;
 
-public class ByteInstruction extends ReferencedInstruction {
+public class ByteInstruction extends Datatype {
 
 	public ByteInstruction() { super(); }
 	
