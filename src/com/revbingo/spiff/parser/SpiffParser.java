@@ -237,10 +237,9 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
                         inst.setName(t1.image);
                         instructions.add(inst);
                 } catch (InstantiationException e) {
-                        {if (true) throw new AdfFormatException("Custom datatype " + userType.getName() + " must have a no-args constructor");}
+                        {if (true) throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a no-args constructor or threw an exception");}
                 } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        {if (true) throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a publically accessible no args constructor");}
                 }
         break;
       default:
@@ -1014,6 +1013,15 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     finally { jj_save(10, xla); }
   }
 
+  private boolean jj_3R_13() {
+    if (jj_scan_token(TY_STRING)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_18()) jj_scanpos = xsp;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
   private boolean jj_3R_40() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_36()) return true;
@@ -1214,13 +1222,13 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3_8() {
-    if (jj_scan_token(IDENTIFIER)) return true;
+  private boolean jj_3_5() {
+    if (jj_3R_12()) return true;
     return false;
   }
 
-  private boolean jj_3_5() {
-    if (jj_3R_12()) return true;
+  private boolean jj_3_8() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -1288,13 +1296,13 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_38() {
-    if (jj_scan_token(ID_VALUE)) return true;
+  private boolean jj_3_1() {
+    if (jj_3R_8()) return true;
     return false;
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
+  private boolean jj_3R_38() {
+    if (jj_scan_token(ID_VALUE)) return true;
     return false;
   }
 
@@ -1374,15 +1382,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   }
 
   private boolean jj_3R_28() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_13() {
-    if (jj_scan_token(TY_STRING)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_18()) jj_scanpos = xsp;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }

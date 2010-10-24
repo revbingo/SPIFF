@@ -753,7 +753,7 @@ public class TestCaseSpiffParser {
 	@Test(expected=AdfFormatException.class)
 	public void classWithoutPublicConstructorCannotBeUsedForCustomDatatype() throws Exception {
 		AdfFile adf = AdfFile.start()
-		.add(".datatype badClass com.revbingo.spiff.parser.TestCaseSpiffParser.PrivateConstructor")
+		.add(".datatype badClass com.revbingo.spiff.parser.TestCaseSpiffParser$PrivateConstructor")
 		.add("badClass  wotNoArgs")
 		.end();
 
