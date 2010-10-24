@@ -123,6 +123,8 @@ public interface SpiffParserConstants {
   int DIGIT = 57;
   /** RegularExpression Id. */
   int ALPHA = 58;
+  /** RegularExpression Id. */
+  int UNDERSCORE = 59;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -188,6 +190,7 @@ public interface SpiffParserConstants {
     "<ALPHANUM>",
     "<DIGIT>",
     "<ALPHA>",
+    "\"_\"",
   };
 
 }

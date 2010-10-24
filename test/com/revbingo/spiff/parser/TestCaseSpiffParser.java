@@ -778,6 +778,19 @@ public class TestCaseSpiffParser {
 		parse(adf);
 	}
 
+	@Test
+	public void canUseUnderscoreInIdentifier() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("byte the_byte")
+			.add("int _beginsWithUnderscore")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(((Datatype) insts.get(0)).name, is("the_byte"));
+		assertThat(((Datatype) insts.get(1)).name, is("_beginsWithUnderscore"));
+	}
+
 	private List<Instruction> parse(AdfFile adf) throws Exception {
 		SpiffParser unit = new SpiffParser(adf.asReader());
 		return unit.parse();
