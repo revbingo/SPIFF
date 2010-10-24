@@ -231,7 +231,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         t2 = jj_consume_token(IDENTIFIER);
                 Class<Datatype> userType = datatypes.get(t1.image);
                 if(userType == null) {
-                        {if (true) throw new ParseException("Undefined datatype " + t1.image);}
+                        {if (true) throw new AdfFormatException("Undefined datatype " + t1.image);}
                 }
                 try {
                         Datatype inst = userType.newInstance();
@@ -343,8 +343,10 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   Token t;
     jj_consume_token(INS_INCLUDE);
     t = jj_consume_token(IDENTIFIER);
-    List < Instruction > include = defines.get(t.image);
-    if (include == null) {if (true) throw new RuntimeException("Could not get defined block with name " + t.image);}
+    List<Instruction> include = defines.get(t.image);
+    if (include == null) {
+        {if (true) throw new AdfFormatException("Could not get defined block with name " + t.image);}
+    }
     instructions.addAll(include);
   }
 
@@ -1014,34 +1016,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_40() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_23() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(40)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(41)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(43)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(45)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(44)) return true;
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
   private boolean jj_3_10() {
     if (jj_3R_15()) return true;
     return false;
@@ -1209,18 +1183,13 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3_4() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
   private boolean jj_3_8() {
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3_5() {
-    if (jj_3R_12()) return true;
+  private boolean jj_3_4() {
+    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -1230,14 +1199,14 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3R_10() {
-    if (jj_3R_17()) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
+  private boolean jj_3_5() {
+    if (jj_3R_12()) return true;
     return false;
   }
 
-  private boolean jj_3_3() {
-    if (jj_3R_10()) return true;
+  private boolean jj_3R_10() {
+    if (jj_3R_17()) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -1258,6 +1227,11 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
+  private boolean jj_3_3() {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
   private boolean jj_3R_8() {
     Token xsp;
     xsp = jj_scanpos;
@@ -1268,11 +1242,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     if (jj_3_6()) return true;
     }
     }
-    return false;
-  }
-
-  private boolean jj_3_2() {
-    if (jj_3R_9()) return true;
     return false;
   }
 
@@ -1288,13 +1257,18 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
+  private boolean jj_3_2() {
+    if (jj_3R_9()) return true;
     return false;
   }
 
   private boolean jj_3R_38() {
     if (jj_scan_token(ID_VALUE)) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_8()) return true;
     return false;
   }
 
@@ -1384,6 +1358,34 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     xsp = jj_scanpos;
     if (jj_3R_18()) jj_scanpos = xsp;
     if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(41)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(45)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(44)) return true;
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 

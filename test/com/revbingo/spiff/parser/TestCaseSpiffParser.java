@@ -434,6 +434,14 @@ public class TestCaseSpiffParser {
 		assertThat(((ByteInstruction) insts.get(2)).getName(), is("byteOne"));
 	}
 
+	@Test(expected=AdfFormatException.class)
+	public void includingUnknownBlockNameThrowsException() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".include notDefined")
+			.end();
+
+		parse(adf);
+	}
 	@Test
 	public void blockInstructionsCanHaveBracesWithOrWithoutSpacesSurrounding() throws Exception {
 		AdfFile adf = AdfFile.start()
@@ -727,6 +735,15 @@ public class TestCaseSpiffParser {
 	public void unknownClassTypeThrowsException() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add(".datatype badClass bad.classname")
+			.end();
+
+		parse(adf);
+	}
+
+	@Test(expected=AdfFormatException.class)
+	public void undefinedDatatypeThrowsException() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("undefinedType  notDefined")
 			.end();
 
 		parse(adf);
