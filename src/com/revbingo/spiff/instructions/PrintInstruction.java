@@ -28,9 +28,9 @@ public class PrintInstruction implements Instruction {
 	private String var;
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher)
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator)
 			throws ExecutionException {
-		System.out.println("PRINT: " + var + " = " + Evaluator.getInstance().evaluate(var));
+		System.out.println("PRINT: " + var + " = " + evaluator.evaluate(var));
 	}
 
 	public void setVar(String s) throws ParseException {

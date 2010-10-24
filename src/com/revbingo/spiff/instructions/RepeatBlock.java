@@ -36,10 +36,10 @@ public class RepeatBlock extends Block {
 	}
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
-		long repeatCount = (long) Evaluator.getInstance().evaluateDouble(repeatCountExpr);
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
+		long repeatCount = (long) evaluator.evaluateDouble(repeatCountExpr);
 		for(int x=0;x<repeatCount;x++){
-			super.execute(buffer, eventDispatcher);
+			super.execute(buffer, eventDispatcher, evaluator);
 		}
 	}
 

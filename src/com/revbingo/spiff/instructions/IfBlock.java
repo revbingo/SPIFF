@@ -31,14 +31,14 @@ public class IfBlock extends Block {
 	private Block elseInsts;
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
-		boolean result = Evaluator.getInstance().evaluateBoolean(expression);
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
+		boolean result = evaluator.evaluateBoolean(expression);
 		if(result){
-			super.execute(buffer, eventDispatcher);
+			super.execute(buffer, eventDispatcher, evaluator);
 		}else{
 			if(elseInsts != null){
 				for(Instruction ins: elseInsts){
-					ins.execute(buffer, eventDispatcher);
+					ins.execute(buffer, eventDispatcher, evaluator);
 				}
 			}
 		}

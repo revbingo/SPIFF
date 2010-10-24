@@ -37,8 +37,8 @@ public class SetInstruction implements Instruction {
 	}
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
-		Object result = Evaluator.getInstance().evaluate(expression);
-		Evaluator.getInstance().addVariable(varname, result);
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
+		Object result = evaluator.evaluate(expression);
+		evaluator.addVariable(varname, result);
 	}
 }

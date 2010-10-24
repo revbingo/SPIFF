@@ -34,7 +34,7 @@ public class Evaluator {
 	private Object[] context;
 	private HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
 
-	private Evaluator() {
+	public Evaluator() {
 
 		Class<?>[] staticLib=new Class[1];
 		Class<?>[] dynamicLib = new Class[1];
@@ -196,9 +196,5 @@ public class Evaluator {
 	public  void clear() {
 		evaluatedExpressions.clear();
 		variableMap.clear();
-	}
-
-	public static Evaluator getInstance() {
-		return instance;
 	}
 }

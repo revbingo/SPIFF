@@ -68,10 +68,11 @@ public class BinaryParser {
 			fc.read(buffer);
 			buffer.flip();
 
-			Evaluator.getInstance().addVariable("fileLength", (int) binaryFile.length());
+			Evaluator evaluator = new Evaluator();
+			evaluator.addVariable("fileLength", (int) binaryFile.length());
 
 			for(Instruction ins : instructions){
-				ins.execute(buffer, eventDispatcher);
+				ins.execute(buffer, eventDispatcher, evaluator);
 			}
 
 			fc.close();

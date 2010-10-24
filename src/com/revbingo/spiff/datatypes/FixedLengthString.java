@@ -29,8 +29,8 @@ public class FixedLengthString extends StringInstruction {
 	}
 
 	@Override
-	public byte[] getBytes(ByteBuffer buffer) {
-		int length = ((Number) Evaluator.getInstance().evaluate(lengthExpr)).intValue();
+	public byte[] getBytes(ByteBuffer buffer, Evaluator evaluator) {
+		int length = ((Number) evaluator.evaluate(lengthExpr)).intValue();
 		byte[] bytes = new byte[length];
 		buffer.get(bytes);
 		return bytes;

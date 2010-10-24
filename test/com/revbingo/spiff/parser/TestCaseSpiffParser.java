@@ -47,6 +47,7 @@ import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
 import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
 import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
 import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
+import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.GroupInstruction;
 import com.revbingo.spiff.instructions.IfBlock;
@@ -770,7 +771,7 @@ public class TestCaseSpiffParser {
 		private PrivateConstructor() { }
 
 		@Override
-		public Object evaluate(ByteBuffer buffer) throws ExecutionException {
+		public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
 			return null;
 		}
 	}

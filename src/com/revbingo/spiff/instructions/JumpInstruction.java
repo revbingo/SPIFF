@@ -28,8 +28,8 @@ public class JumpInstruction implements Instruction {
 	private String expression;
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
-		int result = Evaluator.getInstance().evaluateInt(expression);
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
+		int result = evaluator.evaluateInt(expression);
 		buffer.position(result);
 	}
 

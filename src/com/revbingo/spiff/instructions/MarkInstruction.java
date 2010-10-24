@@ -31,10 +31,10 @@ public class MarkInstruction implements Instruction {
 	}
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher)
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator)
 			throws ExecutionException {
-		Evaluator.getInstance().addVariable(name, buffer.position());
-		Evaluator.getInstance().addVariable(name + ".address", buffer.position());
+		evaluator.addVariable(name, buffer.position());
+		evaluator.addVariable(name + ".address", buffer.position());
 	}
 
 }

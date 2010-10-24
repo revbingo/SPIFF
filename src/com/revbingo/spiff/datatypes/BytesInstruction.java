@@ -26,8 +26,8 @@ public class BytesInstruction extends Datatype {
 	private String lengthExpr;
 
 	@Override
-	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
-		int length = Evaluator.getInstance().evaluateInt(lengthExpr);
+	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
+		int length = evaluator.evaluateInt(lengthExpr);
 		byte[] bytes = new byte[length];
 		buffer.get(bytes);
 		return bytes;

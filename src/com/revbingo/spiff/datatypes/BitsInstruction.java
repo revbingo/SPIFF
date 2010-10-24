@@ -26,8 +26,8 @@ public class BitsInstruction extends Datatype {
 	private String numberOfBitsExpression;
 
 	@Override
-	public Object evaluate(ByteBuffer buffer) throws ExecutionException {
-		int numberOfBits = Evaluator.getInstance().evaluateInt(numberOfBitsExpression);
+	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
+		int numberOfBits = evaluator.evaluateInt(numberOfBitsExpression);
 
 		int bytesToGet = (int) Math.ceil(numberOfBits/8d);
 		byte[] bytes = new byte[bytesToGet];

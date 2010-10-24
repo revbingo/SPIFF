@@ -28,8 +28,8 @@ public class SkipInstruction implements Instruction {
 	private String skipExpr;
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
-		int length = Evaluator.getInstance().evaluateInt(skipExpr);
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
+		int length = evaluator.evaluateInt(skipExpr);
 		buffer.position(buffer.position() + length);
 	}
 

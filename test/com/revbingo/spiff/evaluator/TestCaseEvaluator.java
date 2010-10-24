@@ -34,7 +34,7 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void expressionCanBeAddedToListOfEvaluatedExpressions() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.cacheExpression("a+b");
 
 		assertTrue(unit.getEvaluatedExpressions().contains("a+b"));
@@ -42,14 +42,14 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void expressionIsMarkedAsReferenced() {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.cacheExpression("a+b");
 		assertTrue(unit.isReferenced("a+b"));
 	}
 
 	@Test
 	public void evaluateIntegerExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 3);
 		unit.addVariable("b", 5);
 
@@ -58,13 +58,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateIntegerExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateInt("1/0");
 	}
 
 	@Test
 	public void evaluateShortExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", ((short) 1));
 		unit.addVariable("b", ((short) 3));
 
@@ -74,13 +74,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateShortExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateShort("1/0");
 	}
 
 	@Test
 	public void evaluateByteExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", (byte) 1);
 		unit.addVariable("b", (byte) 4);
 
@@ -89,13 +89,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateByteExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateByte("1/0");
 	}
 
 	@Test
 	public void evaluateFloatExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 2.12f);
 		unit.addVariable("b", 3.5f);
 
@@ -104,13 +104,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateFloatExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateFloat("1/0");
 	}
 
 	@Test
 	public void evaluateLongExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 2L);
 		unit.addVariable("b", 3L);
 
@@ -119,13 +119,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateLongExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateLong("1/0");
 	}
 
 	@Test
 	public void evaluateDoubleExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 3.512d);
 		unit.addVariable("b", 5.123d);
 
@@ -134,13 +134,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateDoubleExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateDouble("1/0");
 	}
 
 	@Test
 	public void evaluateBooleanExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", true);
 		unit.addVariable("b", false);
 
@@ -153,19 +153,19 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateBooleanExprWithDiv0() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateBoolean("1/0");
 	}
 
 	@Test
 	public void evaluateDeterminesObject() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		assertThat(unit.evaluate("1 + 2"), instanceOf(Object.class));
 	}
 
 	@Test
 	public void evaluateStringExpr() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", "one");
 		unit.addVariable("b", "two");
 
@@ -174,13 +174,13 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void evaluateHexLiteralAsInteger() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		assertThat(unit.evaluateInt("0x04 + 0xFF"), equalTo(259));
 	}
 
 	@Test
 	public void expressionsAreCachedBasedOnString() throws ExecutionException {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		CompiledExpression c = unit.getCompiledExpression("1 + 2");
 
 		assertThat(c, is(sameInstance(unit.getCompiledExpression("1 + 2"))));
@@ -189,7 +189,7 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void typedExpressionsAreCachedBasedOnStringAndType() throws ExecutionException {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 2);
 		unit.addVariable("b", 3);
 
@@ -201,7 +201,7 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void clearEvaluatorClearsExpressionsAndVariables() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 2);
 		int i = unit.evaluateInt("a + 3");
 
@@ -217,31 +217,31 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateStringThrowsExceptionIfNotAString() throws ExecutionException {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateString("1 + 2");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void divisionByZero() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluate("1/0");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void unknownVarCausesException() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluate("unknown + missing");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void badExpressionThrowsException() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluate("a---");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void badTypedExpressionThrowsException() throws Exception {
-		Evaluator unit = Evaluator.getInstance();
+		Evaluator unit = new Evaluator();
 		unit.evaluateBoolean("a---");
 	}
 

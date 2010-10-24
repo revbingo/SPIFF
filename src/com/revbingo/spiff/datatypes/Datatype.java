@@ -48,15 +48,15 @@ public abstract class Datatype implements Instruction {
 	}
 
 	@Override
-	public void execute(ByteBuffer buffer, EventListener eventDispatcher) throws ExecutionException {
+	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
 		address = buffer.position();
-		this.value = this.evaluate(buffer);
+		this.value = this.evaluate(buffer, evaluator);
 		if(isReferenced){
-			Evaluator.getInstance().addVariable(name, value);
-			Evaluator.getInstance().addVariable(addressStr, this.address);
+			evaluator.addVariable(name, value);
+			evaluator.addVariable(addressStr, this.address);
 		}
 		eventDispatcher.notifyData(this);
 	}
 
-	public abstract Object evaluate(ByteBuffer buffer) throws ExecutionException;
+	public abstract Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException;
 }

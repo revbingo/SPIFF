@@ -49,11 +49,13 @@ public class TestCaseInstructions {
 
 	Mockery context = new Mockery();
 	EventListener ed;
+	Evaluator evaluator;
 
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
+		evaluator = new Evaluator();
 		ed = context.mock(EventListener.class);
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
@@ -67,18 +69,18 @@ public class TestCaseInstructions {
 		SetOrderInstruction unit = new SetOrderInstruction();
 
 		unit.setOrder(ByteOrder.LITTLE_ENDIAN);
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
 		IntegerInstruction test = new IntegerInstruction();
-		test.execute(testBuffer, ed);
+		test.execute(testBuffer, ed, evaluator);
 
 		assertThat((Integer) test.value, is(equalTo(0x74736554)));
 
 		unit.setOrder(ByteOrder.BIG_ENDIAN);
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
 		test = new IntegerInstruction();
-		test.execute(testBuffer, ed);
+		test.execute(testBuffer, ed, evaluator);
 
 		assertThat((Integer) test.value, is(equalTo(0x44617461)));
 	}
@@ -98,7 +100,7 @@ public class TestCaseInstructions {
 		unit.setInstructions(Arrays.asList((Instruction) theInstruction));
 		unit.setRepeatCountExpression("10");
 
-		unit.execute(testBuffer, dispatcher);
+		unit.execute(testBuffer, dispatcher, evaluator);
 
 		context.assertIsSatisfied();
 	}
@@ -121,7 +123,7 @@ public class TestCaseInstructions {
 		innerUnit.setRepeatCountExpression("2");
 
 		outerUnit.setInstructions(Arrays.asList(new Instruction[] { innerUnit }));
-		outerUnit.execute(testBuffer, dispatcher);
+		outerUnit.execute(testBuffer, dispatcher, evaluator);
 
 		context.assertIsSatisfied();
 	}
@@ -132,10 +134,10 @@ public class TestCaseInstructions {
 		unit.setName("testMark");
 
 		IntegerInstruction previousInstruction = new IntegerInstruction();
-		previousInstruction.execute(testBuffer, ed);
-		unit.execute(testBuffer, ed);
+		previousInstruction.execute(testBuffer, ed, evaluator);
+		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(Evaluator.getInstance().evaluateInt("testMark"), is(equalTo(4)));
+		assertThat(evaluator.evaluateInt("testMark"), is(equalTo(4)));
 	}
 
 	@Test
@@ -151,8 +153,8 @@ public class TestCaseInstructions {
 
 		GroupInstruction unitStart = new GroupInstruction(groupName);
 		EndGroupInstruction unitEnd = new EndGroupInstruction(groupName);
-		unitStart.execute(testBuffer, dispatcher);
-		unitEnd.execute(testBuffer, dispatcher);
+		unitStart.execute(testBuffer, dispatcher, null);
+		unitEnd.execute(testBuffer, dispatcher, null);
 
 		context.assertIsSatisfied();
 	}
@@ -177,8 +179,8 @@ public class TestCaseInstructions {
 		unit.setExpression(String.valueOf(positionToJumpTo));
 		ByteInstruction nextInst = new ByteInstruction();
 
-		unit.execute(testBuffer, ed);
-		nextInst.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
+		nextInst.execute(testBuffer, ed, evaluator);
 
 		assertThat((Byte) nextInst.value, is(testData[positionToJumpTo]));
 		assertThat(testBuffer.position(), is(positionToJumpTo + 1));
@@ -187,7 +189,7 @@ public class TestCaseInstructions {
 	@Test
 	public void setInstructionAddsExpressionResultToEvaluator() throws Exception {
 		try {
-			Evaluator.getInstance().evaluateInt("theResult");
+			evaluator.evaluateInt("theResult");
 			fail("Should not have been able to resolve theResult");
 		} catch (ExecutionException e) {}
 
@@ -195,9 +197,9 @@ public class TestCaseInstructions {
 		unit.setExpression("8");
 		unit.setVarname("theResult");
 
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(Evaluator.getInstance().evaluateInt("theResult"), is(8));
+		assertThat(evaluator.evaluateInt("theResult"), is(8));
 	}
 
 	@Test
@@ -213,7 +215,7 @@ public class TestCaseInstructions {
 		PrintInstruction unit = new PrintInstruction();
 		unit.setVar("1 + 3");
 
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat(baos.size(), is(not(0)));
 		System.setOut(oldOut);
@@ -234,7 +236,7 @@ public class TestCaseInstructions {
 		unit.setInstructions(ifInsts);
 		unit.setElseInstructions(elseInsts);
 
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((Byte) ifInst.value, is((byte) 0x54));
 		assertThat(elseInst2.value, is(nullValue()));
@@ -255,7 +257,7 @@ public class TestCaseInstructions {
 		unit.setInstructions(ifInsts);
 		unit.setElseInstructions(elseInsts);
 
-		unit.execute(testBuffer, ed);
+		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((Byte) elseInst2.value, is((byte) 0x74));
 		assertThat(ifInst.value, is(nullValue()));
