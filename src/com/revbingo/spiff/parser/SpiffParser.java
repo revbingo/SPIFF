@@ -15,6 +15,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   Stack <List<Instruction>> instructionStack = new Stack <List <Instruction>> ();
   Map <String, List<Instruction>> defines = new HashMap <String, List<Instruction>> ();
   Map <String, Class<Datatype>> datatypes = new HashMap<String, Class<Datatype>>();
+  Evaluator evaluator = Evaluator.getInstance();
 
   private String defaultEncoding = Charset.defaultCharset().displayName();
 
@@ -23,7 +24,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     for (Instruction i : allInsts) {
       if (i instanceof Datatype) {
         Datatype ri = (Datatype) i;
-        if (!Evaluator.isReferenced(ri.getName())) {
+        if (!evaluator.isReferenced(ri.getName())) {
           ri.setReferenced(false);
         }
       }
@@ -754,7 +755,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       case IDENTIFIER:
         t = jj_consume_token(IDENTIFIER);
       s.append(t.image);
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       case INTEGER:
         t = jj_consume_token(INTEGER);
@@ -768,12 +769,12 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         t = jj_consume_token(ID_ADDRESS);
       String s1 = t.image;
       s.append(s1.substring(1, s1.length()) + ".address");
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       case ID_VALUE:
         t = jj_consume_token(ID_VALUE);
       s.append(t.image);
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       case OPEN_PAR:
         t = jj_consume_token(OPEN_PAR);
@@ -856,7 +857,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case IDENTIFIER:
         t = jj_consume_token(IDENTIFIER);
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       case INTEGER:
         t = jj_consume_token(INTEGER);
@@ -866,11 +867,11 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
         break;
       case ID_VALUE:
         t = jj_consume_token(ID_VALUE);
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       case ID_ADDRESS:
         t = jj_consume_token(ID_ADDRESS);
-      Evaluator.cacheExpression(t.image);
+      evaluator.cacheExpression(t.image);
         break;
       default:
         jj_la1[20] = jj_gen;
@@ -1011,15 +1012,6 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     try { return !jj_3_11(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(10, xla); }
-  }
-
-  private boolean jj_3R_13() {
-    if (jj_scan_token(TY_STRING)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_18()) jj_scanpos = xsp;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
   }
 
   private boolean jj_3R_40() {
@@ -1222,13 +1214,13 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
     return false;
   }
 
-  private boolean jj_3_5() {
-    if (jj_3R_12()) return true;
+  private boolean jj_3_8() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  private boolean jj_3_8() {
-    if (jj_scan_token(IDENTIFIER)) return true;
+  private boolean jj_3_5() {
+    if (jj_3R_12()) return true;
     return false;
   }
 
@@ -1382,6 +1374,15 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
   }
 
   private boolean jj_3R_28() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_13() {
+    if (jj_scan_token(TY_STRING)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_18()) jj_scanpos = xsp;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }

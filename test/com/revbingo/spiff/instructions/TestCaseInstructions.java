@@ -1,23 +1,22 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package com.revbingo.spiff.instructions;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -26,7 +25,6 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
@@ -43,7 +41,6 @@ import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.datatypes.IntegerInstruction;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class TestCaseInstructions {
 
@@ -138,7 +135,7 @@ public class TestCaseInstructions {
 		previousInstruction.execute(testBuffer, ed);
 		unit.execute(testBuffer, ed);
 
-		assertThat(Evaluator.evaluateInt("testMark"), is(equalTo(4)));
+		assertThat(Evaluator.getInstance().evaluateInt("testMark"), is(equalTo(4)));
 	}
 
 	@Test
@@ -189,10 +186,8 @@ public class TestCaseInstructions {
 
 	@Test
 	public void setInstructionAddsExpressionResultToEvaluator() throws Exception {
-		Evaluator.clear();
-
 		try {
-			Evaluator.evaluateInt("theResult");
+			Evaluator.getInstance().evaluateInt("theResult");
 			fail("Should not have been able to resolve theResult");
 		} catch (ExecutionException e) {}
 
@@ -202,7 +197,7 @@ public class TestCaseInstructions {
 
 		unit.execute(testBuffer, ed);
 
-		assertThat(Evaluator.evaluateInt("theResult"), is(8));
+		assertThat(Evaluator.getInstance().evaluateInt("theResult"), is(8));
 	}
 
 	@Test

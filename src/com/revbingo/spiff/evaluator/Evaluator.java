@@ -1,16 +1,16 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -27,13 +27,15 @@ import com.revbingo.spiff.ExecutionException;
 
 public class Evaluator {
 
-	private static Library lib;
-	private static EvaluatorMap variableMap;
-	private static HashSet<String> evaluatedExpressions;
-	private static Object[] context;
-	private static HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
+	private static Evaluator instance = new Evaluator();
+	private Library lib;
+	private EvaluatorMap variableMap;
+	private HashSet<String> evaluatedExpressions;
+	private Object[] context;
+	private HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
 
-	static {
+	private Evaluator() {
+
 		Class<?>[] staticLib=new Class[1];
 		Class<?>[] dynamicLib = new Class[1];
 		Class<?>[] dotLib = new Class[0];
@@ -48,38 +50,38 @@ public class Evaluator {
 		context[0] = variableMap;
 	}
 
-	public static void cacheExpression(String exp){
+	public void cacheExpression(String exp){
 		if(exp.startsWith("&")) {
 			exp = exp.substring(1);
 		}
 		evaluatedExpressions.add(exp);
 	}
 
-	public static HashSet<String> getEvaluatedExpressions(){
+	public HashSet<String> getEvaluatedExpressions(){
 		return evaluatedExpressions;
 	}
 
-	public static boolean isReferenced(String name){
+	public boolean isReferenced(String name){
 		return evaluatedExpressions.contains(name);
 	}
 
-	public static void addVariable(String name, Object var){
+	public void addVariable(String name, Object var){
 		variableMap.addVariable(name, var);
 	}
 
-	private static CompiledExpression compile(String expression) throws CompilationException {
+	private CompiledExpression compile(String expression) throws CompilationException {
 		CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib);
 		cExpr.put(expression, c);
 		return c;
 	}
 
-	private static CompiledExpression compile(String expression, Class<?> type) throws CompilationException {
+	private CompiledExpression compile(String expression, Class<?> type) throws CompilationException {
 		CompiledExpression c = gnu.jel.Evaluator.compile(expression, lib, type);
 		cExpr.put(expression + "@" + type.getSimpleName(), c);
 		return c;
 	}
 
-	public static int evaluateInt(String expression) throws ExecutionException {
+	public int evaluateInt(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Integer.TYPE);
 			return c.evaluate_int(context);
@@ -88,7 +90,7 @@ public class Evaluator {
 		}
 	}
 
-	public static long evaluateLong(String expression) throws ExecutionException {
+	public long evaluateLong(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Long.TYPE);
 			return c.evaluate_long(context);
@@ -97,7 +99,7 @@ public class Evaluator {
 		}
 	}
 
-	public static short evaluateShort(String expression) throws ExecutionException {
+	public short evaluateShort(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Short.TYPE);
 			return c.evaluate_short(context);
@@ -106,7 +108,7 @@ public class Evaluator {
 		}
 	}
 
-	public static boolean evaluateBoolean(String expression) throws ExecutionException{
+	public boolean evaluateBoolean(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Boolean.TYPE);
 			return c.evaluate_boolean(context);
@@ -115,7 +117,7 @@ public class Evaluator {
 		}
 	}
 
-	public static byte evaluateByte(String expression) throws ExecutionException{
+	public byte evaluateByte(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Byte.TYPE);
 			return c.evaluate_byte(context);
@@ -124,7 +126,7 @@ public class Evaluator {
 		}
 	}
 
-	public static double evaluateDouble(String expression) throws ExecutionException{
+	public double evaluateDouble(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Double.TYPE);
 			return c.evaluate_double(context);
@@ -133,7 +135,7 @@ public class Evaluator {
 		}
 	}
 
-	public static float evaluateFloat(String expression) throws ExecutionException{
+	public float evaluateFloat(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression, Float.TYPE);
 			return c.evaluate_float(context);
@@ -142,7 +144,7 @@ public class Evaluator {
 		}
 	}
 
-	public static String evaluateString(String expression) throws ExecutionException{
+	public String evaluateString(String expression) throws ExecutionException{
 		Object o;
 		try {
 			CompiledExpression c = getCompiledExpression(expression);
@@ -157,7 +159,7 @@ public class Evaluator {
 		}
 	}
 
-	public static Object evaluate(String expression) throws ExecutionException{
+	public Object evaluate(String expression) throws ExecutionException{
 		try {
 			CompiledExpression c = getCompiledExpression(expression);
 			return c.evaluate(context);
@@ -166,7 +168,7 @@ public class Evaluator {
 		}
 	}
 
-	static CompiledExpression getCompiledExpression(String expression, Class<?> type) throws ExecutionException {
+	CompiledExpression getCompiledExpression(String expression, Class<?> type) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression + "@" + type.getSimpleName());
 		if(c == null){
 			try {
@@ -178,7 +180,7 @@ public class Evaluator {
 		return c;
 	}
 
-	static CompiledExpression getCompiledExpression(String expression) throws ExecutionException {
+	CompiledExpression getCompiledExpression(String expression) throws ExecutionException {
 		CompiledExpression c = cExpr.get(expression);
 
 		if(c == null){
@@ -191,8 +193,12 @@ public class Evaluator {
 		return c;
 	}
 
-	public static void clear() {
+	public  void clear() {
 		evaluatedExpressions.clear();
 		variableMap.clear();
+	}
+
+	public static Evaluator getInstance() {
+		return instance;
 	}
 }
