@@ -27,7 +27,6 @@ import com.revbingo.spiff.ExecutionException;
 
 public class Evaluator {
 
-	private static Evaluator instance = new Evaluator();
 	private Library lib;
 	private EvaluatorMap variableMap;
 	private HashSet<String> evaluatedExpressions;
