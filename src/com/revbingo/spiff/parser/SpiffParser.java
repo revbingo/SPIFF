@@ -235,7 +235,7 @@ public class SpiffParser implements InstructionParser, SpiffParserConstants {
                 }
                 try {
                         Datatype inst = userType.newInstance();
-                        inst.setName(t1.image);
+                        inst.setName(t2.image);
                         instructions.add(inst);
                 } catch (InstantiationException e) {
                         {if (true) throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a no-args constructor or threw an exception");}

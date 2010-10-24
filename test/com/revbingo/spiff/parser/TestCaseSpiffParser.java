@@ -729,6 +729,7 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(1));
 		assertThat(insts.get(0), instanceOf(StringReversingInstruction.class));
+		assertThat(((Datatype) insts.get(0)).name, is("customInt"));
 	}
 
 	@Test(expected=AdfFormatException.class)
