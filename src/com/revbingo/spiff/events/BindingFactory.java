@@ -113,8 +113,7 @@ public class BindingFactory {
 						return new FieldBinder(f);
 					}
 				} else if(f.isAnnotationPresent(BindingCollection.class)
-						&& (f.getAnnotation(BindingCollection.class).value().equals(name)
-								| f.getName().equals(name))) {
+						&& f.getAnnotation(BindingCollection.class).value().equals(name)) {
 
 					Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
 
@@ -153,6 +152,9 @@ public class BindingFactory {
 		@Override
 		public Binder match(String name, Class<?> clazz) {
 			for(Field f : clazz.getDeclaredFields()) {
+				if(getAnnotatedName(f) != null &&
+						!(getAnnotatedName(f).equals("")) &&
+						!(f.getName().equals(getAnnotatedName(f)))) continue;
 				if(f.getName().equals(name)) {
 					if(Collection.class.isAssignableFrom(f.getType())) {
 
@@ -174,5 +176,16 @@ public class BindingFactory {
 			return null;
 		}
 
+		private String getAnnotatedName(Field f) {
+			BindingCollection bcAnno = f.getAnnotation(BindingCollection.class);
+			if(bcAnno != null) return bcAnno.value();
+
+			Binding bAnno = f.getAnnotation(Binding.class);
+			if(bAnno != null) return bAnno.value();
+
+			return null;
+		}
 	}
+
+
 }

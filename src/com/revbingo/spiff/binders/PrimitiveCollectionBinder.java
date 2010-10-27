@@ -1,16 +1,16 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -29,12 +29,13 @@ import java.util.Set;
 
 import com.revbingo.spiff.ExecutionException;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class PrimitiveCollectionBinder implements Binder {
 
 	protected Field boundField;
 	protected FieldBinder boundFieldBinder;
-	
-	protected static Map<Class<? extends Collection>, Class<? extends Collection>> preferredCollections 
+
+	protected static Map<Class<? extends Collection>, Class<? extends Collection>> preferredCollections
 										= new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
 
 	static {
@@ -54,7 +55,7 @@ public class PrimitiveCollectionBinder implements Binder {
 		Collection collection = this.ensureCollectionExists(boundField, target);
 		collection.add(value);
 	}
-	
+
 	@Override
 	public Object createAndBind(Object target) throws ExecutionException {
 		throw new ExecutionException("Cannot bind group to a primitive");
@@ -64,12 +65,12 @@ public class PrimitiveCollectionBinder implements Binder {
 		try {
 			Collection collection = (Collection) boundField.get(target);
 			if(collection != null) return collection;
-			
+
 			Class<? extends Collection> collectionType = (Class<? extends Collection>) f.getType();
 			if(collectionType.isInterface() && preferredCollections.containsKey(collectionType)) {
 				collectionType = preferredCollections.get(collectionType);
 			}
-			
+
 			collection = collectionType.newInstance();
 			boundFieldBinder.bind(target, collection);
 			return collection;
@@ -78,6 +79,6 @@ public class PrimitiveCollectionBinder implements Binder {
 		} catch (InstantiationException e) {
 			throw new ExecutionException("Could not instantiate new instance of " + boundField.getType().getSimpleName());
 		}
-		
+
 	}
 }

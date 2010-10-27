@@ -21,6 +21,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -211,7 +213,6 @@ public class TestCaseDataTypes {
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.value, is(equalTo("Test")));
-		String s = new String();
 
 		assertThat(unit.address, is(equalTo(0)));
 	}
@@ -228,7 +229,6 @@ public class TestCaseDataTypes {
 		unit.execute(paddedBuffer, ed, evaluator);
 
 		assertThat((String) unit.value, is(equalTo("TestData!")));
-		String s = new String();
 	}
 
 	@Test(expected=ExecutionException.class)
@@ -360,8 +360,22 @@ public class TestCaseDataTypes {
 	}
 
 	@Test(expected=UnsupportedOperationException.class)
-	public void testUnsignedLongIsNotSupported() throws Exception {
+	public void testUnsignedLongIsNotSupportedWhenBiggerThan2ToPow63() throws Exception {
 		new UnsignedLongInstruction().execute(testBuffer, ed, evaluator);
+	}
+
+	@Test
+	public void testUnsignedLongWorksUpTo2ToPow63() throws Exception {
+		LongInstruction unit = new LongInstruction();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream oos = new DataOutputStream(baos);
+
+		oos.writeLong((long) Math.pow(2, 63));
+
+		for(byte b : baos.toByteArray()) {
+			System.out.println(Integer.toHexString(b & 0xFF));
+		}
 	}
 
 	@Test(expected=ParseException.class)

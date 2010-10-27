@@ -34,7 +34,7 @@ public class UnsignedIntegerInstruction extends FixedLengthUnsignedNumber {
 		bytes[3] = (byte)(signedInt);
 
 		int[] ubytes = convertBytesToInts(bytes);
-		return new Long(ubytes[0] << 24
+		return Long.valueOf(ubytes[0] << 24
 						| ubytes[1] << 16
 						| ubytes[2] << 8
 						| ubytes[3]);

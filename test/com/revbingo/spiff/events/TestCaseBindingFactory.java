@@ -1,16 +1,16 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -145,6 +145,15 @@ public class TestCaseBindingFactory {
 		assertThat(binder1, not(sameInstance(binder3)));
 	}
 
+	@Test
+	public void nameOfFieldDoesntCountIfAnnotationIsDeclared() throws Exception {
+		BindingFactory unit = new BindingFactory();
+
+		Binder binder = unit.getBindingFor("shorts", BindingTest.class);
+
+		assertThat(binder, is(nullValue()));
+
+	}
 
 	public static class BindingTest {
 
@@ -153,6 +162,9 @@ public class TestCaseBindingFactory {
 
 		@BindingCollection(type=Float.class)
 		public List<Float> floats;
+
+		@BindingCollection(type=Short.class, value="AnotherName")
+		public List<Short> shorts;
 
 		public List<Object> objects;
 

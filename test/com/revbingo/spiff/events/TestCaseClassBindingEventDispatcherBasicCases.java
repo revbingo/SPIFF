@@ -1,16 +1,16 @@
 /*******************************************************************************
  * This file is part of SPIFF.
- * 
+ *
  * SPIFF is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SPIFF is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -127,7 +127,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	@Test
 	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
 		Datatype ri = new ByteInstruction("setterWithADifferentName");
-		ri.value = new Byte((byte) 3);
+		ri.value = Byte.valueOf((byte) 3);
 		unit.notifyData(ri);
 
 		assertThat(unit.getResult().gotASetter, is((byte) 3));
@@ -144,7 +144,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	@Test
 	public void finalFieldsCanBeAltered() throws Exception {
 		Datatype ri = new ByteInstruction("finalByte");
-		ri.value = new Byte((byte) 3);
+		ri.value = Byte.valueOf((byte) 3);
 		unit.notifyData(ri);
 
 		assertThat(unit.getResult().finalByte, is((byte) 3));
@@ -260,7 +260,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	public void autoboxedTypesAreHandled() {
 		Datatype ri = new IntegerInstruction();
 		ri.name = "primitiveInt";
-		ri.value = new Integer(10);
+		ri.value = Integer.valueOf(10);
 
 		unit.notifyData(ri);
 
