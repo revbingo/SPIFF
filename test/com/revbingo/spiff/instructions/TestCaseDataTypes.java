@@ -21,8 +21,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -47,7 +45,6 @@ import com.revbingo.spiff.datatypes.ShortInstruction;
 import com.revbingo.spiff.datatypes.TerminatedString;
 import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
 import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
-import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
 import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
@@ -357,25 +354,6 @@ public class TestCaseDataTypes {
 		unit.execute(unsignedByteBuffer, ed, evaluator);
 		assertThat((Long) unit.value, is(equalTo((long) 0xBEBAFECA)));
 		assertThat(unit.address, is(equalTo(0)));
-	}
-
-	@Test(expected=UnsupportedOperationException.class)
-	public void testUnsignedLongIsNotSupportedWhenBiggerThan2ToPow63() throws Exception {
-		new UnsignedLongInstruction().execute(testBuffer, ed, evaluator);
-	}
-
-	@Test
-	public void testUnsignedLongWorksUpTo2ToPow63() throws Exception {
-		LongInstruction unit = new LongInstruction();
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream oos = new DataOutputStream(baos);
-
-		oos.writeLong((long) Math.pow(2, 63));
-
-		for(byte b : baos.toByteArray()) {
-			System.out.println(Integer.toHexString(b & 0xFF));
-		}
 	}
 
 	@Test(expected=ParseException.class)
