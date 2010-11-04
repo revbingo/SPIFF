@@ -29,13 +29,7 @@ public interface SpiffTreeParserTreeConstants
   public int JJTTERMINATEDSTRING = 23;
   public int JJTFIXEDNUMBER = 24;
   public int JJTEXPRESSION = 25;
-  public int JJTCOMPARATOR = 26;
-  public int JJTADDITIVEEXPRESSION = 27;
-  public int JJTMULTIPLICATIVEEXPRESSION = 28;
-  public int JJTUNARYEXPRESSION = 29;
-  public int JJTFUNCTIONCALL = 30;
-  public int JJTFORMALPARAMETERS = 31;
-  public int JJTVOID = 32;
+  public int JJTVOID = 26;
 
 
   public String[] jjtNodeName = {
@@ -65,13 +59,7 @@ public interface SpiffTreeParserTreeConstants
     "terminatedString",
     "fixedNumber",
     "expression",
-    "comparator",
-    "additiveExpression",
-    "multiplicativeExpression",
-    "unaryExpression",
-    "functionCall",
-    "FormalParameters",
     "void",
   };
 }
-/* JavaCC - OriginalChecksum=3fca8f804fcf986cd2e5f224c00bcc2b (do not edit this line) */
+/* JavaCC - OriginalChecksum=cb469a5831dec3685c2a69a54f9380d9 (do not edit this line) */

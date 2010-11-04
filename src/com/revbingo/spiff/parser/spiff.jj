@@ -676,176 +676,4 @@
       jjtree.closeNodeScope(jjtn000, true);
     }
   }
-/*@egen*/}Token comparator() :{/*@bgen(jjtree) comparator */
-  SimpleNode jjtn000 = new SimpleNode(JJTCOMPARATOR);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;}{/*@bgen(jjtree) comparator */
-  try {
-/*@egen*/  (    (t = < EQUAL >)  |     (t = < GREATER_THAN >)  |     (t = < LESS_THAN >)  |     (t = < NOT_EQUAL >)  |     (t = < LESS_OR_EQUAL >)  |     (t = < GREATER_OR_EQUAL >)  )/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return t;  }/*@bgen(jjtree)*/
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String additiveExpression() :{/*@bgen(jjtree) additiveExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTADDITIVEEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;  String s;}{/*@bgen(jjtree) additiveExpression */
-  try {
-/*@egen*/  {    StringBuffer expr = new StringBuffer();  }  (    s = multiplicativeExpression()  )  {    expr.append(s);  }     (	    (t = < PL_MI_OPERATOR >)	    {	      expr.append(t.image);	    }	    (	      s = multiplicativeExpression()	    )	    {	      expr.append(s);	    }	  )*/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return expr.toString();  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String multiplicativeExpression() :{/*@bgen(jjtree) multiplicativeExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTMULTIPLICATIVEEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  String s;  Token t;}{/*@bgen(jjtree) multiplicativeExpression */
-  try {
-/*@egen*/  {    StringBuffer term = new StringBuffer();  }  (    s = unaryExpression()  )  {    term.append(s);  }  (    (t = < MUL_DIV_OPERATOR >)    {      term.append(t.image);    }    (      s = unaryExpression()    )    {      term.append(s);    }  )*/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return term.toString();  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String unaryExpression() :{/*@bgen(jjtree) unaryExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTUNARYEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;  String ex;}{/*@bgen(jjtree) unaryExpression */
-  try {
-/*@egen*/  {    StringBuffer s = new StringBuffer();  }  (    LOOKAHEAD(2)    (      ex = functionCall()    )    {      s.append(ex);    }  |     (t = < IDENTIFIER >)    {      s.append(t.image);      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)    {      s.append(t.image);    }  |   	(t = < HEX_INTEGER>)  	{  		s.append(t.image);  	}  |    (t = < ID_ADDRESS >)    {      String s1 = t.image;      s.append(s1.substring(1, s1.length()) + ".address");      evaluator.cacheExpression(t.image);    }  |     (t = < ID_VALUE >)    {      s.append(t.image);      evaluator.cacheExpression(t.image);    }  |     (t = < OPEN_PAR >)    {      s.append(t.image);    }    (      ex = expression()    )    {      s.append(ex);    }    (t = < CLOSE_PAR >)    {      s.append(t.image);    }  )/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return s.toString();  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String functionCall() :{/*@bgen(jjtree) functionCall */
-  SimpleNode jjtn000 = new SimpleNode(JJTFUNCTIONCALL);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;  String ex;}{/*@bgen(jjtree) functionCall */
-  try {
-/*@egen*/  (t = < IDENTIFIER >)   < OPEN_PAR >  (    ex = FormalParameters()  )  < CLOSE_PAR >/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    StringBuffer b = new StringBuffer();    b.append(t.image);    b.append(ex);    return b.toString();  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String FormalParameters() :{/*@bgen(jjtree) FormalParameters */
-  SimpleNode jjtn000 = new SimpleNode(JJTFORMALPARAMETERS);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  String ex;}{/*@bgen(jjtree) FormalParameters */
-  try {
-/*@egen*/  {    StringBuffer b = new StringBuffer();    b.append("(");  }  [    (      ex = FormalParameter()    )    {      b.append(ex);    }    (      ","      (        ex = FormalParameter()      )      {        b.append(",");        b.append(ex);      }    )*  ]/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    b.append(")");    return b.toString();  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}String FormalParameter()       :{  Token t = null;  String expr;}{  (      LOOKAHEAD(2)      (expr = expression())      { return expr; }  |    (t = < IDENTIFIER >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)  |     (t = < FLOAT >)  |     (t = < ID_VALUE >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < ID_ADDRESS >)    {      evaluator.cacheExpression(t.image);    }      )  {    return t.image;  }}
+/*@egen*/}Token comparator()       :{  Token t;}{  (    (t = < EQUAL >)  |     (t = < GREATER_THAN >)  |     (t = < LESS_THAN >)  |     (t = < NOT_EQUAL >)  |     (t = < LESS_OR_EQUAL >)  |     (t = < GREATER_OR_EQUAL >)  )  {    return t;  }}String additiveExpression()       :{  Token t;  String s;}{  {    StringBuffer expr = new StringBuffer();  }  (    s = multiplicativeExpression()  )  {    expr.append(s);  }     (	    (t = < PL_MI_OPERATOR >)	    {	      expr.append(t.image);	    }	    (	      s = multiplicativeExpression()	    )	    {	      expr.append(s);	    }	  )*  {    return expr.toString();  }}String multiplicativeExpression()       :{  String s;  Token t;}{  {    StringBuffer term = new StringBuffer();  }  (    s = unaryExpression()  )  {    term.append(s);  }  (    (t = < MUL_DIV_OPERATOR >)    {      term.append(t.image);    }    (      s = unaryExpression()    )    {      term.append(s);    }  )*  {    return term.toString();  }}String unaryExpression()       :{  Token t;  String ex;}{  {    StringBuffer s = new StringBuffer();  }  (    LOOKAHEAD(2)    (      ex = functionCall()    )    {      s.append(ex);    }  |     (t = < IDENTIFIER >)    {      s.append(t.image);      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)    {      s.append(t.image);    }  |   	(t = < HEX_INTEGER>)  	{  		s.append(t.image);  	}  |    (t = < ID_ADDRESS >)    {      String s1 = t.image;      s.append(s1.substring(1, s1.length()) + ".address");      evaluator.cacheExpression(t.image);    }  |     (t = < ID_VALUE >)    {      s.append(t.image);      evaluator.cacheExpression(t.image);    }  |     (t = < OPEN_PAR >)    {      s.append(t.image);    }    (      ex = expression()    )    {      s.append(ex);    }    (t = < CLOSE_PAR >)    {      s.append(t.image);    }  )  {    return s.toString();  }}String functionCall()       :{  Token t;  String ex;}{  (t = < IDENTIFIER >)   < OPEN_PAR >  (    ex = FormalParameters()  )  < CLOSE_PAR >  {    StringBuffer b = new StringBuffer();    b.append(t.image);    b.append(ex);    return b.toString();  }}String FormalParameters()       :{  String ex;}{  {    StringBuffer b = new StringBuffer();    b.append("(");  }  [    (      ex = FormalParameter()    )    {      b.append(ex);    }    (      ","      (        ex = FormalParameter()      )      {        b.append(",");        b.append(ex);      }    )*  ]  {    b.append(")");    return b.toString();  }}String FormalParameter()       :{  Token t = null;  String expr;}{  (      LOOKAHEAD(2)      (expr = expression())      { return expr; }  |    (t = < IDENTIFIER >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)  |     (t = < FLOAT >)  |     (t = < ID_VALUE >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < ID_ADDRESS >)    {      evaluator.cacheExpression(t.image);    }      )  {    return t.image;  }}

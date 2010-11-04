@@ -1219,322 +1219,186 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
   }
 
   final public Token comparator() throws ParseException {
- /*@bgen(jjtree) comparator */
-  SimpleNode jjtn000 = new SimpleNode(JJTCOMPARATOR);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
-    try {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case EQUAL:
-        t = jj_consume_token(EQUAL);
-        break;
-      case GREATER_THAN:
-        t = jj_consume_token(GREATER_THAN);
-        break;
-      case LESS_THAN:
-        t = jj_consume_token(LESS_THAN);
-        break;
-      case NOT_EQUAL:
-        t = jj_consume_token(NOT_EQUAL);
-        break;
-      case LESS_OR_EQUAL:
-        t = jj_consume_token(LESS_OR_EQUAL);
-        break;
-      case GREATER_OR_EQUAL:
-        t = jj_consume_token(GREATER_OR_EQUAL);
-        break;
-      default:
-        jj_la1[15] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+  Token t;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EQUAL:
+      t = jj_consume_token(EQUAL);
+      break;
+    case GREATER_THAN:
+      t = jj_consume_token(GREATER_THAN);
+      break;
+    case LESS_THAN:
+      t = jj_consume_token(LESS_THAN);
+      break;
+    case NOT_EQUAL:
+      t = jj_consume_token(NOT_EQUAL);
+      break;
+    case LESS_OR_EQUAL:
+      t = jj_consume_token(LESS_OR_EQUAL);
+      break;
+    case GREATER_OR_EQUAL:
+      t = jj_consume_token(GREATER_OR_EQUAL);
+      break;
+    default:
+      jj_la1[15] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
     {if (true) return t;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
   final public String additiveExpression() throws ParseException {
- /*@bgen(jjtree) additiveExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTADDITIVEEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
+  Token t;
   String s;
-    try {
     StringBuffer expr = new StringBuffer();
-      s = multiplicativeExpression();
+    s = multiplicativeExpression();
     expr.append(s);
-      label_5:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case PL_MI_OPERATOR:
-          ;
-          break;
-        default:
-          jj_la1[16] = jj_gen;
-          break label_5;
-        }
-        t = jj_consume_token(PL_MI_OPERATOR);
-              expr.append(t.image);
-        s = multiplicativeExpression();
-              expr.append(s);
+    label_5:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PL_MI_OPERATOR:
+        ;
+        break;
+      default:
+        jj_la1[16] = jj_gen;
+        break label_5;
       }
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+      t = jj_consume_token(PL_MI_OPERATOR);
+              expr.append(t.image);
+      s = multiplicativeExpression();
+              expr.append(s);
+    }
     {if (true) return expr.toString();}
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
   final public String multiplicativeExpression() throws ParseException {
- /*@bgen(jjtree) multiplicativeExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTMULTIPLICATIVEEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);String s;
+  String s;
   Token t;
-    try {
     StringBuffer term = new StringBuffer();
-      s = unaryExpression();
+    s = unaryExpression();
     term.append(s);
-      label_6:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case MUL_DIV_OPERATOR:
-          ;
-          break;
-        default:
-          jj_la1[17] = jj_gen;
-          break label_6;
-        }
-        t = jj_consume_token(MUL_DIV_OPERATOR);
-      term.append(t.image);
-        s = unaryExpression();
-      term.append(s);
+    label_6:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MUL_DIV_OPERATOR:
+        ;
+        break;
+      default:
+        jj_la1[17] = jj_gen;
+        break label_6;
       }
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+      t = jj_consume_token(MUL_DIV_OPERATOR);
+      term.append(t.image);
+      s = unaryExpression();
+      term.append(s);
+    }
     {if (true) return term.toString();}
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
   final public String unaryExpression() throws ParseException {
- /*@bgen(jjtree) unaryExpression */
-  SimpleNode jjtn000 = new SimpleNode(JJTUNARYEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
+  Token t;
   String ex;
-    try {
     StringBuffer s = new StringBuffer();
-      if (jj_2_9(2)) {
-        ex = functionCall();
+    if (jj_2_9(2)) {
+      ex = functionCall();
       s.append(ex);
-      } else {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IDENTIFIER:
-          t = jj_consume_token(IDENTIFIER);
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENTIFIER:
+        t = jj_consume_token(IDENTIFIER);
       s.append(t.image);
       evaluator.cacheExpression(t.image);
-          break;
-        case INTEGER:
-          t = jj_consume_token(INTEGER);
+        break;
+      case INTEGER:
+        t = jj_consume_token(INTEGER);
       s.append(t.image);
-          break;
-        case HEX_INTEGER:
-          t = jj_consume_token(HEX_INTEGER);
+        break;
+      case HEX_INTEGER:
+        t = jj_consume_token(HEX_INTEGER);
                 s.append(t.image);
-          break;
-        case ID_ADDRESS:
-          t = jj_consume_token(ID_ADDRESS);
+        break;
+      case ID_ADDRESS:
+        t = jj_consume_token(ID_ADDRESS);
       String s1 = t.image;
       s.append(s1.substring(1, s1.length()) + ".address");
       evaluator.cacheExpression(t.image);
-          break;
-        case ID_VALUE:
-          t = jj_consume_token(ID_VALUE);
+        break;
+      case ID_VALUE:
+        t = jj_consume_token(ID_VALUE);
       s.append(t.image);
       evaluator.cacheExpression(t.image);
-          break;
-        case OPEN_PAR:
-          t = jj_consume_token(OPEN_PAR);
+        break;
+      case OPEN_PAR:
+        t = jj_consume_token(OPEN_PAR);
       s.append(t.image);
-          ex = expression();
+        ex = expression();
       s.append(ex);
-          t = jj_consume_token(CLOSE_PAR);
+        t = jj_consume_token(CLOSE_PAR);
       s.append(t.image);
-          break;
-        default:
-          jj_la1[18] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
+        break;
+      default:
+        jj_la1[18] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+    }
     {if (true) return s.toString();}
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
   final public String functionCall() throws ParseException {
- /*@bgen(jjtree) functionCall */
-  SimpleNode jjtn000 = new SimpleNode(JJTFUNCTIONCALL);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
+  Token t;
   String ex;
-    try {
-      t = jj_consume_token(IDENTIFIER);
-      jj_consume_token(OPEN_PAR);
-      ex = FormalParameters();
-      jj_consume_token(CLOSE_PAR);
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+    t = jj_consume_token(IDENTIFIER);
+    jj_consume_token(OPEN_PAR);
+    ex = FormalParameters();
+    jj_consume_token(CLOSE_PAR);
     StringBuffer b = new StringBuffer();
     b.append(t.image);
     b.append(ex);
     {if (true) return b.toString();}
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
   final public String FormalParameters() throws ParseException {
- /*@bgen(jjtree) FormalParameters */
-  SimpleNode jjtn000 = new SimpleNode(JJTFORMALPARAMETERS);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);String ex;
-    try {
+  String ex;
     StringBuffer b = new StringBuffer();
     b.append("(");
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case OPEN_PAR:
-      case IDENTIFIER:
-      case ID_VALUE:
-      case ID_ADDRESS:
-      case FLOAT:
-      case HEX_INTEGER:
-      case INTEGER:
-        ex = FormalParameter();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case OPEN_PAR:
+    case IDENTIFIER:
+    case ID_VALUE:
+    case ID_ADDRESS:
+    case FLOAT:
+    case HEX_INTEGER:
+    case INTEGER:
+      ex = FormalParameter();
       b.append(ex);
-        label_7:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case COMMA:
-            ;
-            break;
-          default:
-            jj_la1[19] = jj_gen;
-            break label_7;
-          }
-          jj_consume_token(COMMA);
-          ex = FormalParameter();
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[19] = jj_gen;
+          break label_7;
+        }
+        jj_consume_token(COMMA);
+        ex = FormalParameter();
         b.append(",");
         b.append(ex);
-        }
-        break;
-      default:
-        jj_la1[20] = jj_gen;
-        ;
       }
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
+      break;
+    default:
+      jj_la1[20] = jj_gen;
+      ;
+    }
     b.append(")");
     {if (true) return b.toString();}
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
     throw new Error("Missing return statement in function");
   }
 
