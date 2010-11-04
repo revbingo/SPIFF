@@ -48,9 +48,9 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return a;
   }
 
-  final public SimpleNode parse() throws ParseException {
-                      /*@bgen(jjtree) parse */
-  SimpleNode jjtn000 = new SimpleNode(JJTPARSE);
+  final public SimpleNode adf() throws ParseException {
+                    /*@bgen(jjtree) adf */
+  SimpleNode jjtn000 = new SimpleNode(JJTADF);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {

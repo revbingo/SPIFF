@@ -3,7 +3,7 @@ package com.revbingo.spiff.parser;
 
 public interface SpiffTreeParserTreeConstants
 {
-  public int JJTPARSE = 0;
+  public int JJTADF = 0;
   public int JJTDATATYPEDEFS = 1;
   public int JJTLIST = 2;
   public int JJTENTRY = 3;
@@ -41,7 +41,7 @@ public interface SpiffTreeParserTreeConstants
 
 
   public String[] jjtNodeName = {
-    "parse",
+    "adf",
     "datatypeDefs",
     "list",
     "entry",
@@ -78,4 +78,4 @@ public interface SpiffTreeParserTreeConstants
     "unsignedNumberType",
   };
 }
-/* JavaCC - OriginalChecksum=24de84fb42c92092accca8e8641ff059 (do not edit this line) */
+/* JavaCC - OriginalChecksum=6f79ed75d914655417c1c1bde4a25b6b (do not edit this line) */
