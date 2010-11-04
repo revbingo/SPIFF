@@ -24,12 +24,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
 import com.revbingo.spiff.parser.ParseException;
 import com.revbingo.spiff.parser.SpiffParser;
+import com.revbingo.spiff.vm.SpiffVm;
 
 public class BinaryParser {
 
@@ -68,12 +68,9 @@ public class BinaryParser {
 			fc.read(buffer);
 			buffer.flip();
 
-			Evaluator evaluator = new Evaluator();
-			evaluator.addVariable("fileLength", (int) binaryFile.length());
+			SpiffVm vm = new SpiffVm(instructions, buffer, eventDispatcher);
 
-			for(Instruction ins : instructions){
-				ins.execute(buffer, eventDispatcher, evaluator);
-			}
+			vm.start();
 
 			fc.close();
 		} catch (IOException e) {

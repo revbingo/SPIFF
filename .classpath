@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="bin-test" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/mark/code/jel/jel_g.jar" sourcepath="/home/mark/code/jel/source/src/java"/>
 	<classpathentry kind="lib" path="lib/jmock-junit4-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-library-1.1.jar"/>
@@ -12,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/jmock-legacy-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/jel.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
