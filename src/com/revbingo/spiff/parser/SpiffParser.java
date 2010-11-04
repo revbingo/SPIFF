@@ -19,6 +19,7 @@ public class SpiffParser implements InstructionParser {
 
 		SimpleNode rootNode = parser.adf();
 		rootNode.dump("::");
+
 		return parser.getInstructions();
 	}
 

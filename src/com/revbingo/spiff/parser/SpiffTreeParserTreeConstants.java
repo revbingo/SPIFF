@@ -9,25 +9,25 @@ public interface SpiffTreeParserTreeConstants
   public int JJTENTRY = 3;
   public int JJTBITS = 4;
   public int JJTBYTES = 5;
-  public int JJTINSTRUCTION = 6;
-  public int JJTSTRING = 7;
-  public int JJTINCLUDEINSTRUCTION = 8;
-  public int JJTDEFINEINSTRUCTION = 9;
-  public int JJTSETENCODINGINSTRUCTION = 10;
-  public int JJTSETINSTRUCTION = 11;
-  public int JJTPRINTINSTRUCTION = 12;
-  public int JJTIFINSTRUCTION = 13;
-  public int JJTSETORDERINSTRUCTION = 14;
-  public int JJTREPEATINSTRUCTION = 15;
-  public int JJTGROUPINSTRUCTION = 16;
-  public int JJTJUMPINSTRUCTION = 17;
-  public int JJTSKIPINSTRUCTION = 18;
-  public int JJTMARKINSTRUCTION = 19;
-  public int JJTFIXEDSTRING = 20;
-  public int JJTLITERALSTRING = 21;
-  public int JJTTERMINATEDSTRING = 22;
-  public int JJTFIXEDNUMBER = 23;
-  public int JJTFIXEDUNSIGNED = 24;
+  public int JJTNUMBERTYPE = 6;
+  public int JJTINSTRUCTION = 7;
+  public int JJTSTRING = 8;
+  public int JJTINCLUDEINSTRUCTION = 9;
+  public int JJTDEFINEINSTRUCTION = 10;
+  public int JJTSETENCODINGINSTRUCTION = 11;
+  public int JJTSETINSTRUCTION = 12;
+  public int JJTPRINTINSTRUCTION = 13;
+  public int JJTIFINSTRUCTION = 14;
+  public int JJTSETORDERINSTRUCTION = 15;
+  public int JJTREPEATINSTRUCTION = 16;
+  public int JJTGROUPINSTRUCTION = 17;
+  public int JJTJUMPINSTRUCTION = 18;
+  public int JJTSKIPINSTRUCTION = 19;
+  public int JJTMARKINSTRUCTION = 20;
+  public int JJTFIXEDSTRING = 21;
+  public int JJTLITERALSTRING = 22;
+  public int JJTTERMINATEDSTRING = 23;
+  public int JJTFIXEDNUMBER = 24;
   public int JJTEXPRESSION = 25;
   public int JJTCOMPARATOR = 26;
   public int JJTADDITIVEEXPRESSION = 27;
@@ -35,9 +35,7 @@ public interface SpiffTreeParserTreeConstants
   public int JJTUNARYEXPRESSION = 29;
   public int JJTFUNCTIONCALL = 30;
   public int JJTFORMALPARAMETERS = 31;
-  public int JJTFORMALPARAMETER = 32;
-  public int JJTNUMBERTYPE = 33;
-  public int JJTUNSIGNEDNUMBERTYPE = 34;
+  public int JJTVOID = 32;
 
 
   public String[] jjtNodeName = {
@@ -47,6 +45,7 @@ public interface SpiffTreeParserTreeConstants
     "entry",
     "bits",
     "bytes",
+    "numberType",
     "instruction",
     "string",
     "includeInstruction",
@@ -65,7 +64,6 @@ public interface SpiffTreeParserTreeConstants
     "literalString",
     "terminatedString",
     "fixedNumber",
-    "fixedUnsigned",
     "expression",
     "comparator",
     "additiveExpression",
@@ -73,9 +71,7 @@ public interface SpiffTreeParserTreeConstants
     "unaryExpression",
     "functionCall",
     "FormalParameters",
-    "FormalParameter",
-    "numberType",
-    "unsignedNumberType",
+    "void",
   };
 }
-/* JavaCC - OriginalChecksum=6f79ed75d914655417c1c1bde4a25b6b (do not edit this line) */
+/* JavaCC - OriginalChecksum=3fca8f804fcf986cd2e5f224c00bcc2b (do not edit this line) */

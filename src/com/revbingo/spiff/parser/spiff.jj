@@ -77,7 +77,7 @@
   jjtree.openNodeScope(jjtn000);
 /*@egen*/ Token t1, t2; }{/*@bgen(jjtree) entry */
   try {
-/*@egen*/  (    LOOKAHEAD(8)    string()  |     LOOKAHEAD(2)    fixedNumber()  |     LOOKAHEAD(2)    fixedUnsigned()  |  	bits()  |   	bytes()  |	  	//user defined datatype  	(t1=<IDENTIFIER>) (t2=<IDENTIFIER>)/*@bgen(jjtree)*/
+/*@egen*/  (    LOOKAHEAD(8)    string()  |     LOOKAHEAD(2)    fixedNumber()  |  	bits()  |   	bytes()  |	  	//user defined datatype  	(t1=<IDENTIFIER>) (t2=<IDENTIFIER>)/*@bgen(jjtree)*/
         {
           jjtree.closeNodeScope(jjtn000, true);
           jjtc000 = false;
@@ -164,7 +164,24 @@
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/	}void instruction() :{/*@bgen(jjtree) instruction */
+/*@egen*/	}Token numberType() :{/*@bgen(jjtree) numberType */
+  SimpleNode jjtn000 = new SimpleNode(JJTNUMBERTYPE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/  Token t;}{/*@bgen(jjtree) numberType */
+  try {
+/*@egen*/  (    (t = < TY_DOUBLE >)  |     (t = < TY_INT >)  |     (t = < TY_BYTE >)  |     (t = < TY_FLOAT >)  |     (t = < TY_SHORT >)  |     (t = < TY_LONG >)  |    (t = < TY_UBYTE >)  |     (t = < TY_USHORT >)  |     (t = < TY_ULONG >)  |     (t = < TY_UINT >)  )/*@bgen(jjtree)*/
+  {
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+  }
+/*@egen*/  {    return t;  }/*@bgen(jjtree)*/
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
+/*@egen*/}void instruction() :{/*@bgen(jjtree) instruction */
   SimpleNode jjtn000 = new SimpleNode(JJTINSTRUCTION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
@@ -628,37 +645,6 @@
       jjtree.closeNodeScope(jjtn000, true);
     }
   }
-/*@egen*/}void fixedUnsigned() :{/*@bgen(jjtree) fixedUnsigned */
-  SimpleNode jjtn000 = new SimpleNode(JJTFIXEDUNSIGNED);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t1, t2;}{/*@bgen(jjtree) fixedUnsigned */
-  try {
-/*@egen*/  (    t1 = unsignedNumberType()  )  (t2 = < IDENTIFIER >)/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    FixedLengthUnsignedNumber ins = null;    if (t1.image.equals("uint"))    {      ins = new UnsignedIntegerInstruction();    }    else if (t1.image.equals("ubyte"))    {      ins = new UnsignedByteInstruction();    }    else if (t1.image.equals("ulong"))    {      ins = new UnsignedLongInstruction();    }    else if (t1.image.equals("ushort"))    {      ins = new UnsignedShortInstruction();    }    ins.setName(t2.image);    instructions.add(ins);  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
 /*@egen*/}String expression() :{/*@bgen(jjtree) expression */
   SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
   boolean jjtc000 = true;
@@ -862,69 +848,4 @@
       jjtree.closeNodeScope(jjtn000, true);
     }
   }
-/*@egen*/}String FormalParameter() :{/*@bgen(jjtree) FormalParameter */
-  SimpleNode jjtn000 = new SimpleNode(JJTFORMALPARAMETER);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t = null;  String expr;}{/*@bgen(jjtree) FormalParameter */
-  try {
-/*@egen*/  (      LOOKAHEAD(2)      (expr = expression())      { return expr; }  |    (t = < IDENTIFIER >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)  |     (t = < FLOAT >)  |     (t = < ID_VALUE >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < ID_ADDRESS >)    {      evaluator.cacheExpression(t.image);    }      )/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return t.image;  }/*@bgen(jjtree)*/
-  } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      throw (RuntimeException)jjte000;
-    }
-    if (jjte000 instanceof ParseException) {
-      throw (ParseException)jjte000;
-    }
-    throw (Error)jjte000;
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}Token numberType() :{/*@bgen(jjtree) numberType */
-  SimpleNode jjtn000 = new SimpleNode(JJTNUMBERTYPE);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;}{/*@bgen(jjtree) numberType */
-  try {
-/*@egen*/  (    (t = < TY_DOUBLE >)  |     (t = < TY_INT >)  |     (t = < TY_BYTE >)  |     (t = < TY_FLOAT >)  |     (t = < TY_SHORT >)  |     (t = < TY_LONG >)  )/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return t;  }/*@bgen(jjtree)*/
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}Token unsignedNumberType() :{/*@bgen(jjtree) unsignedNumberType */
-  SimpleNode jjtn000 = new SimpleNode(JJTUNSIGNEDNUMBERTYPE);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/  Token t;}{/*@bgen(jjtree) unsignedNumberType */
-  try {
-/*@egen*/  (    (t = < TY_UBYTE >)  |     (t = < TY_USHORT >)  |     (t = < TY_ULONG >)  |     (t = < TY_UINT >)  )/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-  }
-/*@egen*/  {    return t;  }/*@bgen(jjtree)*/
-  } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-  }
-/*@egen*/}
+/*@egen*/}String FormalParameter()       :{  Token t = null;  String expr;}{  (      LOOKAHEAD(2)      (expr = expression())      { return expr; }  |    (t = < IDENTIFIER >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < INTEGER >)  |     (t = < FLOAT >)  |     (t = < ID_VALUE >)    {      evaluator.cacheExpression(t.image);    }  |     (t = < ID_ADDRESS >)    {      evaluator.cacheExpression(t.image);    }      )  {    return t.image;  }}
