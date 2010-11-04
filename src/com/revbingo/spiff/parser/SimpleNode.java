@@ -9,13 +9,13 @@ class SimpleNode implements Node {
   protected Node[] children;
   protected int id;
   protected Object value;
-  protected SpiffParser parser;
+  protected SpiffTreeParser parser;
 
   public SimpleNode(int i) {
     id = i;
   }
 
-  public SimpleNode(SpiffParser p, int i) {
+  public SimpleNode(SpiffTreeParser p, int i) {
     this(i);
     parser = p;
   }
@@ -57,7 +57,7 @@ class SimpleNode implements Node {
      toString(String), otherwise overriding toString() is probably all
      you need to do. */
 
-  public String toString() { return SpiffParserTreeConstants.jjtNodeName[id]; }
+  public String toString() { return SpiffTreeParserTreeConstants.jjtNodeName[id]; }
   public String toString(String prefix) { return prefix + toString(); }
 
   /* Override this method if you want to customize how the node dumps
@@ -76,4 +76,4 @@ class SimpleNode implements Node {
   }
 }
 
-/* JavaCC - OriginalChecksum=ea8f1455eafe8a382013353c0b98cd33 (do not edit this line) */
+/* JavaCC - OriginalChecksum=6d9acd60ead77dae85465080f4710ecc (do not edit this line) */
