@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class JumpInstruction implements Instruction {
 
@@ -33,8 +32,12 @@ public class JumpInstruction implements Instruction {
 		buffer.position(result);
 	}
 
-	public void setExpression(String expression) throws ParseException {
+	public void setExpression(String expression) {
 		this.expression = expression;
+	}
+
+	public String getExpression() {
+		return expression;
 	}
 }
 

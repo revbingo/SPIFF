@@ -631,6 +631,22 @@ public class TestCaseSpiffParser {
 	}
 
 	@Test
+	public void expressionWithMinus() throws Exception {
+		AdfFile adf = AdfFile.start()
+		.add(".jump x/-2")
+		.add(".jump x-2")
+		.add(".jump -2 + 3 / (-4)")
+		.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(3));
+		assertThat(((JumpInstruction) insts.get(0)).getExpression(), is("x/-2"));
+		assertThat(((JumpInstruction) insts.get(1)).getExpression(), is("x-2"));
+		assertThat(((JumpInstruction) insts.get(2)).getExpression(), is("-2+3/(-4)"));
+	}
+
+	@Test
 	public void expressionCanContainFunctions() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add(".if(pow(2,3) == 2) {")
@@ -659,14 +675,14 @@ public class TestCaseSpiffParser {
 	@Test
 	public void expressionsCanContainNegativeNumbers() throws Exception {
 		AdfFile adf = AdfFile.start()
-			.add(".if(abs(-2) == 2) {")
+			.add(".if(abs(-2)/-3 == 2) {")
 			.add("}")
 			.end();
 
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(1));
-		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("abs(-2)==2"));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("abs(-2)/-3==2"));
 	}
 
 	@Test
