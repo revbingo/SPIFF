@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class SetInstruction implements Instruction {
 
@@ -32,7 +31,7 @@ public class SetInstruction implements Instruction {
 		this.varname = varname;
 	}
 
-	public void setExpression(String expr) throws ParseException {
+	public void setExpression(String expr) {
 		this.expression = expr;
 	}
 

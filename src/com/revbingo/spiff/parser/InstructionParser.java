@@ -19,6 +19,7 @@ package com.revbingo.spiff.parser;
 import java.util.List;
 
 import com.revbingo.spiff.instructions.Instruction;
+import com.revbingo.spiff.parser.gen.ParseException;
 
 public interface InstructionParser {
 

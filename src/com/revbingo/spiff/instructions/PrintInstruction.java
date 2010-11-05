@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class PrintInstruction implements Instruction {
 
@@ -33,7 +32,7 @@ public class PrintInstruction implements Instruction {
 		System.out.println("PRINT: " + var + " = " + evaluator.evaluate(var));
 	}
 
-	public void setVar(String s) throws ParseException {
+	public void setVar(String s) {
 		var = s;
 	}
 

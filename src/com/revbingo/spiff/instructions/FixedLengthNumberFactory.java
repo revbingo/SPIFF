@@ -27,11 +27,10 @@ import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
 import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
 import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
 import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
-import com.revbingo.spiff.parser.ParseException;
 
 public class FixedLengthNumberFactory {
 
-	public Datatype getInstruction(String type) throws ParseException{
+	public Datatype getInstruction(String type) {
 		if("int".equals(type)) return new IntegerInstruction();
 		else if("long".equals(type)) return new LongInstruction();
 		else if("float".equals(type)) return new FloatInstruction();
@@ -42,7 +41,7 @@ public class FixedLengthNumberFactory {
 		else if("ushort".equals(type)) return new UnsignedShortInstruction();
 		else if("uint".equals(type)) return new UnsignedIntegerInstruction();
 		else if("ulong".equals(type)) return new UnsignedLongInstruction();
-		else throw new ParseException("Unknown data type");
+		else throw new RuntimeException("Unknown data type");
 	}
 
 }

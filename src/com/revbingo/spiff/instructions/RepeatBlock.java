@@ -21,13 +21,12 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class RepeatBlock extends Block {
 
 	private String repeatCountExpr;
 
-	public void setRepeatCountExpression(String expr) throws ParseException {
+	public void setRepeatCountExpression(String expr) {
 		repeatCountExpr=expr;
 	}
 

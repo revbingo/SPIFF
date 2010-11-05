@@ -61,6 +61,7 @@ import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.instructions.StringReversingInstruction;
+import com.revbingo.spiff.parser.gen.ParseException;
 
 public class TestCaseSpiffParser {
 

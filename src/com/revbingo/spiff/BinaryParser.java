@@ -27,8 +27,8 @@ import java.util.List;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
-import com.revbingo.spiff.parser.ParseException;
 import com.revbingo.spiff.parser.SpiffParser;
+import com.revbingo.spiff.parser.gen.ParseException;
 import com.revbingo.spiff.vm.SpiffVm;
 
 public class BinaryParser {

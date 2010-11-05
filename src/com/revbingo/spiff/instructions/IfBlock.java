@@ -23,7 +23,6 @@ import java.util.List;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class IfBlock extends Block {
 
@@ -44,7 +43,7 @@ public class IfBlock extends Block {
 		}
 	}
 
-	public void setIfExpression(String expr) throws ParseException{
+	public void setIfExpression(String expr) {
 		expression = expr;
 	}
 

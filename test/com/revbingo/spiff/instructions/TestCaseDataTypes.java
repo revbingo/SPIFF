@@ -48,7 +48,6 @@ import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
 import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.parser.ParseException;
 
 public class TestCaseDataTypes {
 	ByteBuffer testBuffer;
@@ -354,12 +353,6 @@ public class TestCaseDataTypes {
 		unit.execute(unsignedByteBuffer, ed, evaluator);
 		assertThat((Long) unit.value, is(equalTo((long) 0xBEBAFECA)));
 		assertThat(unit.address, is(equalTo(0)));
-	}
-
-	@Test(expected=ParseException.class)
-	public void numberFactoryThrowsExceptionForUnknownType() throws Exception {
-		FixedLengthNumberFactory unit = new FixedLengthNumberFactory();
-		unit.getInstruction("oops");
 	}
 
 	@Test
