@@ -2,7 +2,10 @@ package com.revbingo.spiff.parser;
 
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.revbingo.spiff.AdfFormatException;
 import com.revbingo.spiff.datatypes.BitsInstruction;
@@ -42,12 +45,15 @@ import com.revbingo.spiff.parser.gen.ASTskipInstruction;
 import com.revbingo.spiff.parser.gen.ASTstring;
 import com.revbingo.spiff.parser.gen.Node;
 import com.revbingo.spiff.parser.gen.SimpleNode;
+import com.revbingo.spiff.parser.gen.SpiffTreeParserConstants;
 import com.revbingo.spiff.parser.gen.SpiffTreeParserVisitor;
 import com.revbingo.spiff.parser.gen.Token;
 
 public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	private String defaultEncoding = Charset.defaultCharset().displayName();
+
+	private Map <String, List<Instruction>> defines = new HashMap <String, List<Instruction>> ();
 
 	@Override
 	public List<Instruction> visit(SimpleNode node, List<Instruction> data) {
@@ -132,14 +138,20 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTincludeInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+	    List<Instruction> include = defines.get(node.jjtGetLastToken().image);
+	    if (include == null) {
+	    	throw new AdfFormatException("Could not get defined block with name " + node.jjtGetLastToken());
+	    }
+	    data.addAll(include);
 		return data;
 	}
 
 	@Override
 	public List<Instruction> visit(ASTdefineInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+		List<Instruction> nestedInstructions = new ArrayList<Instruction>();
+		node.childrenAccept(this, nestedInstructions);
+		defines.put(findIdentifier(node), nestedInstructions);
 		return data;
 	}
 
@@ -251,4 +263,14 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		} while (t != exprNode.jjtGetLastToken().next);
 		return expression.toString();
 	}
+
+	private String findIdentifier(ASTdefineInstruction node) {
+		Token t = node.jjtGetFirstToken();
+		do {
+			if(t.kind == SpiffTreeParserConstants.IDENTIFIER) return t.image;
+			t = t.next;
+		} while (t != node.jjtGetLastToken().next);
+		return null;
+	}
+
 }
