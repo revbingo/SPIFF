@@ -3,32 +3,30 @@ package com.revbingo.spiff.parser.gen;
 
 public interface SpiffTreeParserVisitor
 {
-  public Object visit(SimpleNode node, Object data);
-  public Object visit(ASTadf node, Object data);
-  public Object visit(ASTdatatypeDefs node, Object data);
-  public Object visit(ASTlist node, Object data);
-  public Object visit(ASTentry node, Object data);
-  public Object visit(ASTbits node, Object data);
-  public Object visit(ASTbytes node, Object data);
-  public Object visit(ASTnumberType node, Object data);
-  public Object visit(ASTinstruction node, Object data);
-  public Object visit(ASTstring node, Object data);
-  public Object visit(ASTincludeInstruction node, Object data);
-  public Object visit(ASTdefineInstruction node, Object data);
-  public Object visit(ASTsetEncodingInstruction node, Object data);
-  public Object visit(ASTsetInstruction node, Object data);
-  public Object visit(ASTprintInstruction node, Object data);
-  public Object visit(ASTifInstruction node, Object data);
-  public Object visit(ASTsetOrderInstruction node, Object data);
-  public Object visit(ASTrepeatInstruction node, Object data);
-  public Object visit(ASTgroupInstruction node, Object data);
-  public Object visit(ASTjumpInstruction node, Object data);
-  public Object visit(ASTskipInstruction node, Object data);
-  public Object visit(ASTmarkInstruction node, Object data);
-  public Object visit(ASTfixedString node, Object data);
-  public Object visit(ASTliteralString node, Object data);
-  public Object visit(ASTterminatedString node, Object data);
-  public Object visit(ASTfixedNumber node, Object data);
-  public Object visit(ASTexpression node, Object data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(SimpleNode node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTadf node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTdatatypeDefs node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTlist node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTentry node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTbits node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTbytes node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTinstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTstring node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTincludeInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTdefineInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTsetEncodingInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTsetInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTifInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTsetOrderInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTrepeatInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTgroupInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTjumpInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTskipInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTmarkInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTfixedString node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTliteralString node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTterminatedString node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTfixedNumber node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTexpression node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
 }
-/* JavaCC - OriginalChecksum=c8f568ba9cccfb2a635ede07da6ea133 (do not edit this line) */
+/* JavaCC - OriginalChecksum=d38102a9b3fdc0654919740aae61b193 (do not edit this line) */

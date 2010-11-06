@@ -32,8 +32,12 @@ public class SkipInstruction implements Instruction {
 		buffer.position(buffer.position() + length);
 	}
 
-	public void setSizeExpression(String ex) {
+	public void setExpression(String ex) {
 		skipExpr = ex;
+	}
+
+	public String getExpression() {
+		return skipExpr;
 	}
 
 }

@@ -55,7 +55,6 @@ import com.revbingo.spiff.instructions.IfBlock;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
-import com.revbingo.spiff.instructions.PrintInstruction;
 import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
@@ -333,7 +332,9 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(2));
 		assertThat(insts.get(0), instanceOf(SkipInstruction.class));
+		assertThat(((SkipInstruction) insts.get(0)).getExpression(), is("14"));
 		assertThat(insts.get(1), instanceOf(SkipInstruction.class));
+		assertThat(((SkipInstruction) insts.get(1)).getExpression(), is("x-1"));
 	}
 
 	@Test(expected=ParseException.class)
@@ -382,18 +383,6 @@ public class TestCaseSpiffParser {
 			parse(adf);
 			fail(".set with more than two args should fail");
 		} catch (ParseException e) {}
-	}
-
-	@Test
-	public void printInstructionTakesOneArg() throws Exception {
-		AdfFile adf = AdfFile.start()
-			.add(".print x")
-			.end();
-
-		List<Instruction> insts = parse(adf);
-
-		assertThat(insts.size(), is(1));
-		assertThat(insts.get(0), instanceOf(PrintInstruction.class));
 	}
 
 	@Test

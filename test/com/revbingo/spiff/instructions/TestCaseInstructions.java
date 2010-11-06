@@ -18,13 +18,10 @@ package com.revbingo.spiff.instructions;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
@@ -200,25 +197,6 @@ public class TestCaseInstructions {
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat(evaluator.evaluateInt("theResult"), is(8));
-	}
-
-	@Test
-	public void printInstructionPrintsToStdOut() throws Exception {
-		PrintStream oldOut = System.out;
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream newOut = new PrintStream(baos);
-		System.setOut(newOut);
-
-		assertThat(baos.size(), is(0));
-
-		PrintInstruction unit = new PrintInstruction();
-		unit.setVar("1 + 3");
-
-		unit.execute(testBuffer, ed, evaluator);
-
-		assertThat(baos.size(), is(not(0)));
-		System.setOut(oldOut);
 	}
 
 	@Test

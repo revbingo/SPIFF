@@ -9,27 +9,25 @@ public interface SpiffTreeParserTreeConstants
   public int JJTENTRY = 3;
   public int JJTBITS = 4;
   public int JJTBYTES = 5;
-  public int JJTNUMBERTYPE = 6;
+  public int JJTVOID = 6;
   public int JJTINSTRUCTION = 7;
   public int JJTSTRING = 8;
   public int JJTINCLUDEINSTRUCTION = 9;
   public int JJTDEFINEINSTRUCTION = 10;
   public int JJTSETENCODINGINSTRUCTION = 11;
   public int JJTSETINSTRUCTION = 12;
-  public int JJTPRINTINSTRUCTION = 13;
-  public int JJTIFINSTRUCTION = 14;
-  public int JJTSETORDERINSTRUCTION = 15;
-  public int JJTREPEATINSTRUCTION = 16;
-  public int JJTGROUPINSTRUCTION = 17;
-  public int JJTJUMPINSTRUCTION = 18;
-  public int JJTSKIPINSTRUCTION = 19;
-  public int JJTMARKINSTRUCTION = 20;
-  public int JJTFIXEDSTRING = 21;
-  public int JJTLITERALSTRING = 22;
-  public int JJTTERMINATEDSTRING = 23;
-  public int JJTFIXEDNUMBER = 24;
-  public int JJTEXPRESSION = 25;
-  public int JJTVOID = 26;
+  public int JJTIFINSTRUCTION = 13;
+  public int JJTSETORDERINSTRUCTION = 14;
+  public int JJTREPEATINSTRUCTION = 15;
+  public int JJTGROUPINSTRUCTION = 16;
+  public int JJTJUMPINSTRUCTION = 17;
+  public int JJTSKIPINSTRUCTION = 18;
+  public int JJTMARKINSTRUCTION = 19;
+  public int JJTFIXEDSTRING = 20;
+  public int JJTLITERALSTRING = 21;
+  public int JJTTERMINATEDSTRING = 22;
+  public int JJTFIXEDNUMBER = 23;
+  public int JJTEXPRESSION = 24;
 
 
   public String[] jjtNodeName = {
@@ -39,14 +37,13 @@ public interface SpiffTreeParserTreeConstants
     "entry",
     "bits",
     "bytes",
-    "numberType",
+    "void",
     "instruction",
     "string",
     "includeInstruction",
     "defineInstruction",
     "setEncodingInstruction",
     "setInstruction",
-    "printInstruction",
     "ifInstruction",
     "setOrderInstruction",
     "repeatInstruction",
@@ -59,7 +56,6 @@ public interface SpiffTreeParserTreeConstants
     "terminatedString",
     "fixedNumber",
     "expression",
-    "void",
   };
 }
-/* JavaCC - OriginalChecksum=6d1f96ea3811e8deb8b582bdd8ecf913 (do not edit this line) */
+/* JavaCC - OriginalChecksum=fc8c2ea57801962273e111a97df1f95e (do not edit this line) */
