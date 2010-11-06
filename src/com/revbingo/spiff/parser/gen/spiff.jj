@@ -112,20 +112,14 @@
       jjtn000.jjtSetLastToken(getToken(0));
     }
   }
-/*@egen*/}void bits() :{/*@bgen(jjtree) bits */
-        ASTbits jjtn000 = new ASTbits(JJTBITS);
-        boolean jjtc000 = true;
-        jjtree.openNodeScope(jjtn000);
-        jjtn000.jjtSetFirstToken(getToken(1));
-/*@egen*/ 	Token t2; 	String expr;}{/*@bgen(jjtree) bits */
+/*@egen*/}void bits() : {/*@bgen(jjtree) bits */
+  ASTbits jjtn000 = new ASTbits(JJTBITS);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+/*@egen*/}{/*@bgen(jjtree) bits */
         try {
-/*@egen*/	<TY_BITS> <OPEN_PAR> (expr = expression()) < CLOSE_PAR> (t2=<IDENTIFIER>)/*@bgen(jjtree)*/
-        {
-          jjtree.closeNodeScope(jjtn000, true);
-          jjtc000 = false;
-          jjtn000.jjtSetLastToken(getToken(0));
-        }
-/*@egen*/		{		BitsInstruction inst = new BitsInstruction();		inst.setName(t2.image);		inst.setNumberOfBitsExpr(expr);				instructions.add(inst);	}/*@bgen(jjtree)*/
+/*@egen*/	<TY_BITS> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -146,20 +140,14 @@
             jjtn000.jjtSetLastToken(getToken(0));
           }
         }
-/*@egen*/	}void bytes() :{/*@bgen(jjtree) bytes */
-        ASTbytes jjtn000 = new ASTbytes(JJTBYTES);
-        boolean jjtc000 = true;
-        jjtree.openNodeScope(jjtn000);
-        jjtn000.jjtSetFirstToken(getToken(1));
-/*@egen*/ 	Token t2; 	String expr;}{/*@bgen(jjtree) bytes */
+/*@egen*/}void bytes() : {/*@bgen(jjtree) bytes */
+  ASTbytes jjtn000 = new ASTbytes(JJTBYTES);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+/*@egen*/}{/*@bgen(jjtree) bytes */
         try {
-/*@egen*/	<TY_BYTES> <OPEN_PAR> (expr = expression()) < CLOSE_PAR> (t2=<IDENTIFIER>)/*@bgen(jjtree)*/
-        {
-          jjtree.closeNodeScope(jjtn000, true);
-          jjtc000 = false;
-          jjtn000.jjtSetLastToken(getToken(0));
-        }
-/*@egen*/		{		BytesInstruction inst = new BytesInstruction();		inst.setName(t2.image);		inst.setLengthExpr(expr);				instructions.add(inst);	}/*@bgen(jjtree)*/
+/*@egen*/	<TY_BYTES> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -180,7 +168,7 @@
             jjtn000.jjtSetLastToken(getToken(0));
           }
         }
-/*@egen*/	}Token numberType()       :{  Token t;}{  (    (t = < TY_DOUBLE >)  |     (t = < TY_INT >)  |     (t = < TY_BYTE >)  |     (t = < TY_FLOAT >)  |     (t = < TY_SHORT >)  |     (t = < TY_LONG >)  |    (t = < TY_UBYTE >)  |     (t = < TY_USHORT >)  |     (t = < TY_ULONG >)  |     (t = < TY_UINT >)  )  {    return t;  }}void instruction() :{/*@bgen(jjtree) instruction */
+/*@egen*/}Token numberType()       :{  Token t;}{  (    (t = < TY_DOUBLE >)  |     (t = < TY_INT >)  |     (t = < TY_BYTE >)  |     (t = < TY_FLOAT >)  |     (t = < TY_SHORT >)  |     (t = < TY_LONG >)  |    (t = < TY_UBYTE >)  |     (t = < TY_USHORT >)  |     (t = < TY_ULONG >)  |     (t = < TY_UINT >)  )  {    return t;  }}void instruction() :{/*@bgen(jjtree) instruction */
   ASTinstruction jjtn000 = new ASTinstruction(JJTINSTRUCTION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
@@ -515,7 +503,7 @@
   jjtn000.jjtSetFirstToken(getToken(1));
 /*@egen*/  Token t;}{/*@bgen(jjtree) string */
   try {
-/*@egen*/  { jjtn000.type = ASTstring.StringType.FIXED; }  <TY_STRING> <OPEN_PAR> expression()  [    <COMMA> t = <ENCODING>    { jjtn000.encoding = t.image; }  ]  <CLOSE_PAR> t = <IDENTIFIER>/*@bgen(jjtree)*/
+/*@egen*/  { jjtn000.type = ASTstring.StringType.FIXED; }  <TY_STRING> <OPEN_PAR> expression()  [ <COMMA> t = <ENCODING>     { jjtn000.encoding = t.image; } ]  <CLOSE_PAR> <IDENTIFIER>/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -543,7 +531,7 @@
    jjtn000.jjtSetFirstToken(getToken(1));
 /*@egen*/   Token t;}{/*@bgen(jjtree) string */
   try {
-/*@egen*/  { jjtn000.type = ASTstring.StringType.LITERAL; }  <TY_STRING>    <OPEN_PAR>   	<QUOTE>   		t = <IDENTIFIER> { jjtn000.literal = t.image; }  	<QUOTE> 	[ 	  <COMMA> t = <ENCODING>	  { jjtn000.encoding = t.image; }	]    <CLOSE_PAR>  t = <IDENTIFIER>/*@bgen(jjtree)*/
+/*@egen*/  { jjtn000.type = ASTstring.StringType.LITERAL; }  <TY_STRING> <OPEN_PAR>   	<QUOTE>   		t = <IDENTIFIER> { jjtn000.literal = t.image; }  	<QUOTE> 	[ <COMMA> t=<ENCODING> { jjtn000.encoding = t.image; } ]    <CLOSE_PAR> <IDENTIFIER>/*@bgen(jjtree)*/
   } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -557,13 +545,7 @@
   jjtn000.jjtSetFirstToken(getToken(1));
 /*@egen*/  Token t;}{/*@bgen(jjtree) string */
   try {
-/*@egen*/  { jjtn000.type = ASTstring.StringType.TERMINATED; }  <TY_STRING>  [    <OPEN_PAR> t = <ENCODING> <CLOSE_PAR>    { jjtn000.encoding = t.image; }  ]  t = <IDENTIFIER>/*@bgen(jjtree)*/
-  {
-    jjtree.closeNodeScope(jjtn000, true);
-    jjtc000 = false;
-    jjtn000.jjtSetLastToken(getToken(0));
-  }
-/*@egen*/  { jjtn000.name = t.image; }/*@bgen(jjtree)*/
+/*@egen*/  { jjtn000.type = ASTstring.StringType.TERMINATED; }  <TY_STRING>  [ <OPEN_PAR> t = <ENCODING> <CLOSE_PAR> { jjtn000.encoding = t.image; } ]  <IDENTIFIER>/*@bgen(jjtree)*/
   } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);

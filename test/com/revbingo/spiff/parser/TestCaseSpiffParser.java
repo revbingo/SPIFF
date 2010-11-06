@@ -95,15 +95,25 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(10));
 		assertThat(insts.get(0), instanceOf(ByteInstruction.class));
+		assertThat(((Datatype) insts.get(0)).name, is("testByte"));
 		assertThat(insts.get(1), instanceOf(IntegerInstruction.class));
+		assertThat(((Datatype) insts.get(1)).name, is("testInt"));
 		assertThat(insts.get(2), instanceOf(LongInstruction.class));
+		assertThat(((Datatype) insts.get(2)).name, is("testLong"));
 		assertThat(insts.get(3), instanceOf(ShortInstruction.class));
+		assertThat(((Datatype) insts.get(3)).name, is("testShort"));
 		assertThat(insts.get(4), instanceOf(DoubleInstruction.class));
+		assertThat(((Datatype) insts.get(4)).name, is("testDouble"));
 		assertThat(insts.get(5), instanceOf(FloatInstruction.class));
+		assertThat(((Datatype) insts.get(5)).name, is("testFloat"));
 		assertThat(insts.get(6), instanceOf(UnsignedByteInstruction.class));
+		assertThat(((Datatype) insts.get(6)).name, is("testUByte"));
 		assertThat(insts.get(7), instanceOf(UnsignedShortInstruction.class));
+		assertThat(((Datatype) insts.get(7)).name, is("testUShort"));
 		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
+		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
 		assertThat(insts.get(9), instanceOf(UnsignedLongInstruction.class));
+		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
 	}
 
 	@Test
@@ -143,6 +153,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(FixedLengthString.class));
 
 		FixedLengthString inst = (FixedLengthString) insts.get(0);
+		assertThat(inst.name, is("str"));
 		assertThat(inst.getLengthExpr(), is("expr"));
 	}
 
@@ -180,6 +191,7 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 		assertThat(insts.size(), is(1));
 		assertThat(insts.get(0), instanceOf(TerminatedString.class));
+		assertThat(((TerminatedString) insts.get(0)).name, is("terminatedString"));
 	}
 
 	@Test
@@ -199,7 +211,7 @@ public class TestCaseSpiffParser {
 	@Test
 	public void stringWithLiteralGeneratesLiteralStringInstruction() throws Exception {
 		AdfFile adf = AdfFile.start()
-			.add("string('mhbd') m")
+			.add("string('mhbd') dbhm")
 			.end();
 
 		List<Instruction> insts = parse(adf);
@@ -208,6 +220,7 @@ public class TestCaseSpiffParser {
 
 		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
 		assertThat(litStr.getLiteral(), is("mhbd"));
+		assertThat(litStr.name, is("dbhm"));
 	}
 
 	@Test

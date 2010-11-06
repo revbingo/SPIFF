@@ -5,6 +5,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import com.revbingo.spiff.AdfFormatException;
+import com.revbingo.spiff.datatypes.BitsInstruction;
+import com.revbingo.spiff.datatypes.BytesInstruction;
 import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.datatypes.FixedLengthString;
 import com.revbingo.spiff.datatypes.LiteralStringInstruction;
@@ -79,13 +81,21 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	@Override
 	public List<Instruction> visit(ASTbits node, List<Instruction> data) {
-		node.childrenAccept(this, data);
+		BitsInstruction inst = new BitsInstruction();
+		inst.setName(node.jjtGetLastToken().image);
+		inst.setNumberOfBitsExpr(getExpr(node.jjtGetChild(0)));
+
+		data.add(inst);
 		return data;
 	}
 
 	@Override
 	public List<Instruction> visit(ASTbytes node, List<Instruction> data) {
-		node.childrenAccept(this, data);
+		BytesInstruction inst = new BytesInstruction();
+		inst.setName(node.jjtGetLastToken().image);
+		inst.setLengthExpr(getExpr(node.jjtGetChild(0)));
+
+		data.add(inst);
 		return data;
 	}
 
@@ -114,7 +124,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 				break;
 		}
 
-		ins.setName(ins.name);
+		ins.setName(node.jjtGetLastToken().image);
 		data.add(ins);
 		return data;
 	}
@@ -214,15 +224,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		data.add(inst);
 		return data;
 	}
-
-//	@Override
-//	public List<Instruction> visit(ASTfixedString node, List<Instruction> data) {
-//
-//
-//	    ins.setName(node.name);
-//	    data.add(ins);
-//		return data;
-//	}
 
 	@Override
 	public List<Instruction> visit(ASTfixedNumber node, List<Instruction> data) {
