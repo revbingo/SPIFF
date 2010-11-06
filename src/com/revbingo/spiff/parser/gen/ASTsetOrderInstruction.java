@@ -4,6 +4,9 @@ package com.revbingo.spiff.parser.gen;
 
 public
 class ASTsetOrderInstruction extends SimpleNode {
+
+	public String byteOrder;
+
   public ASTsetOrderInstruction(int id) {
     super(id);
   }
@@ -14,7 +17,8 @@ class ASTsetOrderInstruction extends SimpleNode {
 
 
   /** Accept the visitor. **/
-  public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
+  @Override
+public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
     return visitor.visit(this, data);
   }
 }

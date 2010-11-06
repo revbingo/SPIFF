@@ -1,14 +1,21 @@
 package com.revbingo.spiff.parser;
 
+import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import com.revbingo.spiff.AdfFormatException;
 import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.FixedLengthString;
+import com.revbingo.spiff.datatypes.LiteralStringInstruction;
+import com.revbingo.spiff.datatypes.StringInstruction;
+import com.revbingo.spiff.datatypes.TerminatedString;
 import com.revbingo.spiff.instructions.FixedLengthNumberFactory;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
 import com.revbingo.spiff.instructions.SetInstruction;
+import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.parser.gen.ASTadf;
 import com.revbingo.spiff.parser.gen.ASTbits;
@@ -18,14 +25,12 @@ import com.revbingo.spiff.parser.gen.ASTdefineInstruction;
 import com.revbingo.spiff.parser.gen.ASTentry;
 import com.revbingo.spiff.parser.gen.ASTexpression;
 import com.revbingo.spiff.parser.gen.ASTfixedNumber;
-import com.revbingo.spiff.parser.gen.ASTfixedString;
 import com.revbingo.spiff.parser.gen.ASTgroupInstruction;
 import com.revbingo.spiff.parser.gen.ASTifInstruction;
 import com.revbingo.spiff.parser.gen.ASTincludeInstruction;
 import com.revbingo.spiff.parser.gen.ASTinstruction;
 import com.revbingo.spiff.parser.gen.ASTjumpInstruction;
 import com.revbingo.spiff.parser.gen.ASTlist;
-import com.revbingo.spiff.parser.gen.ASTliteralString;
 import com.revbingo.spiff.parser.gen.ASTmarkInstruction;
 import com.revbingo.spiff.parser.gen.ASTrepeatInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetEncodingInstruction;
@@ -33,13 +38,14 @@ import com.revbingo.spiff.parser.gen.ASTsetInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetOrderInstruction;
 import com.revbingo.spiff.parser.gen.ASTskipInstruction;
 import com.revbingo.spiff.parser.gen.ASTstring;
-import com.revbingo.spiff.parser.gen.ASTterminatedString;
 import com.revbingo.spiff.parser.gen.Node;
 import com.revbingo.spiff.parser.gen.SimpleNode;
 import com.revbingo.spiff.parser.gen.SpiffTreeParserVisitor;
 import com.revbingo.spiff.parser.gen.Token;
 
 public class SpiffVisitor implements SpiffTreeParserVisitor {
+
+	private String defaultEncoding = Charset.defaultCharset().displayName();
 
 	@Override
 	public List<Instruction> visit(SimpleNode node, List<Instruction> data) {
@@ -91,7 +97,25 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	@Override
 	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
-		node.childrenAccept(this, data);
+		StringInstruction ins = null;
+		String encoding = node.encoding == null ? defaultEncoding : node.encoding;
+
+		switch(node.type) {
+			case FIXED:
+				ins = new FixedLengthString(node.encoding == null ? defaultEncoding : node.encoding);
+			    ((FixedLengthString) ins).setLengthExpr(getExpr(node.jjtGetChild(0)));
+				break;
+			case LITERAL:
+			   	ins = new LiteralStringInstruction(encoding);
+			   	((LiteralStringInstruction) ins).setLiteral(node.literal);
+				break;
+			case TERMINATED:
+			   	ins = new TerminatedString(encoding);
+				break;
+		}
+
+		ins.setName(ins.name);
+		data.add(ins);
 		return data;
 	}
 
@@ -112,7 +136,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTsetEncodingInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+		this.defaultEncoding = node.encoding;
 		return data;
 	}
 
@@ -136,7 +160,17 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTsetOrderInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+
+	    SetOrderInstruction ins = new SetOrderInstruction();
+	    ByteOrder order = null;
+	    if (node.byteOrder.equals("LITTLE_ENDIAN")) {
+	      order = ByteOrder.LITTLE_ENDIAN;
+	    } else {
+	      order = ByteOrder.BIG_ENDIAN;
+	    }
+	    ins.setOrder(order);
+	    data.add(ins);
+
 		return data;
 	}
 
@@ -181,24 +215,14 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		return data;
 	}
 
-	@Override
-	public List<Instruction> visit(ASTfixedString node, List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
-	}
-
-	@Override
-	public List<Instruction> visit(ASTliteralString node, List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
-	}
-
-	@Override
-	public List<Instruction> visit(ASTterminatedString node,
-			List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
-	}
+//	@Override
+//	public List<Instruction> visit(ASTfixedString node, List<Instruction> data) {
+//
+//
+//	    ins.setName(node.name);
+//	    data.add(ins);
+//		return data;
+//	}
 
 	@Override
 	public List<Instruction> visit(ASTfixedNumber node, List<Instruction> data) {

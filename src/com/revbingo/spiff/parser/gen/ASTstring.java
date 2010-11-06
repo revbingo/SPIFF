@@ -4,6 +4,18 @@ package com.revbingo.spiff.parser.gen;
 
 public
 class ASTstring extends SimpleNode {
+
+  public enum StringType {
+	  FIXED,
+	  LITERAL,
+	  TERMINATED
+  }
+
+  public String encoding;
+  public String name;
+  public StringType type;
+  public String literal;
+
   public ASTstring(int id) {
     super(id);
   }
@@ -14,7 +26,8 @@ class ASTstring extends SimpleNode {
 
 
   /** Accept the visitor. **/
-  public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
+  @Override
+public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
     return visitor.visit(this, data);
   }
 }

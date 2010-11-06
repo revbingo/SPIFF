@@ -11,23 +11,20 @@ public interface SpiffTreeParserTreeConstants
   public int JJTBYTES = 5;
   public int JJTVOID = 6;
   public int JJTINSTRUCTION = 7;
-  public int JJTSTRING = 8;
-  public int JJTINCLUDEINSTRUCTION = 9;
-  public int JJTDEFINEINSTRUCTION = 10;
-  public int JJTSETENCODINGINSTRUCTION = 11;
-  public int JJTSETINSTRUCTION = 12;
-  public int JJTIFINSTRUCTION = 13;
-  public int JJTSETORDERINSTRUCTION = 14;
-  public int JJTREPEATINSTRUCTION = 15;
-  public int JJTGROUPINSTRUCTION = 16;
-  public int JJTJUMPINSTRUCTION = 17;
-  public int JJTSKIPINSTRUCTION = 18;
-  public int JJTMARKINSTRUCTION = 19;
-  public int JJTFIXEDSTRING = 20;
-  public int JJTLITERALSTRING = 21;
-  public int JJTTERMINATEDSTRING = 22;
-  public int JJTFIXEDNUMBER = 23;
-  public int JJTEXPRESSION = 24;
+  public int JJTINCLUDEINSTRUCTION = 8;
+  public int JJTDEFINEINSTRUCTION = 9;
+  public int JJTSETENCODINGINSTRUCTION = 10;
+  public int JJTSETINSTRUCTION = 11;
+  public int JJTIFINSTRUCTION = 12;
+  public int JJTSETORDERINSTRUCTION = 13;
+  public int JJTREPEATINSTRUCTION = 14;
+  public int JJTGROUPINSTRUCTION = 15;
+  public int JJTJUMPINSTRUCTION = 16;
+  public int JJTSKIPINSTRUCTION = 17;
+  public int JJTMARKINSTRUCTION = 18;
+  public int JJTSTRING = 19;
+  public int JJTFIXEDNUMBER = 20;
+  public int JJTEXPRESSION = 21;
 
 
   public String[] jjtNodeName = {
@@ -39,7 +36,6 @@ public interface SpiffTreeParserTreeConstants
     "bytes",
     "void",
     "instruction",
-    "string",
     "includeInstruction",
     "defineInstruction",
     "setEncodingInstruction",
@@ -51,11 +47,9 @@ public interface SpiffTreeParserTreeConstants
     "jumpInstruction",
     "skipInstruction",
     "markInstruction",
-    "fixedString",
-    "literalString",
-    "terminatedString",
+    "string",
     "fixedNumber",
     "expression",
   };
 }
-/* JavaCC - OriginalChecksum=fc8c2ea57801962273e111a97df1f95e (do not edit this line) */
+/* JavaCC - OriginalChecksum=7554069291041ad471feb1b64f55d791 (do not edit this line) */

@@ -4,6 +4,8 @@ package com.revbingo.spiff.parser.gen;
 
 public
 class ASTsetEncodingInstruction extends SimpleNode {
+
+  public String encoding;
   public ASTsetEncodingInstruction(int id) {
     super(id);
   }
@@ -14,7 +16,8 @@ class ASTsetEncodingInstruction extends SimpleNode {
 
 
   /** Accept the visitor. **/
-  public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
+  @Override
+public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {
     return visitor.visit(this, data);
   }
 }
