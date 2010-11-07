@@ -4,19 +4,19 @@ package com.revbingo.spiff.parser.gen;
 public interface SpiffTreeParserTreeConstants
 {
   public int JJTADF = 0;
-  public int JJTDATATYPEDEFS = 1;
-  public int JJTLIST = 2;
-  public int JJTENTRY = 3;
-  public int JJTBITS = 4;
-  public int JJTBYTES = 5;
-  public int JJTFIXEDNUMBER = 6;
-  public int JJTVOID = 7;
-  public int JJTINSTRUCTION = 8;
+  public int JJTVOID = 1;
+  public int JJTDATATYPEDEF = 2;
+  public int JJTLIST = 3;
+  public int JJTENTRY = 4;
+  public int JJTBITS = 5;
+  public int JJTBYTES = 6;
+  public int JJTUSERDEFINEDTYPE = 7;
+  public int JJTFIXEDNUMBER = 8;
   public int JJTINCLUDEINSTRUCTION = 9;
   public int JJTDEFINEINSTRUCTION = 10;
   public int JJTSETENCODINGINSTRUCTION = 11;
   public int JJTSETINSTRUCTION = 12;
-  public int JJTIFINSTRUCTION = 13;
+  public int JJTIFELSEBLOCK = 13;
   public int JJTSETORDERINSTRUCTION = 14;
   public int JJTREPEATINSTRUCTION = 15;
   public int JJTGROUPINSTRUCTION = 16;
@@ -29,19 +29,19 @@ public interface SpiffTreeParserTreeConstants
 
   public String[] jjtNodeName = {
     "adf",
-    "datatypeDefs",
+    "void",
+    "datatypeDef",
     "list",
     "entry",
     "bits",
     "bytes",
+    "userDefinedType",
     "fixedNumber",
-    "void",
-    "instruction",
     "includeInstruction",
     "defineInstruction",
     "setEncodingInstruction",
     "setInstruction",
-    "ifInstruction",
+    "ifElseBlock",
     "setOrderInstruction",
     "repeatInstruction",
     "groupInstruction",
@@ -52,4 +52,4 @@ public interface SpiffTreeParserTreeConstants
     "expression",
   };
 }
-/* JavaCC - OriginalChecksum=ea45d12d39a2189237b0717e9e0a7a56 (do not edit this line) */
+/* JavaCC - OriginalChecksum=550e732721d29e19b154db1b79cb2a5e (do not edit this line) */

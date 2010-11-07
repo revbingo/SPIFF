@@ -22,8 +22,8 @@ public class TestCaseSpiffTreeParser {
 		SpiffTreeParser parser = new SpiffTreeParser(new StringReader(".jump x+3/4\n"));
 		SimpleNode node = parser.adf();
 
-		assertThat(node.jjtGetNumChildren(), is(2));
-		assertThat(node.jjtGetChild(1), instanceOf(SimpleNode.class));
+		assertThat(node.jjtGetNumChildren(), is(1));
+		assertThat(node.jjtGetChild(0), instanceOf(SimpleNode.class));
 		List<SimpleNode> expressionNodes = findNodes(node, ASTexpression.class);
 		assertThat(expressionNodes.size(), is(1));
 	}
@@ -33,9 +33,8 @@ public class TestCaseSpiffTreeParser {
 		SpiffTreeParser parser = new SpiffTreeParser(new StringReader(".jump x+3*(x/(9+2))\n"));
 		SimpleNode node = parser.adf();
 
-		node.dump("");
-		assertThat(node.jjtGetNumChildren(), is(2));
-		assertThat(node.jjtGetChild(1), instanceOf(SimpleNode.class));
+		assertThat(node.jjtGetNumChildren(), is(1));
+		assertThat(node.jjtGetChild(0), instanceOf(SimpleNode.class));
 		List<SimpleNode> expressionNodes = findNodes(node, ASTexpression.class);
 		assertThat(expressionNodes.size(), is(1));
 	}

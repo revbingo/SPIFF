@@ -18,24 +18,25 @@ import com.revbingo.spiff.datatypes.TerminatedString;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthNumberFactory;
 import com.revbingo.spiff.instructions.GroupInstruction;
+import com.revbingo.spiff.instructions.IfBlock;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
+import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.parser.gen.ASTadf;
 import com.revbingo.spiff.parser.gen.ASTbits;
 import com.revbingo.spiff.parser.gen.ASTbytes;
-import com.revbingo.spiff.parser.gen.ASTdatatypeDefs;
+import com.revbingo.spiff.parser.gen.ASTdatatypeDef;
 import com.revbingo.spiff.parser.gen.ASTdefineInstruction;
 import com.revbingo.spiff.parser.gen.ASTentry;
 import com.revbingo.spiff.parser.gen.ASTexpression;
 import com.revbingo.spiff.parser.gen.ASTfixedNumber;
 import com.revbingo.spiff.parser.gen.ASTgroupInstruction;
-import com.revbingo.spiff.parser.gen.ASTifInstruction;
+import com.revbingo.spiff.parser.gen.ASTifElseBlock;
 import com.revbingo.spiff.parser.gen.ASTincludeInstruction;
-import com.revbingo.spiff.parser.gen.ASTinstruction;
 import com.revbingo.spiff.parser.gen.ASTjumpInstruction;
 import com.revbingo.spiff.parser.gen.ASTlist;
 import com.revbingo.spiff.parser.gen.ASTmarkInstruction;
@@ -45,6 +46,7 @@ import com.revbingo.spiff.parser.gen.ASTsetInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetOrderInstruction;
 import com.revbingo.spiff.parser.gen.ASTskipInstruction;
 import com.revbingo.spiff.parser.gen.ASTstring;
+import com.revbingo.spiff.parser.gen.ASTuserDefinedType;
 import com.revbingo.spiff.parser.gen.Node;
 import com.revbingo.spiff.parser.gen.SimpleNode;
 import com.revbingo.spiff.parser.gen.SpiffTreeParserConstants;
@@ -56,6 +58,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	private String defaultEncoding = Charset.defaultCharset().displayName();
 
 	private Map <String, List<Instruction>> defines = new HashMap <String, List<Instruction>> ();
+	private Map <String, Class<Datatype>> datatypes = new HashMap<String, Class<Datatype>>();
 
 	@Override
 	public List<Instruction> visit(SimpleNode node, List<Instruction> data) {
@@ -70,8 +73,38 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	}
 
 	@Override
-	public List<Instruction> visit(ASTdatatypeDefs node, List<Instruction> data) {
+	public List<Instruction> visit(ASTdatatypeDef node, List<Instruction> data) {
+		String className = findTokenValue(node, SpiffTreeParserConstants.CLASS);
+		try {
+			Class<Datatype> datatypeClass = (Class<Datatype>) Class.forName(className);
+			if(!Datatype.class.isAssignableFrom(datatypeClass)) {
+				throw new AdfFormatException("Custom datatype " + datatypeClass + " does not extend com.revbingo.spiff.datatypes.Datatype");
+			}
+			datatypes.put(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER), datatypeClass);
+		} catch (ClassNotFoundException e) {
+			throw new AdfFormatException("Unknown datatype class " + className);
+		}
 		node.childrenAccept(this, data);
+		return data;
+	}
+
+	@Override
+	public List<Instruction> visit(ASTuserDefinedType node, List<Instruction> data) {
+		String typeName = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER, 1);
+		String identifier = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER, 2);
+  		Class<Datatype> userType = datatypes.get(typeName);
+  		if(userType == null) {
+  			throw new AdfFormatException("Undefined datatype " + typeName);
+  		}
+  		try {
+  			Datatype inst = userType.newInstance();
+  			inst.setName(identifier);
+  			data.add(inst);
+  		} catch (InstantiationException e) {
+			throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a no-args constructor or threw an exception");
+		} catch (IllegalAccessException e) {
+			throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a publically accessible no args constructor");
+		}
 		return data;
 	}
 
@@ -108,20 +141,14 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	}
 
 	@Override
-	public List<Instruction> visit(ASTinstruction node, List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
-	}
-
-	@Override
 	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
 		StringInstruction ins = null;
-		String encoding = findNodeValue(node, SpiffTreeParserConstants.ENCODING);
+		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
 		if(encoding == null) encoding = defaultEncoding;
 
 		switch(node.type) {
 			case FIXED:
-				ins = new FixedLengthString(node.encoding == null ? defaultEncoding : node.encoding);
+				ins = new FixedLengthString(encoding);
 			    ((FixedLengthString) ins).setLengthExpr(getExpr(node.jjtGetChild(0)));
 				break;
 			case LITERAL:
@@ -154,14 +181,14 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 		List<Instruction> nestedInstructions = new ArrayList<Instruction>();
 		node.childrenAccept(this, nestedInstructions);
-		defines.put(findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER), nestedInstructions);
+		defines.put(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER), nestedInstructions);
 		return data;
 	}
 
 	@Override
 	public List<Instruction> visit(ASTsetEncodingInstruction node,
 			List<Instruction> data) {
-		this.defaultEncoding = findNodeValue(node, SpiffTreeParserConstants.ENCODING);
+		this.defaultEncoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
 		return data;
 	}
 
@@ -170,17 +197,35 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 
 		SetInstruction ins = new SetInstruction();
-	    ins.setVarname(findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER));
+	    ins.setVarname(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER));
 	    ins.setExpression(getExpr(node.jjtGetChild(0)));
 	    data.add(ins);
 		return data;
 	}
 
 	@Override
-	public List<Instruction> visit(ASTifInstruction node, List<Instruction> data) {
-		node.childrenAccept(this, data);
+	public List<Instruction> visit(ASTifElseBlock node, List<Instruction> data) {
+		IfBlock ins = new IfBlock();
+
+		ins.setIfExpression(getExpr(node.jjtGetChild(0)));
+
+		List<Instruction> ifInsts = node.jjtGetChild(1).jjtAccept(this, new ArrayList<Instruction>());
+		ins.setInstructions(ifInsts);
+
+		if(node.jjtGetNumChildren() == 3) {
+			List<Instruction> elseInsts = node.jjtGetChild(2).jjtAccept(this, new ArrayList<Instruction>());
+			ins.setElseInstructions(elseInsts);
+		}
+		data.add(ins);
+
 		return data;
 	}
+
+//	@Override
+//	public List<Instruction> visit(ASTelseInstruction node,
+//			List<Instruction> data) {
+//
+//	}
 
 	@Override
 	public List<Instruction> visit(ASTsetOrderInstruction node,
@@ -188,7 +233,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	    SetOrderInstruction ins = new SetOrderInstruction();
 	    ByteOrder order = null;
-	    String byteOrder = findNodeValue(node, SpiffTreeParserConstants.BYTEORDER);
+	    String byteOrder = findTokenValue(node, SpiffTreeParserConstants.BYTEORDER);
 	    if (byteOrder.equals("LITTLE_ENDIAN")) {
 	      order = ByteOrder.LITTLE_ENDIAN;
 	    } else {
@@ -203,14 +248,21 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTrepeatInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+
+	    RepeatBlock ins = new RepeatBlock();
+	    ins.setRepeatCountExpression(getExpr(node.jjtGetChild(0)));
+	    List<Instruction> nestedInstructions = new ArrayList<Instruction>();
+	    node.childrenAccept(this, nestedInstructions);
+	    ins.setInstructions(nestedInstructions);
+	    data.add(ins);
+
 		return data;
 	}
 
 	@Override
 	public List<Instruction> visit(ASTgroupInstruction node,
 			List<Instruction> data) {
-		String groupName = findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER);
+		String groupName = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER);
 	    data.add(new GroupInstruction(groupName));
 
 	    node.childrenAccept(this, data);
@@ -267,18 +319,56 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		Token t = exprNode.jjtGetFirstToken();
 		StringBuffer expression = new StringBuffer();
 		do {
-			expression.append(t.image);
+			String tokenText = t.image;
+			if(t.kind == SpiffTreeParserConstants.ID_ADDRESS) {
+				tokenText = tokenText.substring(1, tokenText.length()) + ".address";
+			}
+			expression.append(tokenText);
 			t = t.next;
 		} while (t != exprNode.jjtGetLastToken().next);
 		return expression.toString();
 	}
 
-	private String findNodeValue(SimpleNode node, int kind) {
+	private String findTokenValue(SimpleNode node, int kind) {
+		return findTokenValue(node, kind, 1);
+	}
+
+	private String findTokenValue(SimpleNode node, int kind, int count) {
 		Token t = node.jjtGetFirstToken();
 		do {
-			if(t.kind == kind) return t.image;
+			if(t.kind == kind && (--count == 0)) return t.image;
 			t = t.next;
 		} while (t != node.jjtGetLastToken().next);
 		return null;
 	}
+
+//	  public void optimise() {
+//		    List <Instruction> allInsts = flatten(instructions);
+//		    for (Instruction i : allInsts) {
+//		      if (i instanceof Datatype) {
+//		        Datatype ri = (Datatype) i;
+//		        if (!evaluator.isReferenced(ri.getName())) {
+//		          ri.setReferenced(false);
+//		        }
+//		      }
+//		    }
+//		  }
+//
+//		  public List<Instruction> getInstructions() {
+//		  	optimise();
+//		  	return instructions;
+//		  }
+//
+//		  private List <Instruction> flatten(List <Instruction> insts) {
+//		    List <Instruction> a = new ArrayList <Instruction> ();
+//		    for (Instruction i : insts) {
+//		      if (i instanceof Block) {
+//		        a.addAll(flatten(((Block) i).getInstructions()));
+//		      } else {
+//		        a.add(i);
+//		      }
+//		    }
+//		    return a;
+//		  }
+
 }

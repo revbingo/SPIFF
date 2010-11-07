@@ -23,14 +23,10 @@ public class SpiffParser implements InstructionParser {
 
 		ASTadf rootNode = parser.adf();
 
-		rootNode.dump("");
 		SpiffVisitor visitor = new SpiffVisitor();
 		List<Instruction> insts = rootNode.jjtAccept(visitor, new ArrayList<Instruction>());
-		for(Instruction i : insts) {
-			System.out.println(i.getClass().getSimpleName());
-		}
 
-		return insts; //parser.getInstructions();
+		return insts;
 	}
 
 }
