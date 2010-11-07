@@ -26,6 +26,7 @@ import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
+import com.revbingo.spiff.instructions.VmInstruction;
 import com.revbingo.spiff.parser.gen.ASTadf;
 import com.revbingo.spiff.parser.gen.ASTbits;
 import com.revbingo.spiff.parser.gen.ASTbytes;
@@ -83,6 +84,11 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		} catch (ClassNotFoundException e) {
 			throw new AdfFormatException("Unknown datatype class " + className);
 		}
+		return data;
+	}
+
+	@Override
+	public List<Instruction> visit(ASTlist node, List<Instruction> data) {
 		node.childrenAccept(this, data);
 		return data;
 	}
@@ -98,13 +104,12 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
   		try {
   			Datatype inst = userType.newInstance();
   			inst.setName(identifier);
-  			data.add(inst);
+  			return decorateAndAdd(node, inst, data);
   		} catch (InstantiationException e) {
 			throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a no-args constructor or threw an exception");
 		} catch (IllegalAccessException e) {
 			throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a publically accessible no args constructor");
 		}
-		return data;
 	}
 
 	@Override
@@ -112,9 +117,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		BitsInstruction inst = new BitsInstruction();
 		inst.setName(node.jjtGetLastToken().image);
 		inst.setNumberOfBitsExpr(getExpr(node.jjtGetChild(0)));
-
-		data.add(inst);
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
@@ -123,33 +126,31 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		inst.setName(node.jjtGetLastToken().image);
 		inst.setLengthExpr(getExpr(node.jjtGetChild(0)));
 
-		data.add(inst);
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
-		StringInstruction ins = null;
+		StringInstruction inst = null;
 		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
 		if(encoding == null) encoding = defaultEncoding;
 
 		switch(node.type) {
 			case FIXED:
-				ins = new FixedLengthString(encoding);
-			    ((FixedLengthString) ins).setLengthExpr(getExpr(node.jjtGetChild(0)));
+				inst = new FixedLengthString(encoding);
+			    ((FixedLengthString) inst).setLengthExpr(getExpr(node.jjtGetChild(0)));
 				break;
 			case LITERAL:
-			   	ins = new LiteralStringInstruction(encoding);
-			   	((LiteralStringInstruction) ins).setLiteral(node.literal);
+			   	inst = new LiteralStringInstruction(encoding);
+			   	((LiteralStringInstruction) inst).setLiteral(node.literal);
 				break;
 			case TERMINATED:
-			   	ins = new TerminatedString(encoding);
+			   	inst = new TerminatedString(encoding);
 				break;
 		}
 
-		ins.setName(node.jjtGetLastToken().image);
-		data.add(ins);
-		return data;
+		inst.setName(node.jjtGetLastToken().image);
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
@@ -183,36 +184,33 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	public List<Instruction> visit(ASTsetInstruction node,
 			List<Instruction> data) {
 
-		SetInstruction ins = new SetInstruction();
-	    ins.setVarname(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER));
-	    ins.setExpression(getExpr(node.jjtGetChild(0)));
-	    data.add(ins);
-		return data;
+		SetInstruction inst = new SetInstruction();
+	    inst.setVarname(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER));
+	    inst.setExpression(getExpr(node.jjtGetChild(0)));
+	    return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTifElseBlock node, List<Instruction> data) {
-		IfBlock ins = new IfBlock();
+		IfBlock inst = new IfBlock();
 
-		ins.setIfExpression(getExpr(node.jjtGetChild(0)));
+		inst.setIfExpression(getExpr(node.jjtGetChild(0)));
 
 		List<Instruction> ifInsts = node.jjtGetChild(1).jjtAccept(this, new ArrayList<Instruction>());
-		ins.setInstructions(ifInsts);
+		inst.setInstructions(ifInsts);
 
 		if(node.jjtGetNumChildren() == 3) {
 			List<Instruction> elseInsts = node.jjtGetChild(2).jjtAccept(this, new ArrayList<Instruction>());
-			ins.setElseInstructions(elseInsts);
+			inst.setElseInstructions(elseInsts);
 		}
-		data.add(ins);
-
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTsetOrderInstruction node,
 			List<Instruction> data) {
 
-	    SetOrderInstruction ins = new SetOrderInstruction();
+	    SetOrderInstruction inst = new SetOrderInstruction();
 	    ByteOrder order = null;
 	    String byteOrder = findTokenValue(node, SpiffTreeParserConstants.BYTEORDER);
 	    if (byteOrder.equals("LITTLE_ENDIAN")) {
@@ -220,35 +218,32 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	    } else {
 	      order = ByteOrder.BIG_ENDIAN;
 	    }
-	    ins.setOrder(order);
-	    data.add(ins);
-
-		return data;
+	    inst.setOrder(order);
+	    return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTrepeatInstruction node,
 			List<Instruction> data) {
 
-	    RepeatBlock ins = new RepeatBlock();
-	    ins.setRepeatCountExpression(getExpr(node.jjtGetChild(0)));
+	    RepeatBlock inst = new RepeatBlock();
+	    inst.setRepeatCountExpression(getExpr(node.jjtGetChild(0)));
 	    List<Instruction> nestedInstructions = new ArrayList<Instruction>();
 	    node.childrenAccept(this, nestedInstructions);
-	    ins.setInstructions(nestedInstructions);
-	    data.add(ins);
-
-		return data;
+	    inst.setInstructions(nestedInstructions);
+	    return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTgroupInstruction node,
 			List<Instruction> data) {
 		String groupName = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER);
-	    data.add(new GroupInstruction(groupName));
-
+	    decorateAndAdd(node, new GroupInstruction(groupName), data);
 	    node.childrenAccept(this, data);
 
-	    data.add(new EndGroupInstruction(groupName));
+	    EndGroupInstruction endGroupInst = new EndGroupInstruction(groupName);
+	    endGroupInst.lineNumber = node.jjtGetLastToken().beginLine;
+	    data.add(endGroupInst);
 		return data;
 	}
 
@@ -257,8 +252,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 		JumpInstruction inst = new JumpInstruction();
 		inst.setExpression(getExpr(node.jjtGetChild(0)));
-		data.add(inst);
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
@@ -266,8 +260,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 		SkipInstruction inst = new SkipInstruction();
 		inst.setExpression(getExpr(node.jjtGetChild(0)));
-		data.add(inst);
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
@@ -275,17 +268,15 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 		MarkInstruction inst = new MarkInstruction();
 		inst.setName(node.jjtGetLastToken().image);
-		data.add(inst);
-		return data;
+		return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
 	public List<Instruction> visit(ASTfixedNumber node, List<Instruction> data) {
 	    FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
-	    Datatype ins = insF.getInstruction(node.jjtGetFirstToken().image);
-	    ins.setName(node.jjtGetLastToken().image);
-	    data.add(ins);
-		return data;
+	    Datatype inst = insF.getInstruction(node.jjtGetFirstToken().image);
+	    inst.setName(node.jjtGetLastToken().image);
+	    return decorateAndAdd(node, inst, data);
 	}
 
 	@Override
@@ -322,12 +313,13 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		return null;
 	}
 
-	@Override
-	public List<Instruction> visit(ASTlist node, List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
+	private List<Instruction> decorateAndAdd(SimpleNode node, Instruction inst, List<Instruction> list) {
+		if(inst instanceof VmInstruction) {
+			((VmInstruction) inst).lineNumber = node.jjtGetFirstToken().beginLine;
+		}
+		list.add(inst);
+		return list;
 	}
-
 //	  public void optimise() {
 //		    List <Instruction> allInsts = flatten(instructions);
 //		    for (Instruction i : allInsts) {

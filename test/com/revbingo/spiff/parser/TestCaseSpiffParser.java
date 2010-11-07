@@ -60,6 +60,7 @@ import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.instructions.StringReversingInstruction;
+import com.revbingo.spiff.instructions.VmInstruction;
 import com.revbingo.spiff.parser.gen.ParseException;
 
 public class TestCaseSpiffParser {
@@ -116,6 +117,26 @@ public class TestCaseSpiffParser {
 		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
 	}
 
+	@Test
+	public void instructionsHaveLineNumbers() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("byte theByte")
+			.add("")
+			.add("int theInt")
+			.add("#comment")
+			.add(".repeat(x) {")
+			.add("   byte anotherByte")
+			.add("}")
+			.end();
+
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.size(), is(3));
+		assertThat(((VmInstruction) insts.get(0)).lineNumber, is(1));
+		assertThat(((VmInstruction) insts.get(1)).lineNumber, is(3));
+		assertThat(((VmInstruction) insts.get(2)).lineNumber, is(5));
+		assertThat(((VmInstruction) ((RepeatBlock) insts.get(2)).getInstructions().get(0)).lineNumber, is(6));
+	}
 	@Test
 	public void bitsTakesArgForNumberOfBits() throws Exception {
 		AdfFile adf = AdfFile.start()
