@@ -31,7 +31,6 @@ import com.revbingo.spiff.parser.gen.ASTbits;
 import com.revbingo.spiff.parser.gen.ASTbytes;
 import com.revbingo.spiff.parser.gen.ASTdatatypeDef;
 import com.revbingo.spiff.parser.gen.ASTdefineInstruction;
-import com.revbingo.spiff.parser.gen.ASTentry;
 import com.revbingo.spiff.parser.gen.ASTexpression;
 import com.revbingo.spiff.parser.gen.ASTfixedNumber;
 import com.revbingo.spiff.parser.gen.ASTgroupInstruction;
@@ -105,18 +104,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		} catch (IllegalAccessException e) {
 			throw new AdfFormatException("Custom datatype " + userType.getName() + " does not have a publically accessible no args constructor");
 		}
-		return data;
-	}
-
-	@Override
-	public List<Instruction> visit(ASTlist node, List<Instruction> data) {
-		node.childrenAccept(this, data);
-		return data;
-	}
-
-	@Override
-	public List<Instruction> visit(ASTentry node, List<Instruction> data) {
-		node.childrenAccept(this, data);
 		return data;
 	}
 
@@ -221,12 +208,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		return data;
 	}
 
-//	@Override
-//	public List<Instruction> visit(ASTelseInstruction node,
-//			List<Instruction> data) {
-//
-//	}
-
 	@Override
 	public List<Instruction> visit(ASTsetOrderInstruction node,
 			List<Instruction> data) {
@@ -309,7 +290,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	@Override
 	public List<Instruction> visit(ASTexpression node, List<Instruction> data) {
-
 		return data;
 	}
 
@@ -342,6 +322,12 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		return null;
 	}
 
+	@Override
+	public List<Instruction> visit(ASTlist node, List<Instruction> data) {
+		node.childrenAccept(this, data);
+		return data;
+	}
+
 //	  public void optimise() {
 //		    List <Instruction> allInsts = flatten(instructions);
 //		    for (Instruction i : allInsts) {
@@ -353,12 +339,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 //		      }
 //		    }
 //		  }
-//
-//		  public List<Instruction> getInstructions() {
-//		  	optimise();
-//		  	return instructions;
-//		  }
-//
+
 //		  private List <Instruction> flatten(List <Instruction> insts) {
 //		    List <Instruction> a = new ArrayList <Instruction> ();
 //		    for (Instruction i : insts) {

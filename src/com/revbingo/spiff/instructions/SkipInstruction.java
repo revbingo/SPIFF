@@ -22,7 +22,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class SkipInstruction implements Instruction {
+public class SkipInstruction extends VmInstruction {
 
 	private String skipExpr;
 

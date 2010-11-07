@@ -24,7 +24,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class Block implements Instruction, Iterable<Instruction> {
+public class Block extends VmInstruction implements Iterable<Instruction> {
 
 	protected List<Instruction> instructions;
 

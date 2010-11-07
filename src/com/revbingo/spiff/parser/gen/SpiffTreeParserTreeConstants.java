@@ -7,24 +7,23 @@ public interface SpiffTreeParserTreeConstants
   public int JJTVOID = 1;
   public int JJTDATATYPEDEF = 2;
   public int JJTLIST = 3;
-  public int JJTENTRY = 4;
-  public int JJTBITS = 5;
-  public int JJTBYTES = 6;
-  public int JJTUSERDEFINEDTYPE = 7;
-  public int JJTFIXEDNUMBER = 8;
+  public int JJTBITS = 4;
+  public int JJTBYTES = 5;
+  public int JJTUSERDEFINEDTYPE = 6;
+  public int JJTFIXEDNUMBER = 7;
+  public int JJTSTRING = 8;
   public int JJTINCLUDEINSTRUCTION = 9;
   public int JJTDEFINEINSTRUCTION = 10;
   public int JJTSETENCODINGINSTRUCTION = 11;
   public int JJTSETINSTRUCTION = 12;
-  public int JJTIFELSEBLOCK = 13;
-  public int JJTSETORDERINSTRUCTION = 14;
-  public int JJTREPEATINSTRUCTION = 15;
-  public int JJTGROUPINSTRUCTION = 16;
-  public int JJTJUMPINSTRUCTION = 17;
-  public int JJTSKIPINSTRUCTION = 18;
-  public int JJTMARKINSTRUCTION = 19;
-  public int JJTSTRING = 20;
-  public int JJTEXPRESSION = 21;
+  public int JJTSETORDERINSTRUCTION = 13;
+  public int JJTJUMPINSTRUCTION = 14;
+  public int JJTSKIPINSTRUCTION = 15;
+  public int JJTMARKINSTRUCTION = 16;
+  public int JJTIFELSEBLOCK = 17;
+  public int JJTREPEATINSTRUCTION = 18;
+  public int JJTGROUPINSTRUCTION = 19;
+  public int JJTEXPRESSION = 20;
 
 
   public String[] jjtNodeName = {
@@ -32,24 +31,23 @@ public interface SpiffTreeParserTreeConstants
     "void",
     "datatypeDef",
     "list",
-    "entry",
     "bits",
     "bytes",
     "userDefinedType",
     "fixedNumber",
+    "string",
     "includeInstruction",
     "defineInstruction",
     "setEncodingInstruction",
     "setInstruction",
-    "ifElseBlock",
     "setOrderInstruction",
-    "repeatInstruction",
-    "groupInstruction",
     "jumpInstruction",
     "skipInstruction",
     "markInstruction",
-    "string",
+    "ifElseBlock",
+    "repeatInstruction",
+    "groupInstruction",
     "expression",
   };
 }
-/* JavaCC - OriginalChecksum=550e732721d29e19b154db1b79cb2a5e (do not edit this line) */
+/* JavaCC - OriginalChecksum=bc2471157f8daf68731e3e3e708125c6 (do not edit this line) */

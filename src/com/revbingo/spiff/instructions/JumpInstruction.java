@@ -22,7 +22,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class JumpInstruction implements Instruction {
+public class JumpInstruction extends VmInstruction {
 
 	private String expression;
 

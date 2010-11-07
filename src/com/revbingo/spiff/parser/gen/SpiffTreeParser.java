@@ -175,7 +175,7 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
           case TY_BITS:
           case TY_BYTES:
           case IDENTIFIER:
-            entry();
+            datatype();
             break;
           case INS_JUMP:
           case INS_SETORDER:
@@ -232,53 +232,27 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
-  final public void entry() throws ParseException {
- /*@bgen(jjtree) entry */
-  ASTentry jjtn000 = new ASTentry(JJTENTRY);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-  jjtn000.jjtSetFirstToken(getToken(1));Token t1, t2;
-    try {
-      if (jj_2_1(8)) {
-        string();
-      } else if (jj_2_2(2)) {
-        fixedNumber();
-      } else {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case TY_BITS:
-          bits();
-          break;
-        case TY_BYTES:
-          bytes();
-          break;
-        case IDENTIFIER:
-          userDefinedType();
-          break;
-        default:
-          jj_la1[6] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-      }
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
+  final public void datatype() throws ParseException {
+    if (jj_2_1(8)) {
+      string();
+    } else if (jj_2_2(2)) {
+      fixedNumber();
     } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtn000.jjtSetLastToken(getToken(0));
-    }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case TY_BITS:
+        bits();
+        break;
+      case TY_BYTES:
+        bytes();
+        break;
+      case IDENTIFIER:
+        userDefinedType();
+        break;
+      default:
+        jj_la1[6] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
     }
   }
 
@@ -437,6 +411,124 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
+  final public void string() throws ParseException {
+    if (jj_2_3(3)) {
+      literalString();
+    } else if (jj_2_4(3)) {
+      fixedString();
+    } else if (jj_2_5(3)) {
+      terminatedString();
+    } else {
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void fixedString() throws ParseException {
+                              /*@bgen(jjtree) string */
+  ASTstring jjtn000 = new ASTstring(JJTSTRING);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+    try {
+    jjtn000.type = ASTstring.StringType.FIXED;
+      jj_consume_token(TY_STRING);
+      jj_consume_token(OPEN_PAR);
+      expression();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        jj_consume_token(COMMA);
+        jj_consume_token(ENCODING);
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        ;
+      }
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(IDENTIFIER);
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
+    }
+    }
+  }
+
+  final public void literalString() throws ParseException {
+ /*@bgen(jjtree) string */
+   ASTstring jjtn000 = new ASTstring(JJTSTRING);
+   boolean jjtc000 = true;
+   jjtree.openNodeScope(jjtn000);
+   jjtn000.jjtSetFirstToken(getToken(1));Token t;
+    try {
+    jjtn000.type = ASTstring.StringType.LITERAL;
+      jj_consume_token(TY_STRING);
+      jj_consume_token(OPEN_PAR);
+      jj_consume_token(QUOTE);
+      t = jj_consume_token(IDENTIFIER);
+                                   jjtn000.literal = t.image;
+      jj_consume_token(QUOTE);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        jj_consume_token(COMMA);
+        jj_consume_token(ENCODING);
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        ;
+      }
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(IDENTIFIER);
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
+    }
+    }
+  }
+
+  final public void terminatedString() throws ParseException {
+                                   /*@bgen(jjtree) string */
+  ASTstring jjtn000 = new ASTstring(JJTSTRING);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
+    try {
+    jjtn000.type = ASTstring.StringType.TERMINATED;
+      jj_consume_token(TY_STRING);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_PAR:
+        jj_consume_token(OPEN_PAR);
+        jj_consume_token(ENCODING);
+        jj_consume_token(CLOSE_PAR);
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        ;
+      }
+      jj_consume_token(IDENTIFIER);
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
+    }
+    }
+  }
+
   final public void instruction() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INS_JUMP:
@@ -473,20 +565,7 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
       includeInstruction();
       break;
     default:
-      jj_la1[8] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  final public void string() throws ParseException {
-    if (jj_2_3(3)) {
-      literalString();
-    } else if (jj_2_4(3)) {
-      fixedString();
-    } else if (jj_2_5(3)) {
-      terminatedString();
-    } else {
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -594,66 +673,6 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
-  final public void ifElseBlock() throws ParseException {
-                      /*@bgen(jjtree) ifElseBlock */
-  ASTifElseBlock jjtn000 = new ASTifElseBlock(JJTIFELSEBLOCK);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-  jjtn000.jjtSetFirstToken(getToken(1));
-    try {
-      jj_consume_token(INS_IF);
-      jj_consume_token(OPEN_PAR);
-      expression();
-      jj_consume_token(CLOSE_PAR);
-      jj_consume_token(OPEN_BRACE);
-      list();
-      jj_consume_token(CLOSE_BRACE);
-      if (jj_2_6(2)) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case EOL:
-          jj_consume_token(EOL);
-          break;
-        default:
-          jj_la1[9] = jj_gen;
-          ;
-        }
-        jj_consume_token(INS_ELSE);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case EOL:
-          jj_consume_token(EOL);
-          break;
-        default:
-          jj_la1[10] = jj_gen;
-          ;
-        }
-        jj_consume_token(OPEN_BRACE);
-        list();
-        jj_consume_token(CLOSE_BRACE);
-      } else {
-        ;
-      }
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtn000.jjtSetLastToken(getToken(0));
-    }
-    }
-  }
-
   final public void setOrderInstruction() throws ParseException {
                               /*@bgen(jjtree) setOrderInstruction */
   ASTsetOrderInstruction jjtn000 = new ASTsetOrderInstruction(JJTSETORDERINSTRUCTION);
@@ -663,78 +682,6 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     try {
       jj_consume_token(INS_SETORDER);
       jj_consume_token(BYTEORDER);
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtn000.jjtSetLastToken(getToken(0));
-    }
-    }
-  }
-
-  final public void repeatInstruction() throws ParseException {
-                            /*@bgen(jjtree) repeatInstruction */
-  ASTrepeatInstruction jjtn000 = new ASTrepeatInstruction(JJTREPEATINSTRUCTION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-  jjtn000.jjtSetFirstToken(getToken(1));
-    try {
-      jj_consume_token(INS_REPEAT);
-      jj_consume_token(OPEN_PAR);
-      expression();
-      jj_consume_token(CLOSE_PAR);
-      jj_consume_token(OPEN_BRACE);
-      list();
-      jj_consume_token(CLOSE_BRACE);
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-      jjtn000.jjtSetLastToken(getToken(0));
-    }
-    }
-  }
-
-  final public void groupInstruction() throws ParseException {
-                           /*@bgen(jjtree) groupInstruction */
-  ASTgroupInstruction jjtn000 = new ASTgroupInstruction(JJTGROUPINSTRUCTION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-  jjtn000.jjtSetFirstToken(getToken(1));
-    try {
-      jj_consume_token(INS_GROUP);
-      jj_consume_token(OPEN_PAR);
-      jj_consume_token(IDENTIFIER);
-      jj_consume_token(CLOSE_PAR);
-      jj_consume_token(OPEN_BRACE);
-      list();
-      jj_consume_token(CLOSE_BRACE);
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -822,28 +769,44 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
-  final public void fixedString() throws ParseException {
-                              /*@bgen(jjtree) string */
-  ASTstring jjtn000 = new ASTstring(JJTSTRING);
+  final public void ifElseBlock() throws ParseException {
+                      /*@bgen(jjtree) ifElseBlock */
+  ASTifElseBlock jjtn000 = new ASTifElseBlock(JJTIFELSEBLOCK);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
-    jjtn000.type = ASTstring.StringType.FIXED;
-      jj_consume_token(TY_STRING);
+      jj_consume_token(INS_IF);
       jj_consume_token(OPEN_PAR);
       expression();
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMA:
-        jj_consume_token(COMMA);
-        jj_consume_token(ENCODING);
-        break;
-      default:
-        jj_la1[11] = jj_gen;
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
+      if (jj_2_6(2)) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          jj_consume_token(EOL);
+          break;
+        default:
+          jj_la1[12] = jj_gen;
+          ;
+        }
+        jj_consume_token(INS_ELSE);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          jj_consume_token(EOL);
+          break;
+        default:
+          jj_la1[13] = jj_gen;
+          ;
+        }
+        jj_consume_token(OPEN_BRACE);
+        list();
+        jj_consume_token(CLOSE_BRACE);
+      } else {
         ;
       }
-      jj_consume_token(CLOSE_PAR);
-      jj_consume_token(IDENTIFIER);
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -866,31 +829,34 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
-  final public void literalString() throws ParseException {
- /*@bgen(jjtree) string */
-   ASTstring jjtn000 = new ASTstring(JJTSTRING);
-   boolean jjtc000 = true;
-   jjtree.openNodeScope(jjtn000);
-   jjtn000.jjtSetFirstToken(getToken(1));Token t;
+  final public void repeatInstruction() throws ParseException {
+                            /*@bgen(jjtree) repeatInstruction */
+  ASTrepeatInstruction jjtn000 = new ASTrepeatInstruction(JJTREPEATINSTRUCTION);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
-    jjtn000.type = ASTstring.StringType.LITERAL;
-      jj_consume_token(TY_STRING);
+      jj_consume_token(INS_REPEAT);
       jj_consume_token(OPEN_PAR);
-      jj_consume_token(QUOTE);
-      t = jj_consume_token(IDENTIFIER);
-                                   jjtn000.literal = t.image;
-      jj_consume_token(QUOTE);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMA:
-        jj_consume_token(COMMA);
-        jj_consume_token(ENCODING);
-        break;
-      default:
-        jj_la1[12] = jj_gen;
-        ;
-      }
+      expression();
       jj_consume_token(CLOSE_PAR);
-      jj_consume_token(IDENTIFIER);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -899,26 +865,34 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     }
   }
 
-  final public void terminatedString() throws ParseException {
-                                   /*@bgen(jjtree) string */
-  ASTstring jjtn000 = new ASTstring(JJTSTRING);
+  final public void groupInstruction() throws ParseException {
+                           /*@bgen(jjtree) groupInstruction */
+  ASTgroupInstruction jjtn000 = new ASTgroupInstruction(JJTGROUPINSTRUCTION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtn000.jjtSetFirstToken(getToken(1));
     try {
-    jjtn000.type = ASTstring.StringType.TERMINATED;
-      jj_consume_token(TY_STRING);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case OPEN_PAR:
-        jj_consume_token(OPEN_PAR);
-        jj_consume_token(ENCODING);
-        jj_consume_token(CLOSE_PAR);
-        break;
-      default:
-        jj_la1[13] = jj_gen;
-        ;
-      }
+      jj_consume_token(INS_GROUP);
+      jj_consume_token(OPEN_PAR);
       jj_consume_token(IDENTIFIER);
+      jj_consume_token(CLOSE_PAR);
+      jj_consume_token(OPEN_BRACE);
+      list();
+      jj_consume_token(CLOSE_BRACE);
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -1217,6 +1191,59 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     finally { jj_save(8, xla); }
   }
 
+  private boolean jj_3R_22() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(41)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(45)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(44)) return true;
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_19() {
+    if (jj_3R_22()) return true;
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    if (jj_3R_14()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14() {
+    if (jj_3R_18()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_19()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
   private boolean jj_3R_17() {
     if (jj_scan_token(OPEN_PAR)) return true;
     if (jj_scan_token(ENCODING)) return true;
@@ -1239,26 +1266,6 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
-  private boolean jj_3_2() {
-    if (jj_3R_9()) return true;
-    return false;
-  }
-
-  private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_29() {
-    if (jj_3R_30()) return true;
-    return false;
-  }
-
-  private boolean jj_3_5() {
-    if (jj_3R_12()) return true;
-    return false;
-  }
-
   private boolean jj_3R_10() {
     if (jj_scan_token(TY_STRING)) return true;
     if (jj_scan_token(OPEN_PAR)) return true;
@@ -1273,19 +1280,14 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
+  private boolean jj_3R_29() {
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
   private boolean jj_3R_32() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_31()) return true;
-    return false;
-  }
-
-  private boolean jj_3_3() {
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  private boolean jj_3_4() {
-    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -1295,16 +1297,14 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
-  private boolean jj_3R_8() {
+  private boolean jj_3_6() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_3()) {
-    jj_scanpos = xsp;
-    if (jj_3_4()) {
-    jj_scanpos = xsp;
-    if (jj_3_5()) return true;
-    }
-    }
+    if (jj_scan_token(16)) jj_scanpos = xsp;
+    if (jj_scan_token(INS_ELSE)) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(16)) jj_scanpos = xsp;
+    if (jj_scan_token(OPEN_BRACE)) return true;
     return false;
   }
 
@@ -1347,12 +1347,40 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
+  private boolean jj_3_5() {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  private boolean jj_3_3() {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  private boolean jj_3_4() {
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
   private boolean jj_3R_30() {
     if (jj_3R_31()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_32()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_8() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_3()) {
+    jj_scanpos = xsp;
+    if (jj_3_4()) {
+    jj_scanpos = xsp;
+    if (jj_3_5()) return true;
+    }
     }
     return false;
   }
@@ -1417,28 +1445,6 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
-  private boolean jj_3R_26() {
-    if (jj_scan_token(MUL_DIV_OPERATOR)) return true;
-    if (jj_3R_25()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_20() {
-    if (jj_3R_25()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_26()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_21() {
-    if (jj_scan_token(PL_MI_OPERATOR)) return true;
-    if (jj_3R_20()) return true;
-    return false;
-  }
-
   private boolean jj_3R_9() {
     if (jj_3R_15()) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
@@ -1479,66 +1485,34 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
     return false;
   }
 
+  private boolean jj_3R_26() {
+    if (jj_scan_token(MUL_DIV_OPERATOR)) return true;
+    if (jj_3R_25()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_20() {
+    if (jj_3R_25()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_26()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_21() {
+    if (jj_scan_token(PL_MI_OPERATOR)) return true;
+    if (jj_3R_20()) return true;
+    return false;
+  }
+
   private boolean jj_3R_18() {
     if (jj_3R_20()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_21()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_6() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(16)) jj_scanpos = xsp;
-    if (jj_scan_token(INS_ELSE)) return true;
-    xsp = jj_scanpos;
-    if (jj_scan_token(16)) jj_scanpos = xsp;
-    if (jj_scan_token(OPEN_BRACE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_22() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(40)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(41)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(43)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(45)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(44)) return true;
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_19() {
-    if (jj_3R_22()) return true;
-    if (jj_3R_18()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_16() {
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_14() {
-    if (jj_3R_18()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_19()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
@@ -1562,10 +1536,10 @@ public class SpiffTreeParser/*@bgen(jjtree)*/implements SpiffTreeParserTreeConst
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x10000,0x0,0xfc01fff8,0xfc00fff8,0xfc00fff8,0x0,0xc000,0x3ff0,0xfc000000,0x10000,0x10000,0x1000000,0x1000000,0x100000,0x0,0x0,0x0,0x0,0x0,0x0,0x100000,0x100000,0x1000000,0x0,};
+      jj_la1_0 = new int[] {0x10000,0x0,0xfc01fff8,0xfc00fff8,0xfc00fff8,0x0,0xc000,0x3ff0,0x1000000,0x1000000,0x100000,0xfc000000,0x10000,0x10000,0x0,0x0,0x0,0x0,0x0,0x0,0x100000,0x100000,0x1000000,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x80,0x110079,0x10079,0x10079,0x100000,0x10000,0x0,0x79,0x0,0x0,0x0,0x0,0x0,0x3f00,0x3f00,0x4000,0x8000,0x4000,0x804000,0x4a0000,0xeb4000,0x0,0xab0000,};
+      jj_la1_1 = new int[] {0x0,0x80,0x110079,0x10079,0x10079,0x100000,0x10000,0x0,0x0,0x0,0x0,0x79,0x0,0x0,0x3f00,0x3f00,0x4000,0x8000,0x4000,0x804000,0x4a0000,0xeb4000,0x0,0xab0000,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[9];
   private boolean jj_rescan = false;

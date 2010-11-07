@@ -22,7 +22,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class EndGroupInstruction implements Instruction {
+public class EndGroupInstruction extends VmInstruction {
 
 	private String groupName;
 
