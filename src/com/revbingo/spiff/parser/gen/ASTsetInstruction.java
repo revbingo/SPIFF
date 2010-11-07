@@ -5,7 +5,6 @@ package com.revbingo.spiff.parser.gen;
 public
 class ASTsetInstruction extends SimpleNode {
 
-	public String name;
   public ASTsetInstruction(int id) {
     super(id);
   }

@@ -15,7 +15,9 @@ import com.revbingo.spiff.datatypes.FixedLengthString;
 import com.revbingo.spiff.datatypes.LiteralStringInstruction;
 import com.revbingo.spiff.datatypes.StringInstruction;
 import com.revbingo.spiff.datatypes.TerminatedString;
+import com.revbingo.spiff.instructions.EndGroupInstruction;
 import com.revbingo.spiff.instructions.FixedLengthNumberFactory;
+import com.revbingo.spiff.instructions.GroupInstruction;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.instructions.JumpInstruction;
 import com.revbingo.spiff.instructions.MarkInstruction;
@@ -114,7 +116,8 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
 		StringInstruction ins = null;
-		String encoding = node.encoding == null ? defaultEncoding : node.encoding;
+		String encoding = findNodeValue(node, SpiffTreeParserConstants.ENCODING);
+		if(encoding == null) encoding = defaultEncoding;
 
 		switch(node.type) {
 			case FIXED:
@@ -151,14 +154,14 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 		List<Instruction> nestedInstructions = new ArrayList<Instruction>();
 		node.childrenAccept(this, nestedInstructions);
-		defines.put(findIdentifier(node), nestedInstructions);
+		defines.put(findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER), nestedInstructions);
 		return data;
 	}
 
 	@Override
 	public List<Instruction> visit(ASTsetEncodingInstruction node,
 			List<Instruction> data) {
-		this.defaultEncoding = node.encoding;
+		this.defaultEncoding = findNodeValue(node, SpiffTreeParserConstants.ENCODING);
 		return data;
 	}
 
@@ -167,7 +170,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 			List<Instruction> data) {
 
 		SetInstruction ins = new SetInstruction();
-	    ins.setVarname(node.name);
+	    ins.setVarname(findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER));
 	    ins.setExpression(getExpr(node.jjtGetChild(0)));
 	    data.add(ins);
 		return data;
@@ -185,7 +188,8 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	    SetOrderInstruction ins = new SetOrderInstruction();
 	    ByteOrder order = null;
-	    if (node.byteOrder.equals("LITTLE_ENDIAN")) {
+	    String byteOrder = findNodeValue(node, SpiffTreeParserConstants.BYTEORDER);
+	    if (byteOrder.equals("LITTLE_ENDIAN")) {
 	      order = ByteOrder.LITTLE_ENDIAN;
 	    } else {
 	      order = ByteOrder.BIG_ENDIAN;
@@ -206,7 +210,12 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTgroupInstruction node,
 			List<Instruction> data) {
-		node.childrenAccept(this, data);
+		String groupName = findNodeValue(node, SpiffTreeParserConstants.IDENTIFIER);
+	    data.add(new GroupInstruction(groupName));
+
+	    node.childrenAccept(this, data);
+
+	    data.add(new EndGroupInstruction(groupName));
 		return data;
 	}
 
@@ -240,7 +249,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTfixedNumber node, List<Instruction> data) {
 	    FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
-	    Datatype ins = insF.getInstruction(node.type);
+	    Datatype ins = insF.getInstruction(node.jjtGetFirstToken().image);
 	    ins.setName(node.jjtGetLastToken().image);
 	    data.add(ins);
 		return data;
@@ -264,13 +273,12 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		return expression.toString();
 	}
 
-	private String findIdentifier(ASTdefineInstruction node) {
+	private String findNodeValue(SimpleNode node, int kind) {
 		Token t = node.jjtGetFirstToken();
 		do {
-			if(t.kind == SpiffTreeParserConstants.IDENTIFIER) return t.image;
+			if(t.kind == kind) return t.image;
 			t = t.next;
 		} while (t != node.jjtGetLastToken().next);
 		return null;
 	}
-
 }

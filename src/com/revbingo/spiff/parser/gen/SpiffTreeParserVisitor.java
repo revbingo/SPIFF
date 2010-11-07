@@ -10,6 +10,7 @@ public interface SpiffTreeParserVisitor
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTentry node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTbits node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTbytes node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
+  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTfixedNumber node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTinstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTincludeInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTdefineInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
@@ -23,7 +24,6 @@ public interface SpiffTreeParserVisitor
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTskipInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTmarkInstruction node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTstring node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
-  public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTfixedNumber node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
   public java.util.List<com.revbingo.spiff.instructions.Instruction> visit(ASTexpression node, java.util.List<com.revbingo.spiff.instructions.Instruction> data);
 }
-/* JavaCC - OriginalChecksum=f04b1c8d0b16621bd1245ff8a9f095a9 (do not edit this line) */
+/* JavaCC - OriginalChecksum=09b9e781dc5149c66e6da3031d25bd84 (do not edit this line) */

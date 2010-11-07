@@ -5,8 +5,6 @@ package com.revbingo.spiff.parser.gen;
 public
 class ASTsetOrderInstruction extends SimpleNode {
 
-	public String byteOrder;
-
   public ASTsetOrderInstruction(int id) {
     super(id);
   }

@@ -5,8 +5,6 @@ package com.revbingo.spiff.parser.gen;
 public
 class ASTfixedNumber extends SimpleNode {
 
-  public String type;
-
   public ASTfixedNumber(int id) {
     super(id);
   }
