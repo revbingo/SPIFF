@@ -70,7 +70,7 @@ public class BinaryParser {
 
 			SpiffVm vm = new SpiffVm(instructions, buffer, eventDispatcher);
 
-			vm.start();
+			vm.start(false);
 
 			fc.close();
 		} catch (IOException e) {

@@ -13,6 +13,8 @@ import com.revbingo.spiff.datatypes.ByteInstruction;
 import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
+import com.revbingo.spiff.parser.AdfFile;
+import com.revbingo.spiff.parser.SpiffParser;
 
 public class TestCaseSpiffVm {
 
@@ -22,7 +24,7 @@ public class TestCaseSpiffVm {
 		instructions.add(new ByteInstruction("a"));
 		TestEventListener ed = new TestEventListener();
 		SpiffVm unit = new SpiffVm(instructions, ByteBuffer.wrap(new byte[] { 0x7f }), ed);
-		unit.start();
+		unit.start(false);
 		assertThat(ed.lastInstruction.getName(), is("a"));
 	}
 
@@ -30,6 +32,43 @@ public class TestCaseSpiffVm {
 	public void evaluatorIsInitialisedWithLengthOfFileAsSpecialVar() {
 		SpiffVm unit = new SpiffVm(null, ByteBuffer.wrap(new byte[] { 0x00, 0x00, 0x00, 0x00 }), null);
 		assertThat((Integer) unit.getVar("fileLength"), is(4));
+	}
+
+	@Test
+	public void vmCanStepThroughAndReportLineNumber() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add("byte byteOne")
+			.add("byte byteTwo")
+			.end();
+		List<Instruction> instructions = new SpiffParser(adf.asInputStream()).parse();
+		SpiffVm unit = new SpiffVm(instructions,ByteBuffer.wrap(new byte[] { 0x01, 0x02}), new TestEventListener());
+		runInThread(unit, true);
+		waitForSuspension(unit);
+
+		assertThat(unit.isSuspended(), is(true));
+		assertThat(unit.getNextLineNumber(), is(1));
+
+		unit.step();
+
+		assertThat(unit.getNextLineNumber(), is(2));
+	}
+
+	private void runInThread(final SpiffVm vm, final boolean step) {
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				vm.start(step);
+			}
+		};
+
+		Thread t = new Thread(r);
+		t.start();
+	}
+
+	private void waitForSuspension(SpiffVm vm) {
+		do {
+			try { Thread.sleep(100); } catch(Exception e) {}
+		} while(!vm.isSuspended());
 	}
 
 	public class TestEventListener implements EventListener {

@@ -21,9 +21,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
@@ -845,36 +842,6 @@ public class TestCaseSpiffParser {
 		@Override
 		public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
 			return null;
-		}
-	}
-	private static class AdfFile {
-
-		private StringBuffer buffer = new StringBuffer();
-
-		public static AdfFile start() {
-			return new AdfFile();
-		}
-
-		public AdfFile add(String line) {
-			return add(line, true);
-		}
-
-		public AdfFile add(String line, boolean cr) {
-			buffer.append(line);
-			if(cr) buffer.append("\n");
-			return this;
-		}
-
-		public AdfFile end() {
-			return this;
-		}
-
-		public InputStream asInputStream() {
-			try {
-				return new ByteArrayInputStream(buffer.toString().getBytes("US-ASCII"));
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 }
