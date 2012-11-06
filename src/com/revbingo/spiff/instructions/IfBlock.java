@@ -52,7 +52,8 @@ public class IfBlock extends Block {
 	}
 
 	public void setElseInstructions(List<Instruction> inst){
-		elseInsts = new Block(inst);
+		elseInsts = new Block();
+		elseInsts.setInstructions(inst);
 	}
 
 	public Block getElseInstructions() {
@@ -60,7 +61,9 @@ public class IfBlock extends Block {
 	}
 
 	public Block getIfInstructions() {
-		return new Block(instructions);
+		Block ifInstructions = new Block();
+		ifInstructions.setInstructions(instructions);
+		return ifInstructions;
 	}
 
 	@Override

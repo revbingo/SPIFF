@@ -26,7 +26,7 @@ import com.revbingo.spiff.instructions.RepeatBlock;
 import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
-import com.revbingo.spiff.instructions.VmInstruction;
+import com.revbingo.spiff.instructions.AdfInstruction;
 import com.revbingo.spiff.parser.gen.ASTadf;
 import com.revbingo.spiff.parser.gen.ASTbits;
 import com.revbingo.spiff.parser.gen.ASTbytes;
@@ -314,8 +314,8 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	}
 
 	private List<Instruction> decorateAndAdd(SimpleNode node, Instruction inst, List<Instruction> list) {
-		if(inst instanceof VmInstruction) {
-			((VmInstruction) inst).lineNumber = node.jjtGetFirstToken().beginLine;
+		if(inst instanceof AdfInstruction) {
+			((AdfInstruction) inst).lineNumber = node.jjtGetFirstToken().beginLine;
 		}
 		list.add(inst);
 		return list;

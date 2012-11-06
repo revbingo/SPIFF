@@ -22,11 +22,9 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class EndGroupInstruction extends VmInstruction {
+public class EndGroupInstruction extends AdfInstruction {
 
 	private String groupName;
-
-	public EndGroupInstruction() { super(); }
 
 	public EndGroupInstruction(String name) {
 		this.setGroupName(name);

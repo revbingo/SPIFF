@@ -23,7 +23,7 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class SetOrderInstruction extends VmInstruction {
+public class SetOrderInstruction extends AdfInstruction {
 
 	private ByteOrder order;
 

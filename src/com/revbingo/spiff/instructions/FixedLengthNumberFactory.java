@@ -41,7 +41,7 @@ public class FixedLengthNumberFactory {
 		else if("ushort".equals(type)) return new UnsignedShortInstruction();
 		else if("uint".equals(type)) return new UnsignedIntegerInstruction();
 		else if("ulong".equals(type)) return new UnsignedLongInstruction();
-		else throw new RuntimeException("Unknown data type");
+		throw new RuntimeException("Unknown data type");
 	}
 
 }

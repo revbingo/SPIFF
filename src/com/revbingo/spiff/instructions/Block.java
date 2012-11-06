@@ -24,15 +24,9 @@ import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
 
-public class Block extends VmInstruction implements Iterable<Instruction> {
+public class Block extends AdfInstruction implements Iterable<Instruction> {
 
 	protected List<Instruction> instructions;
-
-	public Block(){}
-
-	public Block(List<Instruction> i){
-		instructions = i;
-	}
 
 	@Override
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {

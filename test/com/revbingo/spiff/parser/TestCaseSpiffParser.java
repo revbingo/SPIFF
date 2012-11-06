@@ -57,7 +57,7 @@ import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.instructions.StringReversingInstruction;
-import com.revbingo.spiff.instructions.VmInstruction;
+import com.revbingo.spiff.instructions.AdfInstruction;
 import com.revbingo.spiff.parser.gen.ParseException;
 
 public class TestCaseSpiffParser {
@@ -129,10 +129,10 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(3));
-		assertThat(((VmInstruction) insts.get(0)).lineNumber, is(1));
-		assertThat(((VmInstruction) insts.get(1)).lineNumber, is(3));
-		assertThat(((VmInstruction) insts.get(2)).lineNumber, is(5));
-		assertThat(((VmInstruction) ((RepeatBlock) insts.get(2)).getInstructions().get(0)).lineNumber, is(6));
+		assertThat(((AdfInstruction) insts.get(0)).lineNumber, is(1));
+		assertThat(((AdfInstruction) insts.get(1)).lineNumber, is(3));
+		assertThat(((AdfInstruction) insts.get(2)).lineNumber, is(5));
+		assertThat(((AdfInstruction) ((RepeatBlock) insts.get(2)).getInstructions().get(0)).lineNumber, is(6));
 	}
 	@Test
 	public void bitsTakesArgForNumberOfBits() throws Exception {

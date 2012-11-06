@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.events.EventListener;
-import com.revbingo.spiff.instructions.VmInstruction;
+import com.revbingo.spiff.instructions.AdfInstruction;
 
-public abstract class Datatype extends VmInstruction {
+public abstract class Datatype extends AdfInstruction {
 
 	public int address;  //address this instruction was executed
 	public String name;  //name given in map

@@ -1,12 +1,15 @@
 package com.revbingo.spiff.vm;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.revbingo.spiff.datatypes.ByteInstruction;
@@ -24,7 +27,7 @@ public class TestCaseSpiffVm {
 		instructions.add(new ByteInstruction("a"));
 		TestEventListener ed = new TestEventListener();
 		SpiffVm unit = new SpiffVm(instructions, ByteBuffer.wrap(new byte[] { 0x7f }), ed);
-		unit.start(false);
+		unit.start();
 		assertThat(ed.lastInstruction.getName(), is("a"));
 	}
 
@@ -34,41 +37,96 @@ public class TestCaseSpiffVm {
 		assertThat((Integer) unit.getVar("fileLength"), is(4));
 	}
 
+//	@Test
+//	public void vmCanStepThroughAndReportLineNumber() throws Exception {
+//		AdfFile adf = AdfFile.start()
+//			.add("byte byteOne")
+//			.add("byte byteTwo")
+//			.end();
+//		List<Instruction> instructions = new SpiffParser(adf.asInputStream()).parse();
+//		TestEventListener ed = new TestEventListener();
+//		SpiffVm unit = new SpiffVm(instructions,ByteBuffer.wrap(new byte[] { 0x11, 0x12}), ed);
+//		runInThread(unit, true);
+//		waitForSuspension(unit);
+//
+//		assertThat(unit.isSuspended(), is(true));
+//		assertThat(unit.getNextLineNumber(), is(1));
+//
+//		unit.step();
+//
+//		assertThat(ed.lastInstruction.name, is("byteOne"));
+//		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x11));
+//		assertThat(unit.getNextLineNumber(), is(2));
+//
+//		unit.step();
+//		assertThat(ed.lastInstruction.name, is("byteTwo"));
+//		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x12));
+//	}
+
 	@Test
-	public void vmCanStepThroughAndReportLineNumber() throws Exception {
+	public void canAddBreakpointAndVmStopsBeforeExecutingItAndThenResumes() throws Exception {
 		AdfFile adf = AdfFile.start()
 			.add("byte byteOne")
 			.add("byte byteTwo")
 			.end();
+
 		List<Instruction> instructions = new SpiffParser(adf.asInputStream()).parse();
-		SpiffVm unit = new SpiffVm(instructions,ByteBuffer.wrap(new byte[] { 0x01, 0x02}), new TestEventListener());
-		runInThread(unit, true);
-		waitForSuspension(unit);
+		TestEventListener ed = new TestEventListener();
+		SpiffVm unit = new SpiffVm(instructions,ByteBuffer.wrap(new byte[] { 0x11, 0x12}), ed);
 
-		assertThat(unit.isSuspended(), is(true));
-		assertThat(unit.getNextLineNumber(), is(1));
+		unit.setBreakpoint(2);
 
-		unit.step();
+		VmThread thread = new VmThread(unit);
+		thread.start();
+		thread.waitForHalt();
 
+		assertThat(ed.lastInstruction.name, is("byteOne"));
 		assertThat(unit.getNextLineNumber(), is(2));
+
+		thread.runToNext();
+
+		assertThat(ed.lastInstruction.name, is("byteTwo"));
+		assertThat(thread.isAlive(), is(false));
 	}
 
-	private void runInThread(final SpiffVm vm, final boolean step) {
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				vm.start(step);
-			}
-		};
+	@Test
+	@Ignore
+	public void canAddBreakpointInALoopAndSeeMultipleHalts() throws Exception {
+		AdfFile adf = AdfFile.start()
+			.add(".repeat(3) {")
+			.add("	byte theByte")
+			.add("}")
+			.end();
 
-		Thread t = new Thread(r);
-		t.start();
-	}
+		List<Instruction> instructions = new SpiffParser(adf.asInputStream()).parse();
+		TestEventListener ed = new TestEventListener();
+		SpiffVm unit = new SpiffVm(instructions,ByteBuffer.wrap(new byte[] { 0x11, 0x22, 0x33}), ed);
 
-	private void waitForSuspension(SpiffVm vm) {
-		do {
-			try { Thread.sleep(100); } catch(Exception e) {}
-		} while(!vm.isSuspended());
+		unit.setBreakpoint(2);
+
+		VmThread thread = new VmThread(unit);
+		thread.start();
+		thread.waitForHalt();
+
+		assertThat(ed.lastInstruction, is(nullValue()));
+
+		thread.runToNext();
+
+		assertThat(ed.lastInstruction, is(not(nullValue())));
+		assertThat(ed.lastInstruction.name, is("theByte"));
+		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x11));
+
+		thread.runToNext();
+
+		assertThat(ed.lastInstruction, is(not(nullValue())));
+		assertThat(ed.lastInstruction.name, is("theByte"));
+		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x22));
+
+		thread.runToNext();
+
+		assertThat(ed.lastInstruction, is(not(nullValue())));
+		assertThat(ed.lastInstruction.name, is("theByte"));
+		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x33));
 	}
 
 	public class TestEventListener implements EventListener {
@@ -82,6 +140,32 @@ public class TestCaseSpiffVm {
 
 		@Override
 		public void notifyGroup(String groupName, boolean start) {
+		}
+
+	}
+
+	private class VmThread extends Thread {
+
+		private SpiffVm vm;
+
+		public VmThread(SpiffVm unit) {
+			this.vm = unit;
+		}
+
+		public void runToNext() {
+			vm.resume();
+			waitForHalt();
+		}
+
+		@Override
+		public void run() {
+			vm.start();
+		}
+
+		public void waitForHalt() {
+			do {
+				try { Thread.sleep(100); } catch(Exception e) {}
+			} while(this.isAlive() && !vm.isSuspended());
 		}
 
 	}

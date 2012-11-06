@@ -22,12 +22,32 @@ public class DebugEventListener implements EventListener {
 
 	int tabCount = 0;
 
+	private EventListener wrappedListener;
+	
+	public DebugEventListener() {
+		this(new EventListener() {
+
+			@Override
+			public void notifyData(Datatype ins) {
+			}
+			
+			@Override
+			public void notifyGroup(String groupName, boolean start) {
+			}
+		});
+	}
+	
+	public DebugEventListener(EventListener wrappedListener) {
+		this.wrappedListener = wrappedListener;
+	}
+	
 	@Override
 	public void notifyData(Datatype ins) {
 		for(int i=0;i<tabCount;i++) {
 			System.out.print("\t");
 		}
 		System.out.println("[" + ins.name + "] " + ins.value);
+		wrappedListener.notifyData(ins);
 	}
 
 	@Override
@@ -44,6 +64,8 @@ public class DebugEventListener implements EventListener {
 		if(start) {
 			tabCount++;
 		}
+		
+		wrappedListener.notifyGroup(groupName, start);
 	}
 
 }

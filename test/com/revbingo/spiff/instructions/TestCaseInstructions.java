@@ -160,7 +160,8 @@ public class TestCaseInstructions {
 	public void blockCanBeUsedAsIterable() throws Exception {
 		List<Instruction> insts = Arrays.asList((Instruction) new ByteInstruction("one"), new ByteInstruction("two"));
 
-		Block unit = new Block(insts);
+		Block unit = new Block();
+		unit.setInstructions(insts);
 
 		int count = 0;
 		for(Instruction i : unit) {
