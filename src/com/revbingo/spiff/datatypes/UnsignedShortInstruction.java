@@ -31,7 +31,13 @@ public class UnsignedShortInstruction extends FixedLengthUnsignedNumber {
 		bytes[0] = (byte) ((signedShort >> 8) & 0xFF);
 		bytes[1] = (byte) (signedShort & 0xFF);
 		int[] ubytes = convertBytesToInts(bytes);
-		return (int) (ubytes[0] << 8 | ubytes[1]);
+		int i = (int) (ubytes[0] << 8 | ubytes[1]);
+		if(literalExpr != null) {
+			if(i != evaluator.evaluateInt(literalExpr)) {
+				throw new ExecutionException("Value " + i + " did not match expected value " + literalExpr);
+			}
+		}
+		return i;
 	}
 
 }

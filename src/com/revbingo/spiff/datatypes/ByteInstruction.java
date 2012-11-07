@@ -18,6 +18,7 @@ package com.revbingo.spiff.datatypes;
 
 import java.nio.ByteBuffer;
 
+import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 
 public class ByteInstruction extends NumberType {
@@ -30,7 +31,13 @@ public class ByteInstruction extends NumberType {
 	
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) {
-		return buffer.get();
+		byte b = buffer.get();
+		if(literalExpr != null) {
+			if(b != evaluator.evaluateByte(literalExpr)) {
+				throw new ExecutionException("Value " + b + " did not match expected value " + literalExpr);
+			}
+		}
+		return b;
 	}
 	
 }

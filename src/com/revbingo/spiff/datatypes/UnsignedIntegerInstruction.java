@@ -34,10 +34,16 @@ public class UnsignedIntegerInstruction extends FixedLengthUnsignedNumber {
 		bytes[3] = (byte)(signedInt);
 
 		int[] ubytes = convertBytesToInts(bytes);
-		return Long.valueOf(ubytes[0] << 24
-						| ubytes[1] << 16
-						| ubytes[2] << 8
-						| ubytes[3]);
+		long l =  Long.valueOf(ubytes[0] << 24
+				| ubytes[1] << 16
+				| ubytes[2] << 8
+				| ubytes[3]);
+		if(literalExpr != null) {
+			if(l != evaluator.evaluateLong(literalExpr)) {
+				throw new ExecutionException("Value " + l + " did not match expected value " + literalExpr);
+			}
+		}
+		return l;
 	}
 
 

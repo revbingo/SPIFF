@@ -25,7 +25,13 @@ public class ShortInstruction extends NumberType {
 
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
-		return buffer.getShort();
+		Short s = buffer.getShort();
+		if(literalExpr != null) {
+			if(s != evaluator.evaluateShort(literalExpr)) {
+				throw new ExecutionException("Value " + s + " did not match expected value " + literalExpr);
+			}
+		}
+		return s;
 	}
 
 }

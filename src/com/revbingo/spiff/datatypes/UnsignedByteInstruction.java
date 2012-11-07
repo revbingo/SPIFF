@@ -28,6 +28,12 @@ public class UnsignedByteInstruction extends FixedLengthUnsignedNumber {
 		address = buffer.position();
 		byte [] bytes = new byte[1];
 		buffer.get(bytes);
-		return (short) convertBytesToInts(bytes)[0];
+		short s = (short) convertBytesToInts(bytes)[0];
+		if(literalExpr != null) {
+			if(s != evaluator.evaluateShort(literalExpr)) {
+				throw new ExecutionException("Value " + s + " did not match expected value " + literalExpr);
+			}
+		}
+		return s;
 	}
 }

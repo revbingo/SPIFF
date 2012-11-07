@@ -25,7 +25,13 @@ public class LongInstruction extends NumberType {
 
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
-		return buffer.getLong();
+		Long l = buffer.getLong();
+		if(literalExpr != null) {
+			if(l != evaluator.evaluateLong(literalExpr)) {
+				throw new ExecutionException("Value " + l + " did not match expected value " + literalExpr);
+			}
+		}
+		return l;
 	}
 
 }

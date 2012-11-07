@@ -19,8 +19,12 @@ package com.revbingo.spiff.instructions;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -369,5 +373,120 @@ public class TestCaseDataTypes {
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat(unit.getAddress(), is(4));
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfByteLiteralNumberDoesNotMatch() throws Exception {
+		ByteInstruction inst = new ByteInstruction();
+		inst.setLiteral("0x54");
+	
+		try {
+			//first byte should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfShortLiteralNumberDoesNotMatch() throws Exception {
+		ShortInstruction inst = new ShortInstruction();
+		inst.setLiteral("0x5465");
+	
+		try {
+			//first short should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
+	}
+
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfIntegerLiteralNumberDoesNotMatch() throws Exception {
+		IntegerInstruction inst = new IntegerInstruction();
+		inst.setLiteral("0x54657374");
+	
+		try {
+			//first short should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfLongLiteralNumberDoesNotMatch() throws Exception {
+		byte[] testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+		ByteBuffer longerBuffer = ByteBuffer.wrap(testData);
+		
+		LongInstruction inst = new LongInstruction();
+		inst.setLiteral("0x5465737444617461L");
+		
+		try {
+			//first short should pass
+			inst.execute(longerBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(longerBuffer, ed, evaluator);
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfUnsignedByteLiteralNumberDoesNotMatch() throws Exception {
+		UnsignedByteInstruction inst = new UnsignedByteInstruction();
+		inst.setLiteral("0x54");
+		
+		try {
+			//first short should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfUnsignedShortLiteralNumberDoesNotMatch() throws Exception {
+		UnsignedShortInstruction inst = new UnsignedShortInstruction();
+		inst.setLiteral("0x5465");
+		
+		try {
+			//first short should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
+	}
+	
+	@Test(expected=ExecutionException.class)
+	public void exceptionIfUnsignedIntegerLiteralNumberDoesNotMatch() throws Exception {
+		UnsignedIntegerInstruction inst = new UnsignedIntegerInstruction();
+		inst.setLiteral("0x54657374");
+		
+		try {
+			//first short should pass
+			inst.execute(testBuffer, ed, evaluator);
+		} catch(Exception e) {
+			fail();
+		}
+		
+		//next byte should fail
+		inst.execute(testBuffer, ed, evaluator);
 	}
 }

@@ -25,6 +25,12 @@ public class IntegerInstruction extends NumberType {
 
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
-		return buffer.getInt();
+		Integer i = buffer.getInt();
+		if(literalExpr != null) {
+			if(i != evaluator.evaluateInt(literalExpr)) {
+				throw new ExecutionException("Value " + i + " did not match expected value " + literalExpr);
+			}
+		}
+		return i;
 	}
 }
