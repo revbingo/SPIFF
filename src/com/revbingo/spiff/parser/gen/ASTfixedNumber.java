@@ -5,6 +5,8 @@ package com.revbingo.spiff.parser.gen;
 public
 class ASTfixedNumber extends SimpleNode {
 
+  public String literal;
+  
   public ASTfixedNumber(int id) {
     super(id);
   }
@@ -13,7 +15,7 @@ class ASTfixedNumber extends SimpleNode {
     super(p, id);
   }
 
-
+  
   /** Accept the visitor. **/
   @Override
 public java.util.List<com.revbingo.spiff.instructions.Instruction> jjtAccept(SpiffTreeParserVisitor visitor, java.util.List<com.revbingo.spiff.instructions.Instruction> data) {

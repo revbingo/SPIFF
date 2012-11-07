@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.evaluator.Evaluator;
 
-public class DoubleInstruction extends Datatype {
+public class DoubleInstruction extends NumberType {
 
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) {

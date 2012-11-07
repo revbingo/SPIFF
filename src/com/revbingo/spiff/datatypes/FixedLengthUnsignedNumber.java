@@ -16,7 +16,7 @@
  ******************************************************************************/
 package com.revbingo.spiff.datatypes;
 
-public abstract class FixedLengthUnsignedNumber extends Datatype {
+public abstract class FixedLengthUnsignedNumber extends NumberType {
 
 	protected int[] convertBytesToInts(byte[] bytes){
 		int[] ubytes=new int[bytes.length];

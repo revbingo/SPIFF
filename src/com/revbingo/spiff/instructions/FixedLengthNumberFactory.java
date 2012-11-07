@@ -17,11 +17,11 @@
 package com.revbingo.spiff.instructions;
 
 import com.revbingo.spiff.datatypes.ByteInstruction;
-import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.datatypes.DoubleInstruction;
 import com.revbingo.spiff.datatypes.FloatInstruction;
 import com.revbingo.spiff.datatypes.IntegerInstruction;
 import com.revbingo.spiff.datatypes.LongInstruction;
+import com.revbingo.spiff.datatypes.NumberType;
 import com.revbingo.spiff.datatypes.ShortInstruction;
 import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
 import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
@@ -30,7 +30,7 @@ import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 
 public class FixedLengthNumberFactory {
 
-	public Datatype getInstruction(String type) {
+	public NumberType getInstruction(String type) {
 		if("int".equals(type)) return new IntegerInstruction();
 		else if("long".equals(type)) return new LongInstruction();
 		else if("float".equals(type)) return new FloatInstruction();

@@ -20,16 +20,17 @@ import java.nio.ByteBuffer;
 
 import com.revbingo.spiff.evaluator.Evaluator;
 
-public class ByteInstruction extends Datatype {
+public class ByteInstruction extends NumberType {
 
 	public ByteInstruction() { super(); }
 
 	public ByteInstruction(String name) {
 		this.setName(name);
 	}
-
+	
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) {
 		return buffer.get();
 	}
+	
 }

@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.evaluator.Evaluator;
 
-public class ShortInstruction extends Datatype {
+public class ShortInstruction extends NumberType {
 
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {

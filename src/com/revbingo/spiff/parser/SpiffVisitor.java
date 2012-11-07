@@ -13,6 +13,7 @@ import com.revbingo.spiff.datatypes.BytesInstruction;
 import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.datatypes.FixedLengthString;
 import com.revbingo.spiff.datatypes.LiteralStringInstruction;
+import com.revbingo.spiff.datatypes.NumberType;
 import com.revbingo.spiff.datatypes.StringInstruction;
 import com.revbingo.spiff.datatypes.TerminatedString;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
@@ -274,7 +275,10 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	@Override
 	public List<Instruction> visit(ASTfixedNumber node, List<Instruction> data) {
 	    FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
-	    Datatype inst = insF.getInstruction(node.jjtGetFirstToken().image);
+	    NumberType inst = insF.getInstruction(node.jjtGetFirstToken().image);
+	    if(node.jjtGetNumChildren() == 1) {
+	    	inst.setLiteral(getExpr(node.jjtGetChild(0)));
+	    }
 	    inst.setName(node.jjtGetLastToken().image);
 	    return decorateAndAdd(node, inst, data);
 	}

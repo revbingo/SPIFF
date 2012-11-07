@@ -18,6 +18,7 @@ package com.revbingo.spiff.parser;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -114,6 +115,64 @@ public class TestCaseSpiffParser {
 		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
 	}
 
+	@Test
+	public void numericLiteralsAreUnderstood() throws Exception {
+		AdfFile adf = AdfFile.start()
+				.add("byte(0x80) testByte")
+				.add("int(0xFFFFFFFF) testInt")
+				.add("long(0xFFFFFFFFFF) testLong")
+				.add("short(10) testShort")
+				.add("double(1.234) testDouble")
+				.add("float(1.234) testFloat")
+
+				.add("ubyte(0xab) testUByte")
+				.add("ushort(0xFFCC) testUShort")
+				.add("uint(0xABCD) testUInt")
+				.add("ulong(0x1234) testULong")
+				.end();
+	
+		List<Instruction> insts = parse(adf);
+
+		assertThat(insts.get(0), instanceOf(ByteInstruction.class));
+		assertThat(((ByteInstruction) insts.get(0)).getLiteral(), is("0x80"));
+		assertThat(((Datatype) insts.get(0)).name, is("testByte"));
+		assertThat(insts.get(1), instanceOf(IntegerInstruction.class));
+		assertThat(((Datatype) insts.get(1)).name, is("testInt"));
+		assertThat(((IntegerInstruction) insts.get(1)).getLiteral(), is("0xFFFFFFFF"));
+		
+		assertThat(insts.get(2), instanceOf(LongInstruction.class));
+		assertThat(((Datatype) insts.get(2)).name, is("testLong"));
+		assertThat(((LongInstruction) insts.get(2)).getLiteral(), is("0xFFFFFFFFFF"));
+		
+		assertThat(insts.get(3), instanceOf(ShortInstruction.class));
+		assertThat(((Datatype) insts.get(3)).name, is("testShort"));
+		assertThat(((ShortInstruction) insts.get(3)).getLiteral(), is("10"));
+		
+		assertThat(insts.get(4), instanceOf(DoubleInstruction.class));
+		assertThat(((Datatype) insts.get(4)).name, is("testDouble"));
+		assertThat(((DoubleInstruction) insts.get(4)).getLiteral(), is("1.234"));
+		
+		assertThat(insts.get(5), instanceOf(FloatInstruction.class));
+		assertThat(((Datatype) insts.get(5)).name, is("testFloat"));
+		assertThat(((FloatInstruction) insts.get(5)).getLiteral(), is("1.234"));
+		
+		assertThat(insts.get(6), instanceOf(UnsignedByteInstruction.class));
+		assertThat(((Datatype) insts.get(6)).name, is("testUByte"));
+		assertThat(((UnsignedByteInstruction) insts.get(6)).getLiteral(), is("0xab"));
+		
+		assertThat(insts.get(7), instanceOf(UnsignedShortInstruction.class));
+		assertThat(((Datatype) insts.get(7)).name, is("testUShort"));
+		assertThat(((UnsignedShortInstruction) insts.get(7)).getLiteral(), is("0xFFCC"));
+		
+		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
+		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
+		assertThat(((UnsignedIntegerInstruction) insts.get(8)).getLiteral(), is("0xABCD"));
+		
+		assertThat(insts.get(9), instanceOf(UnsignedLongInstruction.class));
+		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
+		assertThat(((UnsignedLongInstruction) insts.get(9)).getLiteral(), is("0x1234"));
+	}
+	
 	@Test
 	public void instructionsHaveLineNumbers() throws Exception {
 		AdfFile adf = AdfFile.start()
