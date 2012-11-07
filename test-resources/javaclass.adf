@@ -13,7 +13,8 @@
 	}
 }
 
-uint		cafebabe
+ushort(0xCAFE) cafe
+ushort(0xBABE) babe
 ushort		minorVersion
 ushort		majorVersion
 ushort		constPoolCount
