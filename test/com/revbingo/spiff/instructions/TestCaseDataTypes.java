@@ -403,7 +403,7 @@ public class TestCaseDataTypes {
 			fail();
 		}
 		
-		//next byte should fail
+		//next short should fail
 		inst.execute(testBuffer, ed, evaluator);
 	}
 
@@ -413,13 +413,13 @@ public class TestCaseDataTypes {
 		inst.setLiteral("0x54657374");
 	
 		try {
-			//first short should pass
+			//first int should pass
 			inst.execute(testBuffer, ed, evaluator);
 		} catch(Exception e) {
 			fail();
 		}
 		
-		//next byte should fail
+		//next int should fail
 		inst.execute(testBuffer, ed, evaluator);
 	}
 	
@@ -432,13 +432,13 @@ public class TestCaseDataTypes {
 		inst.setLiteral("0x5465737444617461L");
 		
 		try {
-			//first short should pass
+			//first long should pass
 			inst.execute(longerBuffer, ed, evaluator);
 		} catch(Exception e) {
 			fail();
 		}
 		
-		//next byte should fail
+		//next long should fail
 		inst.execute(longerBuffer, ed, evaluator);
 	}
 	
@@ -448,7 +448,7 @@ public class TestCaseDataTypes {
 		inst.setLiteral("0x54");
 		
 		try {
-			//first short should pass
+			//first byte should pass
 			inst.execute(testBuffer, ed, evaluator);
 		} catch(Exception e) {
 			fail();
@@ -470,7 +470,7 @@ public class TestCaseDataTypes {
 			fail();
 		}
 		
-		//next byte should fail
+		//next short should fail
 		inst.execute(testBuffer, ed, evaluator);
 	}
 	
@@ -480,13 +480,13 @@ public class TestCaseDataTypes {
 		inst.setLiteral("0x54657374");
 		
 		try {
-			//first short should pass
+			//first int should pass
 			inst.execute(testBuffer, ed, evaluator);
 		} catch(Exception e) {
 			fail();
 		}
 		
-		//next byte should fail
+		//next int should fail
 		inst.execute(testBuffer, ed, evaluator);
 	}
 }
