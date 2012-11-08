@@ -318,41 +318,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		list.add(inst);
 		return list;
 	}
-//	  public void optimise() {
-//		    List <Instruction> allInsts = flatten(instructions);
-//		    for (Instruction i : allInsts) {
-//		      if (i instanceof Datatype) {
-//		        Datatype ri = (Datatype) i;
-//		        if (!evaluator.isReferenced(ri.getName())) {
-//		          ri.setReferenced(false);
-//		        }
-//		      }
-//		    }
-//		  }
-
-//	@Override
-//	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
-//		StringInstruction inst = null;
-//		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
-//		if(encoding == null) encoding = defaultEncoding;
-//
-//		switch(node.type) {
-////			case FIXED:
-////				inst = new FixedLengthString(encoding);
-////			    ((FixedLengthString) inst).setLengthExpr(getExpr(node.jjtGetChild(0)));
-////				break;
-//			case LITERAL:
-//			   	inst = new LiteralStringInstruction(encoding);
-//			   	((LiteralStringInstruction) inst).setLiteral(node.literal);
-//				break;
-//			case TERMINATED:
-//			   	inst = new TerminatedString(encoding);
-//				break;
-//		}
-//
-//		inst.setName(node.jjtGetLastToken().image);
-//		return decorateAndAdd(node, inst, data);
-//	}
 	
 	@Override
 	public List<Instruction> visit(ASTfixedString node, List<Instruction> data) {
@@ -394,17 +359,4 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//		  private List <Instruction> flatten(List <Instruction> insts) {
-//		    List <Instruction> a = new ArrayList <Instruction> ();
-//		    for (Instruction i : insts) {
-//		      if (i instanceof Block) {
-//		        a.addAll(flatten(((Block) i).getInstructions()));
-//		      } else {
-//		        a.add(i);
-//		      }
-//		    }
-//		    return a;
-//		  }
-
 }
