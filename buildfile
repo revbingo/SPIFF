@@ -5,27 +5,24 @@ VERSION_NUMBER = "0.1.0"
 GROUP = "com.revbingo"
 COPYRIGHT = ""
 
+require "buildr/javacc"
+
 JEL = file('lib/jel.jar')
 
 # Specify Maven 2.0 remote repositories here, like this:
-repositories.remote << "http://www.ibiblio.org/maven2/"
+repositories.remote << "http://mirrors.ibiblio.org/maven2/"
 
 flat_layout = Layout.new
 flat_layout[:source, :main, :java] = 'src'
 flat_layout[:source, :test, :java] = 'test'
-
 
 desc "The Spiff project"
 define "SPIFF", :layout=>flat_layout do
 
   project.version = VERSION_NUMBER
   project.group = GROUP
-  manifest["Implementation-Vendor"] = COPYRIGHT
-
+  jjtree = jjtree(_("src/com/revbingo/spiff/parser/gen"), :in_package=>"com.revbingo.spiff.parser.gen", :build_node_files=>true)
+  compile.from javacc(jjtree, :in_package=>"com.revbingo.spiff.parser.gen"), jjtree
   compile.with JEL
   package :jar
 end
-
-flat_layout = Layout.new
-flat_layout[:source, :main, :java] = 'src'
-flat_layout[:source, :test, :java] = 'test'

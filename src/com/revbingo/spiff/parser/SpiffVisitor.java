@@ -28,6 +28,7 @@ import com.revbingo.spiff.instructions.SetInstruction;
 import com.revbingo.spiff.instructions.SetOrderInstruction;
 import com.revbingo.spiff.instructions.SkipInstruction;
 import com.revbingo.spiff.instructions.AdfInstruction;
+import com.revbingo.spiff.parser.gen.ASTIdentifier;
 import com.revbingo.spiff.parser.gen.ASTadf;
 import com.revbingo.spiff.parser.gen.ASTbits;
 import com.revbingo.spiff.parser.gen.ASTbytes;
@@ -35,18 +36,20 @@ import com.revbingo.spiff.parser.gen.ASTdatatypeDef;
 import com.revbingo.spiff.parser.gen.ASTdefineInstruction;
 import com.revbingo.spiff.parser.gen.ASTexpression;
 import com.revbingo.spiff.parser.gen.ASTfixedNumber;
+import com.revbingo.spiff.parser.gen.ASTfixedString;
 import com.revbingo.spiff.parser.gen.ASTgroupInstruction;
 import com.revbingo.spiff.parser.gen.ASTifElseBlock;
 import com.revbingo.spiff.parser.gen.ASTincludeInstruction;
 import com.revbingo.spiff.parser.gen.ASTjumpInstruction;
 import com.revbingo.spiff.parser.gen.ASTlist;
+import com.revbingo.spiff.parser.gen.ASTliteralString;
 import com.revbingo.spiff.parser.gen.ASTmarkInstruction;
 import com.revbingo.spiff.parser.gen.ASTrepeatInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetEncodingInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetInstruction;
 import com.revbingo.spiff.parser.gen.ASTsetOrderInstruction;
 import com.revbingo.spiff.parser.gen.ASTskipInstruction;
-import com.revbingo.spiff.parser.gen.ASTstring;
+import com.revbingo.spiff.parser.gen.ASTterminatedString;
 import com.revbingo.spiff.parser.gen.ASTuserDefinedType;
 import com.revbingo.spiff.parser.gen.Node;
 import com.revbingo.spiff.parser.gen.SimpleNode;
@@ -127,30 +130,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 		inst.setName(node.jjtGetLastToken().image);
 		inst.setLengthExpr(getExpr(node.jjtGetChild(0)));
 
-		return decorateAndAdd(node, inst, data);
-	}
-
-	@Override
-	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
-		StringInstruction inst = null;
-		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
-		if(encoding == null) encoding = defaultEncoding;
-
-		switch(node.type) {
-			case FIXED:
-				inst = new FixedLengthString(encoding);
-			    ((FixedLengthString) inst).setLengthExpr(getExpr(node.jjtGetChild(0)));
-				break;
-			case LITERAL:
-			   	inst = new LiteralStringInstruction(encoding);
-			   	((LiteralStringInstruction) inst).setLiteral(node.literal);
-				break;
-			case TERMINATED:
-			   	inst = new TerminatedString(encoding);
-				break;
-		}
-
-		inst.setName(node.jjtGetLastToken().image);
 		return decorateAndAdd(node, inst, data);
 	}
 
@@ -335,6 +314,71 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 //		      }
 //		    }
 //		  }
+
+//	@Override
+//	public List<Instruction> visit(ASTstring node, List<Instruction> data) {
+//		StringInstruction inst = null;
+//		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
+//		if(encoding == null) encoding = defaultEncoding;
+//
+//		switch(node.type) {
+////			case FIXED:
+////				inst = new FixedLengthString(encoding);
+////			    ((FixedLengthString) inst).setLengthExpr(getExpr(node.jjtGetChild(0)));
+////				break;
+//			case LITERAL:
+//			   	inst = new LiteralStringInstruction(encoding);
+//			   	((LiteralStringInstruction) inst).setLiteral(node.literal);
+//				break;
+//			case TERMINATED:
+//			   	inst = new TerminatedString(encoding);
+//				break;
+//		}
+//
+//		inst.setName(node.jjtGetLastToken().image);
+//		return decorateAndAdd(node, inst, data);
+//	}
+	
+	@Override
+	public List<Instruction> visit(ASTfixedString node, List<Instruction> data) {
+		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
+		if(encoding == null) encoding = defaultEncoding;
+
+		FixedLengthString inst = new FixedLengthString(encoding);
+	    inst.setLengthExpr(getExpr(node.jjtGetChild(0)));
+	    
+	    inst.setName(node.jjtGetLastToken().image);
+		return decorateAndAdd(node, inst, data);
+	}
+
+	@Override
+	public List<Instruction> visit(ASTliteralString node, List<Instruction> data) {
+		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
+		if(encoding == null) encoding = defaultEncoding;
+		
+		LiteralStringInstruction inst = new LiteralStringInstruction(encoding);
+	   	inst.setLiteral(((ASTIdentifier) node.jjtGetChild(0)).jjtGetFirstToken().image);
+	    
+	    inst.setName(node.jjtGetLastToken().image);
+		return decorateAndAdd(node, inst, data);
+	}
+
+	@Override
+	public List<Instruction> visit(ASTterminatedString node, List<Instruction> data) {
+		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
+		if(encoding == null) encoding = defaultEncoding;
+
+		TerminatedString inst = new TerminatedString(encoding);
+		
+	    inst.setName(node.jjtGetLastToken().image);
+		return decorateAndAdd(node, inst, data);
+	}
+
+	@Override
+	public List<Instruction> visit(ASTIdentifier node, List<Instruction> data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 //		  private List <Instruction> flatten(List <Instruction> insts) {
 //		    List <Instruction> a = new ArrayList <Instruction> ();
