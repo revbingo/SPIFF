@@ -30,10 +30,6 @@ public abstract class Datatype extends AdfInstruction {
 	public Object value; //final value
 	public boolean isReferenced = true; //assume it's referenced by default
 
-	public void setReferenced(boolean b){
-		isReferenced = b;
-	}
-
 	public int getAddress() {
 		return address;
 	}
@@ -50,10 +46,8 @@ public abstract class Datatype extends AdfInstruction {
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
 		address = buffer.position();
 		this.value = this.evaluate(buffer, evaluator);
-		if(isReferenced){
-			evaluator.addVariable(name, value);
-			evaluator.addVariable(addressStr, this.address);
-		}
+		evaluator.addVariable(name, value);
+		evaluator.addVariable(addressStr, this.address);
 		eventDispatcher.notifyData(this);
 	}
 

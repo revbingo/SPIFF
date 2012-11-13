@@ -30,9 +30,7 @@ public class SpiffVm {
 	private EventListener ed;
 	private Evaluator evaluator = new Evaluator();
 	private int programCounter;
-	private boolean isStepping;
 	private boolean isSuspended;
-	private boolean isCompleted;
 	private Object suspendedLock = new Object();
 
 	public SpiffVm(List<Instruction> instructions, ByteBuffer buffer,
@@ -62,15 +60,10 @@ public class SpiffVm {
 
 			i.execute(buffer, ed, evaluator);
 		}
-		isCompleted = true;
 	}
 
 	public boolean isSuspended() {
 		return isSuspended;
-	}
-
-	public boolean isComplete() {
-		return isCompleted;
 	}
 
 	public Object getVar(String expression) {
