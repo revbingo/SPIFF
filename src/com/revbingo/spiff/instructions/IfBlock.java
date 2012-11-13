@@ -65,10 +65,4 @@ public class IfBlock extends Block {
 		return ifInstructions;
 	}
 
-	@Override
-	public ArrayList<Instruction> getInstructions(){
-		ArrayList<Instruction> a = new ArrayList<Instruction>(instructions);
-		if(elseInsts != null) a.addAll(elseInsts.getInstructions());
-		return a;
-	}
 }
