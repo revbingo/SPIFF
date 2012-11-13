@@ -238,7 +238,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	}
 
 	private String getExpr(Node node) {
-		if(!(node instanceof ASTexpression)) throw new AdfFormatException("Not an expression node");
 		ASTexpression exprNode = (ASTexpression) node;
 		Token t = exprNode.jjtGetFirstToken();
 		StringBuffer expression = new StringBuffer();
