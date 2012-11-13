@@ -20,7 +20,6 @@ import gnu.jel.CompiledExpression;
 import gnu.jel.Library;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import com.revbingo.spiff.ExecutionException;
 

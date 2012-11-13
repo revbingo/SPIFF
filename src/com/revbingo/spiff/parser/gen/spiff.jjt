@@ -1,1 +1,432 @@
-options{  STATIC = false;  DEBUG_TOKEN_MANAGER = false;  DEBUG_PARSER = false;  VISITOR = true;  VISITOR_DATA_TYPE = "java.util.List<com.revbingo.spiff.instructions.Instruction>";  VISITOR_RETURN_TYPE = "java.util.List<com.revbingo.spiff.instructions.Instruction>";  MULTI = true;  TRACK_TOKENS = true;}PARSER_BEGIN(SpiffTreeParser)/******************************************************************************* * This file is part of SPIFF. *  * SPIFF is free software: you can redistribute it and/or modify * it under the terms of the GNU General Public License as published by * the Free Software Foundation, either version 3 of the License, or * (at your option) any later version. *  * SPIFF is distributed in the hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the * GNU General Public License for more details. *  * You should have received a copy of the GNU General Public License * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>. ******************************************************************************/package com.revbingo.spiff.parser.gen;import com.revbingo.spiff.AdfFormatException;import com.revbingo.spiff.instructions.*;import com.revbingo.spiff.datatypes.*;import com.revbingo.spiff.evaluator.Evaluator;import com.revbingo.spiff.parser.InstructionParser;import java.util.*;import java.nio.ByteOrder;import java.nio.charset.Charset;public class SpiffTreeParser{}PARSER_END(SpiffTreeParser)SKIP :{  " " | "\t"}TOKEN : /* TYPES */{  < TY_STRING : "string" >| < TY_INT : "int" >| < TY_LONG : "long" >| < TY_BYTE : "byte" >| < TY_SHORT : "short" >| < TY_DOUBLE : "double" >| < TY_FLOAT : "float" >| < TY_UBYTE : "ubyte" >| < TY_USHORT : "ushort" >| < TY_UINT : "uint" >| < TY_ULONG : "ulong" >| < TY_BITS : "bits" >| < TY_BYTES : "bytes" >}TOKEN : /* LITERALS */{  < EOL :    "\n"  | "\r"  | "\r\n" >| < BYTEORDER :    "LITTLE_ENDIAN"  | "BIG_ENDIAN" >| < ENCODING :    "UTF-16LE"  | "UTF-16BE"  | "UTF-8"  | "US-ASCII" >| < END :    "end"  | "END" >| < OPEN_PAR : "(" >| < CLOSE_PAR : ")" >| < OPEN_BRACE : "{" >| < CLOSE_BRACE : "}" >| < COMMA : "," >| < QUOTE : "'" >}TOKEN : /* INSTRUCTIONS */{  < INS_JUMP : ".jump" >| < INS_SETORDER : ".setorder" >| < INS_REPEAT : ".repeat" >| < INS_GROUP : ".group" >| < INS_SKIP : ".skip" >| < INS_IF : ".if" >| < INS_SET : ".set" >| < INS_PRINT : ".print" >| < INS_ELSE : ".else" >| < INS_MARK : ".mark" >| < INS_SETENCODING : ".setencoding" >| < INS_DEFINE : ".define" >| < INS_INCLUDE : ".include" >| < INS_DATATYPE : ".datatype" >}TOKEN : /* OPERATORS */{  < EQUAL : "==" >| < GREATER_THAN : ">" >| < LESS_THAN : "<" >| < NOT_EQUAL : "!=" >| < GREATER_OR_EQUAL : ">=" >| < LESS_OR_EQUAL : "<=" >| < PL_MI_OPERATOR : "+" | "-" >| < MUL_DIV_OPERATOR : "*" | "/" | "%" >}TOKEN : /* OTHERS */{ < IDENTIFIER : (< ALPHA > | < UNDERSCORE >) (< ALPHANUM > | < UNDERSCORE >)* >| < ID_VALUE : < IDENTIFIER > ".value" >| < CLASS : (<ALPHA>)+ (("."|"$") (<ALPHANUM>)+ )* >| < ID_ADDRESS : "&" < IDENTIFIER > >| < COMMENT : "#" (~[ "\n", "\r" ])* >| < FLOAT : (< DIGIT >)+ "." (< DIGIT >)+ >| < HEX_INTEGER : "0x" (["A"-"F","a"-"f","0"-"9"])* >| < INTEGER :  (< DIGIT >)+ >| < #ALPHANUM : < ALPHA > | < DIGIT > >| < #DIGIT : [ "0"-"9" ] >| < #ALPHA : [ "a"-"z", "A"-"Z" ] >| < #UNDERSCORE : "_" >}ASTadf adf() : {}{  datatypeDefs()  list()  (< EOL >)*   < EOF >    { return jjtThis; }}void datatypeDefs() #void : {}{	((<INS_DATATYPE> <IDENTIFIER> <CLASS> <EOL>) #datatypeDef)*}void list() :{}{  (    [ datatype() | instruction() ]    [ < COMMENT > ]     < EOL >  )*}void datatype() #void : {}{  (    LOOKAHEAD(8)    string()  |     LOOKAHEAD(2)    fixedNumber()  |  	bits()  |   	bytes()  |	    userDefinedType()  )}void bits() : {}{	<TY_BITS> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>}void bytes() : {}{	<TY_BYTES> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>}void userDefinedType() : {}{  	<IDENTIFIER> <IDENTIFIER> 	}void fixedNumber() :{	Token t = null;}{ 	numberType() 	[ 	<OPEN_PAR> 		expression() 	<CLOSE_PAR> 	] <IDENTIFIER>}void numberType() #void : {}{  (    < TY_DOUBLE >  | < TY_INT >  | < TY_BYTE >  | < TY_FLOAT >  | < TY_SHORT >  | < TY_LONG >  | < TY_UBYTE >  | < TY_USHORT >  | < TY_ULONG >  | < TY_UINT >  )}void string() #void :{}{  (  	LOOKAHEAD(3)  	literalString()  |    LOOKAHEAD(3)    fixedString()  |     LOOKAHEAD(3)    terminatedString()  )  }void fixedString() : {}{  <TY_STRING> <OPEN_PAR> expression()  [ <COMMA> <ENCODING>]  <CLOSE_PAR> <IDENTIFIER>}void literalString() :{   Token t;}{  <TY_STRING> <OPEN_PAR>   	<QUOTE>   		t = <IDENTIFIER> #Identifier  	<QUOTE> 	[ <COMMA> <ENCODING> ]    <CLOSE_PAR> <IDENTIFIER>}void terminatedString() : {}{  <TY_STRING>  [ <OPEN_PAR> <ENCODING> <CLOSE_PAR> ]  <IDENTIFIER> }void instruction() #void :{}{  jumpInstruction()| setOrderInstruction()| repeatInstruction()| groupInstruction()| skipInstruction()| ifElseBlock()| setInstruction()| markInstruction()| setEncodingInstruction()| defineInstruction()| includeInstruction()}void includeInstruction() : {}{  <INS_INCLUDE> <IDENTIFIER>}void defineInstruction() : {}{  <INS_DEFINE>   <OPEN_PAR>   	<IDENTIFIER>   <CLOSE_PAR>   <OPEN_BRACE>   list()   <CLOSE_BRACE>}void setEncodingInstruction() : {}{  <INS_SETENCODING> <ENCODING>}void setInstruction() : {}{  <INS_SET> <IDENTIFIER> expression()}void setOrderInstruction() : {}{  <INS_SETORDER> <BYTEORDER>}void jumpInstruction() : {}{  <INS_JUMP> expression()}void skipInstruction() : {}{  <INS_SKIP> expression()}void markInstruction() : {}{  <INS_MARK> <IDENTIFIER>}void ifElseBlock() : {}{  <INS_IF> <OPEN_PAR> expression() <CLOSE_PAR>   <OPEN_BRACE>     list()   <CLOSE_BRACE>  [    LOOKAHEAD(2)    [ <EOL> ]     <INS_ELSE> [ <EOL> ]    <OPEN_BRACE>       list()     <CLOSE_BRACE>  ]}void repeatInstruction() : {}{  <INS_REPEAT> <OPEN_PAR> expression() <CLOSE_PAR>   <OPEN_BRACE>     list()   <CLOSE_BRACE>}void groupInstruction() : {}{  <INS_GROUP> <OPEN_PAR> <IDENTIFIER> <CLOSE_PAR>  <OPEN_BRACE>   	list()   <CLOSE_BRACE>}// ************ EXPRESSIONS ****************void expression() : {}{	comparitiveExpression()}void comparitiveExpression() #void : {}{  additiveExpression()  ( comparator() additiveExpression() )*}void comparator() #void : {}{  (    <EQUAL>  | <GREATER_THAN>  | <LESS_THAN>  | <NOT_EQUAL>  | <LESS_OR_EQUAL>  | <GREATER_OR_EQUAL>  )}void additiveExpression() #void : {}{  multiplicativeExpression()  ( <PL_MI_OPERATOR> multiplicativeExpression() )*}void multiplicativeExpression() #void : {}{  unaryExpression()  ( <MUL_DIV_OPERATOR> unaryExpression() )*}void unaryExpression() #void :{ Token t; }{  (    LOOKAHEAD(2) functionCall()  | [<PL_MI_OPERATOR>] <INTEGER>  | LOOKAHEAD(2) <IDENTIFIER>  | <HEX_INTEGER>  | <ID_ADDRESS>  | <ID_VALUE>  | <FLOAT>  | <OPEN_PAR> comparitiveExpression() <CLOSE_PAR>  )}void functionCall() #void : {}{  <IDENTIFIER> <OPEN_PAR> [ FormalParameters() ] <CLOSE_PAR>}void FormalParameters() #void : {}{   FormalParameter() ( <COMMA> FormalParameter() )*}void FormalParameter() #void : {}{  (     LOOKAHEAD(2)  comparitiveExpression()  | <IDENTIFIER>  | <INTEGER>  | <FLOAT>  | <ID_VALUE>  | <ID_ADDRESS>  )}
+options
+{
+  STATIC = false;
+  DEBUG_TOKEN_MANAGER = false;
+  DEBUG_PARSER = false;
+  VISITOR = true;
+  VISITOR_DATA_TYPE = "java.util.List<com.revbingo.spiff.instructions.Instruction>";
+  VISITOR_RETURN_TYPE = "java.util.List<com.revbingo.spiff.instructions.Instruction>";
+  MULTI = true;
+  TRACK_TOKENS = true;
+}
+
+PARSER_BEGIN(SpiffTreeParser)
+/*******************************************************************************
+ * This file is part of SPIFF.
+ * 
+ * SPIFF is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * SPIFF is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+package com.revbingo.spiff.parser.gen;
+import com.revbingo.spiff.AdfFormatException;
+import com.revbingo.spiff.instructions.*;
+import com.revbingo.spiff.datatypes.*;
+import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.parser.InstructionParser;
+import java.util.*;
+import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+
+public class SpiffTreeParser
+{
+
+}
+
+PARSER_END(SpiffTreeParser)
+
+SKIP :
+{
+  " " | "\t"
+}
+
+TOKEN : /* TYPES */
+{
+  < TY_STRING : "string" >
+| < TY_INT : "int" >
+| < TY_LONG : "long" >
+| < TY_BYTE : "byte" >
+| < TY_SHORT : "short" >
+| < TY_DOUBLE : "double" >
+| < TY_FLOAT : "float" >
+| < TY_UBYTE : "ubyte" >
+| < TY_USHORT : "ushort" >
+| < TY_UINT : "uint" >
+| < TY_BITS : "bits" >
+| < TY_BYTES : "bytes" >
+}
+
+TOKEN : /* LITERALS */
+{
+  < EOL :
+    "\n"
+  | "\r"
+  | "\r\n" >
+| < BYTEORDER :
+    "LITTLE_ENDIAN"
+  | "BIG_ENDIAN" >
+| < ENCODING :
+    "UTF-16LE"
+  | "UTF-16BE"
+  | "UTF-8"
+  | "US-ASCII" >
+| < END :
+    "end"
+  | "END" >
+| < OPEN_PAR : "(" >
+| < CLOSE_PAR : ")" >
+| < OPEN_BRACE : "{" >
+| < CLOSE_BRACE : "}" >
+| < COMMA : "," >
+| < QUOTE : "'" >
+}
+
+TOKEN : /* INSTRUCTIONS */
+{
+  < INS_JUMP : ".jump" >
+| < INS_SETORDER : ".setorder" >
+| < INS_REPEAT : ".repeat" >
+| < INS_GROUP : ".group" >
+| < INS_SKIP : ".skip" >
+| < INS_IF : ".if" >
+| < INS_SET : ".set" >
+| < INS_PRINT : ".print" >
+| < INS_ELSE : ".else" >
+| < INS_MARK : ".mark" >
+| < INS_SETENCODING : ".setencoding" >
+| < INS_DEFINE : ".define" >
+| < INS_INCLUDE : ".include" >
+| < INS_DATATYPE : ".datatype" >
+}
+
+TOKEN : /* OPERATORS */
+{
+  < EQUAL : "==" >
+| < GREATER_THAN : ">" >
+| < LESS_THAN : "<" >
+| < NOT_EQUAL : "!=" >
+| < GREATER_OR_EQUAL : ">=" >
+| < LESS_OR_EQUAL : "<=" >
+| < PL_MI_OPERATOR : "+" | "-" >
+| < MUL_DIV_OPERATOR : "*" | "/" | "%" >
+}
+
+TOKEN : /* OTHERS */
+{
+ < IDENTIFIER : (< ALPHA > | < UNDERSCORE >) (< ALPHANUM > | < UNDERSCORE >)* >
+| < ID_VALUE : < IDENTIFIER > ".value" >
+| < CLASS : (<ALPHA>)+ (("."|"$") (<ALPHANUM>)+ )* >
+| < ID_ADDRESS : "&" < IDENTIFIER > >
+| < COMMENT : "#" (~[ "\n", "\r" ])* >
+| < FLOAT : (< DIGIT >)+ "." (< DIGIT >)+ >
+| < HEX_INTEGER : "0x" (["A"-"F","a"-"f","0"-"9"])* >
+| < INTEGER :  (< DIGIT >)+ >
+| < #ALPHANUM : < ALPHA > | < DIGIT > >
+| < #DIGIT : [ "0"-"9" ] >
+| < #ALPHA : [ "a"-"z", "A"-"Z" ] >
+| < #UNDERSCORE : "_" >
+}
+
+ASTadf adf() : {}
+{
+  datatypeDefs()
+  list()
+  (< EOL >)* 
+  < EOF >
+  
+  { return jjtThis; }
+}
+
+void datatypeDefs() #void : {}
+{
+	((<INS_DATATYPE> <IDENTIFIER> <CLASS> <EOL>) #datatypeDef)*
+}
+
+void list() :
+{}
+{
+  (
+    [ datatype() | instruction() ]
+    [ < COMMENT > ] 
+    < EOL >
+  )*
+}
+
+void datatype() #void : {}
+{
+  (
+    LOOKAHEAD(8)
+    string()
+  | 
+    LOOKAHEAD(2)
+    fixedNumber()
+  |
+  	bits()
+  | 
+  	bytes()
+  |	
+    userDefinedType()
+  )
+}
+
+void bits() : {}
+{
+	<TY_BITS> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>
+}
+
+void bytes() : {}
+{
+	<TY_BYTES> <OPEN_PAR> expression() <CLOSE_PAR> <IDENTIFIER>
+}
+
+void userDefinedType() : {}
+{
+  	<IDENTIFIER> <IDENTIFIER> 	
+}
+
+void fixedNumber() :
+{
+	Token t = null;
+}
+{
+ 	numberType()
+ 	[
+ 	<OPEN_PAR>
+ 		expression()
+ 	<CLOSE_PAR>
+ 	] <IDENTIFIER>
+}
+
+void numberType() #void : {}
+{
+  (
+    < TY_DOUBLE >
+  | < TY_INT >
+  | < TY_BYTE >
+  | < TY_FLOAT >
+  | < TY_SHORT >
+  | < TY_LONG >
+  | < TY_UBYTE >
+  | < TY_USHORT >
+  | < TY_UINT >
+  )
+}
+
+void string() #void :
+{}
+{
+  (
+  	LOOKAHEAD(3)
+  	literalString()
+  |
+    LOOKAHEAD(3)
+    fixedString()
+  | 
+    LOOKAHEAD(3)
+    terminatedString()
+  )
+  
+}
+
+void fixedString() : {}
+{
+  <TY_STRING> <OPEN_PAR> expression()
+  [ <COMMA> <ENCODING>]
+  <CLOSE_PAR> <IDENTIFIER>
+}
+
+void literalString() :
+{
+   Token t;
+}
+{
+  <TY_STRING> <OPEN_PAR> 
+  	<QUOTE> 
+  		t = <IDENTIFIER> #Identifier
+  	<QUOTE> 
+	[ <COMMA> <ENCODING> ] 
+   <CLOSE_PAR> <IDENTIFIER>
+}
+
+void terminatedString() : {}
+{
+  <TY_STRING>
+  [ <OPEN_PAR> <ENCODING> <CLOSE_PAR> ]
+  <IDENTIFIER> 
+}
+
+void instruction() #void :
+{}
+{
+  jumpInstruction()
+| setOrderInstruction()
+| repeatInstruction()
+| groupInstruction()
+| skipInstruction()
+| ifElseBlock()
+| setInstruction()
+| markInstruction()
+| setEncodingInstruction()
+| defineInstruction()
+| includeInstruction()
+}
+
+void includeInstruction() : {}
+{
+  <INS_INCLUDE> <IDENTIFIER>
+}
+
+void defineInstruction() : {}
+{
+  <INS_DEFINE> 
+  <OPEN_PAR> 
+  	<IDENTIFIER> 
+  <CLOSE_PAR> 
+  <OPEN_BRACE> 
+  list() 
+  <CLOSE_BRACE>
+}
+
+void setEncodingInstruction() : {}
+{
+  <INS_SETENCODING> <ENCODING>
+}
+
+void setInstruction() : {}
+{
+  <INS_SET> <IDENTIFIER> expression()
+}
+
+void setOrderInstruction() : {}
+{
+  <INS_SETORDER> <BYTEORDER>
+}
+
+void jumpInstruction() : {}
+{
+  <INS_JUMP> expression()
+}
+
+void skipInstruction() : {}
+{
+  <INS_SKIP> expression()
+}
+
+void markInstruction() : {}
+{
+  <INS_MARK> <IDENTIFIER>
+}
+
+void ifElseBlock() : {}
+{
+  <INS_IF> <OPEN_PAR> expression() <CLOSE_PAR> 
+  <OPEN_BRACE> 
+    list() 
+  <CLOSE_BRACE>
+  [
+    LOOKAHEAD(2)
+    [ <EOL> ] 
+    <INS_ELSE> [ <EOL> ]
+    <OPEN_BRACE> 
+      list() 
+    <CLOSE_BRACE>
+  ]
+}
+
+void repeatInstruction() : {}
+{
+  <INS_REPEAT> <OPEN_PAR> expression() <CLOSE_PAR> 
+  <OPEN_BRACE> 
+    list() 
+  <CLOSE_BRACE>
+}
+
+void groupInstruction() : {}
+{
+  <INS_GROUP> <OPEN_PAR> <IDENTIFIER> <CLOSE_PAR>
+  <OPEN_BRACE> 
+  	list() 
+  <CLOSE_BRACE>
+}
+
+// ************ EXPRESSIONS ****************
+void expression() : {}
+{
+	comparitiveExpression()
+}
+
+void comparitiveExpression() #void : {}
+{
+  additiveExpression()
+  ( comparator() additiveExpression() )*
+}
+
+void comparator() #void : {}
+{
+  (
+    <EQUAL>
+  | <GREATER_THAN>
+  | <LESS_THAN>
+  | <NOT_EQUAL>
+  | <LESS_OR_EQUAL>
+  | <GREATER_OR_EQUAL>
+  )
+}
+
+void additiveExpression() #void : {}
+{
+  multiplicativeExpression()
+  ( <PL_MI_OPERATOR> multiplicativeExpression() )*
+}
+
+void multiplicativeExpression() #void : {}
+{
+  unaryExpression()
+  ( <MUL_DIV_OPERATOR> unaryExpression() )*
+}
+
+void unaryExpression() #void :
+{ Token t; }
+{
+  (
+    LOOKAHEAD(2) functionCall()
+  | [<PL_MI_OPERATOR>] <INTEGER>
+  | LOOKAHEAD(2) <IDENTIFIER>
+  | <HEX_INTEGER>
+  | <ID_ADDRESS>
+  | <ID_VALUE>
+  | <FLOAT>
+  | <OPEN_PAR> comparitiveExpression() <CLOSE_PAR>
+  )
+}
+
+void functionCall() #void : {}
+{
+  <IDENTIFIER> <OPEN_PAR> [ FormalParameters() ] <CLOSE_PAR>
+}
+
+void FormalParameters() #void : {}
+{ 
+  FormalParameter() ( <COMMA> FormalParameter() )*
+}
+
+void FormalParameter() #void : {}
+{
+  (
+     LOOKAHEAD(2)  comparitiveExpression()
+  | <IDENTIFIER>
+  | <INTEGER>
+  | <FLOAT>
+  | <ID_VALUE>
+  | <ID_ADDRESS>
+  )
+}

@@ -15,17 +15,7 @@
  ******************************************************************************/
 package com.revbingo.spiff.instructions;
 
-import com.revbingo.spiff.datatypes.ByteInstruction;
-import com.revbingo.spiff.datatypes.DoubleInstruction;
-import com.revbingo.spiff.datatypes.FloatInstruction;
-import com.revbingo.spiff.datatypes.IntegerInstruction;
-import com.revbingo.spiff.datatypes.LongInstruction;
-import com.revbingo.spiff.datatypes.NumberType;
-import com.revbingo.spiff.datatypes.ShortInstruction;
-import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
-import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
-import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
-import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
+import com.revbingo.spiff.datatypes.*;
 
 public class FixedLengthNumberFactory {
 
@@ -39,7 +29,6 @@ public class FixedLengthNumberFactory {
 		else if("ubyte".equals(type)) return new UnsignedByteInstruction();
 		else if("ushort".equals(type)) return new UnsignedShortInstruction();
 		else if("uint".equals(type)) return new UnsignedIntegerInstruction();
-		else if("ulong".equals(type)) return new UnsignedLongInstruction();
 		throw new RuntimeException("Unknown data type");
 	}
 

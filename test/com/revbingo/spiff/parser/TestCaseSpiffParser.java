@@ -43,7 +43,6 @@ import com.revbingo.spiff.datatypes.ShortInstruction;
 import com.revbingo.spiff.datatypes.TerminatedString;
 import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
 import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
-import com.revbingo.spiff.datatypes.UnsignedLongInstruction;
 import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
 import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.instructions.EndGroupInstruction;
@@ -86,12 +85,11 @@ public class TestCaseSpiffParser {
 			.add("ubyte testUByte")
 			.add("ushort testUShort")
 			.add("uint testUInt")
-			.add("ulong testULong")
 			.end();
 
 		List<Instruction> insts = parse(adf);
 
-		assertThat(insts.size(), is(10));
+		assertThat(insts.size(), is(9));
 		assertThat(insts.get(0), instanceOf(ByteInstruction.class));
 		assertThat(((Datatype) insts.get(0)).name, is("testByte"));
 		assertThat(insts.get(1), instanceOf(IntegerInstruction.class));
@@ -110,8 +108,6 @@ public class TestCaseSpiffParser {
 		assertThat(((Datatype) insts.get(7)).name, is("testUShort"));
 		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
 		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
-		assertThat(insts.get(9), instanceOf(UnsignedLongInstruction.class));
-		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
 	}
 
 	@Test
@@ -127,7 +123,6 @@ public class TestCaseSpiffParser {
 				.add("ubyte(0xab) testUByte")
 				.add("ushort(0xFFCC) testUShort")
 				.add("uint(0xABCD) testUInt")
-				.add("ulong(0x1234) testULong")
 				.end();
 	
 		List<Instruction> insts = parse(adf);
@@ -166,10 +161,6 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
 		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
 		assertThat(((UnsignedIntegerInstruction) insts.get(8)).getLiteral(), is("0xABCD"));
-		
-		assertThat(insts.get(9), instanceOf(UnsignedLongInstruction.class));
-		assertThat(((Datatype) insts.get(9)).name, is("testULong"));
-		assertThat(((UnsignedLongInstruction) insts.get(9)).getLiteral(), is("0x1234"));
 	}
 	
 	@Test
