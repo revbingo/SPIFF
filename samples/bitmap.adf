@@ -1,4 +1,4 @@
-.setorder LITTLEENDIAN
+.setorder LITTLE_ENDIAN
  
 .group(BitmapFileHeader) {
 string('BM', US-ASCII)	bfType
