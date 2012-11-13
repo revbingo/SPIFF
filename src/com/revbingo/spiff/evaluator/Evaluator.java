@@ -28,7 +28,6 @@ public class Evaluator {
 
 	private Library lib;
 	private EvaluatorMap variableMap;
-	private HashSet<String> evaluatedExpressions;
 	private Object[] context;
 	private HashMap<String, CompiledExpression> cExpr = new HashMap<String, CompiledExpression>();
 
@@ -42,25 +41,9 @@ public class Evaluator {
 		dynamicLib[0] = EvaluatorMap.class;
 
 		variableMap = new EvaluatorMap();
-		evaluatedExpressions = new HashSet<String>();
 		lib = new Library(staticLib, dynamicLib, dotLib, variableMap, null);
 		context = new Object[1];
 		context[0] = variableMap;
-	}
-
-	public void cacheExpression(String exp){
-		if(exp.startsWith("&")) {
-			exp = exp.substring(1);
-		}
-		evaluatedExpressions.add(exp);
-	}
-
-	public HashSet<String> getEvaluatedExpressions(){
-		return evaluatedExpressions;
-	}
-
-	public boolean isReferenced(String name){
-		return evaluatedExpressions.contains(name);
 	}
 
 	public void addVariable(String name, Object var){
@@ -191,8 +174,7 @@ public class Evaluator {
 		return c;
 	}
 
-	public  void clear() {
-		evaluatedExpressions.clear();
+	public void clear() {
 		variableMap.clear();
 	}
 }

@@ -32,21 +32,6 @@ import com.revbingo.spiff.ExecutionException;
 public class TestCaseEvaluator {
 
 	@Test
-	public void expressionCanBeAddedToListOfEvaluatedExpressions() throws Exception {
-		Evaluator unit = new Evaluator();
-		unit.cacheExpression("a+b");
-
-		assertTrue(unit.getEvaluatedExpressions().contains("a+b"));
-	}
-
-	@Test
-	public void expressionIsMarkedAsReferenced() {
-		Evaluator unit = new Evaluator();
-		unit.cacheExpression("a+b");
-		assertTrue(unit.isReferenced("a+b"));
-	}
-
-	@Test
 	public void evaluateIntegerExpr() throws Exception {
 		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 3);
