@@ -1,6 +1,9 @@
 bin
 bin-test
+.idea
 .svn
 .settings
+*.iml
 reports
 target
+src/main/java/com/revbingo/spiff/parser/gen/*.java
