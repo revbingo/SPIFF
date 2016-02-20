@@ -7,5 +7,4 @@ Spiff is the Simple Parser for Interesting File Formats
 Building
 --------
 
-Spiff uses Apache Buildr (=> 1.4) as its build tool. Install Buildr from buildr.apache.org, and then simply run "buildr" in
-the root directory
+Spiff uses Maven as its build tool. I know, I'm not overjoyed either, but it's the path of least resistance.
