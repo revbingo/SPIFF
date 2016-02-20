@@ -94,10 +94,6 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 			@Override
 			public void checkPermission(Permission perm) {
-			}
-
-			@Override
-			public void checkMemberAccess(Class<?> clazz, int which) {
 				throw new SecurityException();
 			}
 		});
