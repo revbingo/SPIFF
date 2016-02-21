@@ -17,6 +17,8 @@ package com.revbingo.spiff.functional;
 
 import java.io.File;
 
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.events.EventListener;
 import org.junit.Test;
 
 import com.revbingo.spiff.BinaryParser;
@@ -26,9 +28,13 @@ public class TestClassFileParse {
 
 	@Test
 	public void canParseClassFile() throws Exception {
-		DebugEventListener listener = new DebugEventListener();
+		EventListener noopListener = new EventListener(){
 
-		BinaryParser parser = new BinaryParser(listener);
-		parser.parse(new File("test-resources/javaclass.adf"), new File("bin-test/com/revbingo/spiff/functional/TestClassFileParse.class"));
+			@Override public void notifyData(Datatype ins) {}
+			@Override public void notifyGroup(String groupName, boolean start) {}
+		};
+
+		BinaryParser parser = new BinaryParser(noopListener);
+		parser.parse(new File("test-resources/javaclass.adf"), new File("target/test-classes/com/revbingo/spiff/functional/TestClassFileParse.class"));
 	}
 }

@@ -93,35 +93,38 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
+			try {
+				for (Field f : clazz.getDeclaredFields()) {
+					if (f.isAnnotationPresent(Binding.class) && f.getAnnotation(Binding.class).value().equals(name)) {
+						if (Collection.class.isAssignableFrom(f.getType())) {
+							Class<?> genericType = null;
+							Type fieldType = f.getGenericType();
+							if (fieldType instanceof ParameterizedType) {
+								genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
+							}
 
-			for(Field f : clazz.getDeclaredFields()) {
-				if(f.isAnnotationPresent(Binding.class) && f.getAnnotation(Binding.class).value().equals(name)) {
-					if(Collection.class.isAssignableFrom(f.getType())) {
-						Class<?> genericType = null;
-						Type fieldType = f.getGenericType();
-						if(fieldType instanceof ParameterizedType) {
-							genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
+							if (primitiveTypes.contains(genericType)) {
+								return new PrimitiveCollectionBinder(f);
+							} else {
+								return new ObjectCollectionBinder(f, genericType);
+							}
+						} else {
+							return new FieldBinder(f);
 						}
+					} else if (f.isAnnotationPresent(BindingCollection.class)
+							&& f.getAnnotation(BindingCollection.class).value().equals(name)) {
 
-						if(primitiveTypes.contains(genericType)) {
+						Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
+
+						if (primitiveTypes.contains(genericType)) {
 							return new PrimitiveCollectionBinder(f);
 						} else {
 							return new ObjectCollectionBinder(f, genericType);
 						}
-					} else {
-						return new FieldBinder(f);
-					}
-				} else if(f.isAnnotationPresent(BindingCollection.class)
-						&& f.getAnnotation(BindingCollection.class).value().equals(name)) {
-
-					Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
-
-					if(primitiveTypes.contains(genericType)) {
-						return new PrimitiveCollectionBinder(f);
-					} else {
-						return new ObjectCollectionBinder(f, genericType);
 					}
 				}
+			} catch(SecurityException e) {
+				throw new ExecutionException("SecurityManager prevents access to fields", e);
 			}
 			return null;
 		}
@@ -150,27 +153,31 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
-			for(Field f : clazz.getDeclaredFields()) {
-				if(getAnnotatedName(f) != null &&
-						!(getAnnotatedName(f).equals("")) &&
-						!(f.getName().equals(getAnnotatedName(f)))) continue;
-				if(f.getName().equals(name)) {
-					if(Collection.class.isAssignableFrom(f.getType())) {
+			try {
+				for(Field f : clazz.getDeclaredFields()) {
+					if(getAnnotatedName(f) != null &&
+							!(getAnnotatedName(f).equals("")) &&
+							!(f.getName().equals(getAnnotatedName(f)))) continue;
+					if(f.getName().equals(name)) {
+						if(Collection.class.isAssignableFrom(f.getType())) {
 
-						Class<?> genericType = null;
-						Type fieldType = f.getGenericType();
-						if(fieldType instanceof ParameterizedType) {
-							genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
-						}
+							Class<?> genericType = null;
+							Type fieldType = f.getGenericType();
+							if(fieldType instanceof ParameterizedType) {
+								genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
+							}
 
-						if(primitiveTypes.contains(genericType)) {
-							return new PrimitiveCollectionBinder(f);
-						} else {
-							return new ObjectCollectionBinder(f, genericType);
+							if(primitiveTypes.contains(genericType)) {
+								return new PrimitiveCollectionBinder(f);
+							} else {
+								return new ObjectCollectionBinder(f, genericType);
+							}
 						}
+						return new FieldBinder(f);
 					}
-					return new FieldBinder(f);
 				}
+			} catch(SecurityException e) {
+				throw new ExecutionException("SecurityManager prevents access to fields", e);
 			}
 			return null;
 		}

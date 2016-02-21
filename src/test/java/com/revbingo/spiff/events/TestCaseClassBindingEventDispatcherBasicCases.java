@@ -18,6 +18,7 @@ package com.revbingo.spiff.events;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.security.Permission;
 import java.util.ArrayList;
@@ -94,12 +95,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 			@Override
 			public void checkPermission(Permission perm) {
-				throw new SecurityException();
+				if(perm.getName().equals("suppressAccessChecks")) throw new SecurityException();
 			}
 		});
 
 		try {
 			unit.notifyData(ri);
+		} catch(SecurityException e) {
+			fail("SecurityException should not get this far");
 		} finally {
 			System.setSecurityManager(oldManager);
 		}
