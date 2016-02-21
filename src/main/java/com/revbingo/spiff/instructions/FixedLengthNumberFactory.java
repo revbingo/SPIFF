@@ -20,15 +20,26 @@ import com.revbingo.spiff.datatypes.*;
 public class FixedLengthNumberFactory {
 
 	public NumberType getInstruction(String type) {
-		if("int".equals(type)) return new IntegerInstruction();
-		else if("long".equals(type)) return new LongInstruction();
-		else if("float".equals(type)) return new FloatInstruction();
-		else if("short".equals(type)) return new ShortInstruction();
-		else if("double".equals(type)) return new DoubleInstruction();
-		else if("byte".equals(type)) return new ByteInstruction();
-		else if("ubyte".equals(type)) return new UnsignedByteInstruction();
-		else if("ushort".equals(type)) return new UnsignedShortInstruction();
-		else return new UnsignedIntegerInstruction();
+		switch(type) {
+			case "int":
+				return new IntegerInstruction();
+			case "long":
+				return new LongInstruction();
+			case "float":
+				return new FloatInstruction();
+			case "short":
+				return new ShortInstruction();
+			case "double":
+				return new DoubleInstruction();
+			case "byte":
+				return new ByteInstruction();
+			case "ubyte":
+				return new UnsignedByteInstruction();
+			case "ushort":
+				return new UnsignedShortInstruction();
+			default:
+				return new UnsignedIntegerInstruction();
+		}
 	}
 
 }
