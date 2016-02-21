@@ -49,12 +49,17 @@ public class BindingFactory {
 		}
 
 		Binder b = null;
-		for(Matcher matcher : matchers) {
-			b = matcher.match(name, clazz);
-			if(b != null) {
-				break;
+		try {
+			for (Matcher matcher : matchers) {
+				b = matcher.match(name, clazz);
+				if (b != null) {
+					break;
+				}
 			}
+		} catch (SecurityException e) {
+			throw new ExecutionException("SecurityManager prevents access to method/field", e);
 		}
+
 		addToCache(clazz, name, b);
 		return b;
 	}
@@ -76,16 +81,12 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
-			try {
-				for(Method m : clazz.getMethods()) {
-					if(m.isAnnotationPresent(Binding.class) && m.getAnnotation(Binding.class).value().equals(name)) {
-						return new MethodBinder(m);
-					}
+			for(Method m : clazz.getMethods()) {
+				if(m.isAnnotationPresent(Binding.class) && m.getAnnotation(Binding.class).value().equals(name)) {
+					return new MethodBinder(m);
 				}
-				return null;
-			} catch (SecurityException e) {
-				throw new ExecutionException("SecurityManager prevents access to class methods", e);
 			}
+			return null;
 		}
 	}
 
@@ -93,38 +94,34 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
-			try {
-				for (Field f : clazz.getDeclaredFields()) {
-					if (f.isAnnotationPresent(Binding.class) && f.getAnnotation(Binding.class).value().equals(name)) {
-						if (Collection.class.isAssignableFrom(f.getType())) {
-							Class<?> genericType = null;
-							Type fieldType = f.getGenericType();
-							if (fieldType instanceof ParameterizedType) {
-								genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
-							}
-
-							if (primitiveTypes.contains(genericType)) {
-								return new PrimitiveCollectionBinder(f);
-							} else {
-								return new ObjectCollectionBinder(f, genericType);
-							}
-						} else {
-							return new FieldBinder(f);
+			for (Field f : clazz.getDeclaredFields()) {
+				if (f.isAnnotationPresent(Binding.class) && f.getAnnotation(Binding.class).value().equals(name)) {
+					if (Collection.class.isAssignableFrom(f.getType())) {
+						Class<?> genericType = null;
+						Type fieldType = f.getGenericType();
+						if (fieldType instanceof ParameterizedType) {
+							genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 						}
-					} else if (f.isAnnotationPresent(BindingCollection.class)
-							&& f.getAnnotation(BindingCollection.class).value().equals(name)) {
-
-						Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
 
 						if (primitiveTypes.contains(genericType)) {
 							return new PrimitiveCollectionBinder(f);
 						} else {
 							return new ObjectCollectionBinder(f, genericType);
 						}
+					} else {
+						return new FieldBinder(f);
+					}
+				} else if (f.isAnnotationPresent(BindingCollection.class)
+						&& f.getAnnotation(BindingCollection.class).value().equals(name)) {
+
+					Class<?> genericType = f.getAnnotation(BindingCollection.class).type();
+
+					if (primitiveTypes.contains(genericType)) {
+						return new PrimitiveCollectionBinder(f);
+					} else {
+						return new ObjectCollectionBinder(f, genericType);
 					}
 				}
-			} catch(SecurityException e) {
-				throw new ExecutionException("SecurityManager prevents access to fields", e);
 			}
 			return null;
 		}
@@ -153,31 +150,27 @@ public class BindingFactory {
 
 		@Override
 		public Binder match(String name, Class<?> clazz) {
-			try {
-				for(Field f : clazz.getDeclaredFields()) {
-					if(getAnnotatedName(f) != null &&
-							!(getAnnotatedName(f).equals("")) &&
-							!(f.getName().equals(getAnnotatedName(f)))) continue;
-					if(f.getName().equals(name)) {
-						if(Collection.class.isAssignableFrom(f.getType())) {
+			for(Field f : clazz.getDeclaredFields()) {
+				if(getAnnotatedName(f) != null &&
+						!(getAnnotatedName(f).equals("")) &&
+						!(f.getName().equals(getAnnotatedName(f)))) continue;
+				if(f.getName().equals(name)) {
+					if(Collection.class.isAssignableFrom(f.getType())) {
 
-							Class<?> genericType = null;
-							Type fieldType = f.getGenericType();
-							if(fieldType instanceof ParameterizedType) {
-								genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
-							}
-
-							if(primitiveTypes.contains(genericType)) {
-								return new PrimitiveCollectionBinder(f);
-							} else {
-								return new ObjectCollectionBinder(f, genericType);
-							}
+						Class<?> genericType = null;
+						Type fieldType = f.getGenericType();
+						if(fieldType instanceof ParameterizedType) {
+							genericType = (Class<?>) ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 						}
-						return new FieldBinder(f);
+
+						if(primitiveTypes.contains(genericType)) {
+							return new PrimitiveCollectionBinder(f);
+						} else {
+							return new ObjectCollectionBinder(f, genericType);
+						}
 					}
+					return new FieldBinder(f);
 				}
-			} catch(SecurityException e) {
-				throw new ExecutionException("SecurityManager prevents access to fields", e);
 			}
 			return null;
 		}

@@ -310,7 +310,6 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	@Override
 	public List<Instruction> visit(ASTIdentifier node, List<Instruction> data) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
