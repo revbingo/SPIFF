@@ -240,4 +240,14 @@ public class TestCaseInstructions {
 		assertThat((Byte) elseInst2.value, is((byte) 0x74));
 		assertThat(ifInst.value, is(nullValue()));
 	}
+
+	@Test
+	public void skipInstructionSkipsSpecifiedNumberOfBytes() {
+		SkipInstruction skipInst = new SkipInstruction();
+		skipInst.setExpression("2");
+
+		skipInst.execute(testBuffer, ed, evaluator);
+
+		assertThat(testBuffer.position(), is(2));
+	}
 }
