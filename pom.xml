@@ -27,6 +27,11 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/jel.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>1.0.0</version>
+    </dependency>
   </dependencies>
    
   <build>
@@ -54,6 +59,28 @@
             <configuration>
               <sourceDirectory>src/main/java/com/revbingo/spiff/parser/gen</sourceDirectory>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <id>kompile</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>ktest-compile</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
