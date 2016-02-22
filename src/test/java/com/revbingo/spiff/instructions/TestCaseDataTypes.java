@@ -242,8 +242,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testLiteralStringInstructionConsumesIfStringMatches() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction("US-ASCII");
-		unit.setLiteral("TestData!");
+		LiteralStringInstruction unit = new LiteralStringInstruction("TestData!", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.value, is("TestData!"));
@@ -258,24 +257,22 @@ public class TestCaseDataTypes {
 		ByteBuffer utf16le = ByteBuffer.wrap(testString.getBytes("UTF-16LE"));
 		ByteBuffer ascii = ByteBuffer.wrap(testString.getBytes("US-ASCII"));
 
-		LiteralStringInstruction strInst = new LiteralStringInstruction("US-ASCII");
-		strInst.setLiteral("Hello");
-		strInst.evaluate(ascii, evaluator);
+		LiteralStringInstruction strInstAscii = new LiteralStringInstruction("Hello", "US-ASCII");
+		strInstAscii.evaluate(ascii, evaluator);
 
-		strInst.setEncoding("UTF-8");
-		strInst.evaluate(utf8, evaluator);
+		LiteralStringInstruction strInstUtf8 = new LiteralStringInstruction("Hello", "UTF-8");
+		strInstUtf8.evaluate(utf8, evaluator);
 
-		strInst.setEncoding("UTF-16BE");
-		strInst.evaluate(utf16, evaluator);
+		LiteralStringInstruction strInstUtf16 = new LiteralStringInstruction("Hello", "UTF-16BE");
+		strInstUtf16.evaluate(utf16, evaluator);
 
-		strInst.setEncoding("UTF-16LE");
-		strInst.evaluate(utf16le, evaluator);
+		LiteralStringInstruction strInstUtf16LE = new LiteralStringInstruction("Hello", "UTF-16LE");
+		strInstUtf16LE.evaluate(utf16le, evaluator);
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void testLiteralStringInstructionThrowsExecutionInstructionIfStringDoesNotMatch() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction("US-ASCII");
-		unit.setLiteral("notData");
+		LiteralStringInstruction unit = new LiteralStringInstruction("notData", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.value, is("TestData!"));

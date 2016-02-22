@@ -289,10 +289,10 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	public List<Instruction> visit(ASTliteralString node, List<Instruction> data) {
 		String encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING);
 		if(encoding == null) encoding = defaultEncoding;
-		
-		LiteralStringInstruction inst = new LiteralStringInstruction(encoding);
-	   	inst.setLiteral(((ASTIdentifier) node.jjtGetChild(0)).jjtGetFirstToken().image);
-	    
+
+		String literal = ((ASTIdentifier) node.jjtGetChild(0)).jjtGetFirstToken().image;
+		LiteralStringInstruction inst = new LiteralStringInstruction(literal, encoding);
+
 	    inst.setName(node.jjtGetLastToken().image);
 		return decorateAndAdd(node, inst, data);
 	}
