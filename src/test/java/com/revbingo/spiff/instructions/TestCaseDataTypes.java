@@ -377,7 +377,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfByteLiteralNumberDoesNotMatch() throws Exception {
 		ByteInstruction inst = new ByteInstruction();
-		inst.setLiteral("0x54");
+		inst.setLiteralExpr("0x54");
 	
 		try {
 			//first byte should pass
@@ -393,7 +393,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfShortLiteralNumberDoesNotMatch() throws Exception {
 		ShortInstruction inst = new ShortInstruction();
-		inst.setLiteral("0x5465");
+		inst.setLiteralExpr("0x5465");
 	
 		try {
 			//first short should pass
@@ -409,7 +409,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfIntegerLiteralNumberDoesNotMatch() throws Exception {
 		IntegerInstruction inst = new IntegerInstruction();
-		inst.setLiteral("0x54657374");
+		inst.setLiteralExpr("0x54657374");
 	
 		try {
 			//first int should pass
@@ -428,7 +428,7 @@ public class TestCaseDataTypes {
 		ByteBuffer longerBuffer = ByteBuffer.wrap(testData);
 		
 		LongInstruction inst = new LongInstruction();
-		inst.setLiteral("0x5465737444617461L");
+		inst.setLiteralExpr("0x5465737444617461L");
 		
 		try {
 			//first long should pass
@@ -444,7 +444,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedByteLiteralNumberDoesNotMatch() throws Exception {
 		UnsignedByteInstruction inst = new UnsignedByteInstruction();
-		inst.setLiteral("0x54");
+		inst.setLiteralExpr("0x54");
 		
 		try {
 			//first byte should pass
@@ -460,7 +460,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedShortLiteralNumberDoesNotMatch() throws Exception {
 		UnsignedShortInstruction inst = new UnsignedShortInstruction();
-		inst.setLiteral("0x5465");
+		inst.setLiteralExpr("0x5465");
 		
 		try {
 			//first short should pass
@@ -476,7 +476,7 @@ public class TestCaseDataTypes {
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedIntegerLiteralNumberDoesNotMatch() throws Exception {
 		UnsignedIntegerInstruction inst = new UnsignedIntegerInstruction();
-		inst.setLiteral("0x54657374");
+		inst.setLiteralExpr("0x54657374");
 		
 		try {
 			//first int should pass
@@ -484,7 +484,7 @@ public class TestCaseDataTypes {
 		} catch(Exception e) {
 			fail();
 		}
-		
+
 		//next int should fail
 		inst.execute(testBuffer, ed, evaluator);
 	}

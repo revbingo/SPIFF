@@ -226,7 +226,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	    FixedLengthNumberFactory insF = new FixedLengthNumberFactory();
 	    NumberType inst = insF.getInstruction(node.jjtGetFirstToken().image);
 	    if(node.jjtGetNumChildren() == 1) {
-	    	inst.setLiteral(getExpr(node.jjtGetChild(0)));
+	    	inst.setLiteralExpr(getExpr(node.jjtGetChild(0)));
 	    }
 	    inst.setName(node.jjtGetLastToken().image);
 	    return decorateAndAdd(node, inst, data);
