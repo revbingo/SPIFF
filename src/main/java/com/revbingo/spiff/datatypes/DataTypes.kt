@@ -25,6 +25,12 @@ abstract class NumberType : Datatype() {
     var literalExpr: String? = null
 }
 
+fun verifyNumber(n: Number, expr: String?, evalFunc: () -> Number): Unit {
+    if(expr != null) {
+        val exprResult = evalFunc()
+        if(n != exprResult) throw ExecutionException("Value $n did not match expected value $expr")
+    }
+}
 
 class ByteInstruction(): NumberType() {
 
@@ -34,12 +40,35 @@ class ByteInstruction(): NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val b = buffer.get()
-        if(literalExpr != null) {
-            if(b != evaluator.evaluateByte(literalExpr)) {
-                throw ExecutionException("Value $b did not match expected value $literalExpr")
-            }
-        }
-        return b;
+        verifyNumber(b, literalExpr) { evaluator.evaluateByte(literalExpr) }
+        return b
+    }
+}
+
+class ShortInstruction: NumberType() {
+
+    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
+        val s = buffer.short
+        verifyNumber(s, literalExpr) { evaluator.evaluateShort(literalExpr) }
+        return s
+    }
+}
+
+class IntegerInstruction: NumberType() {
+
+    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
+        val i = buffer.int
+        verifyNumber(i, literalExpr) { evaluator.evaluateInt(literalExpr) }
+        return i
+    }
+}
+
+class LongInstruction: NumberType() {
+
+    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
+        val l = buffer.long
+        verifyNumber(l, literalExpr) { evaluator.evaluateLong(literalExpr) }
+        return l
     }
 }
 
@@ -58,45 +87,10 @@ class FloatInstruction: NumberType() {
     }
 }
 
-class ShortInstruction: NumberType() {
-
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val s = buffer.short
-        if(literalExpr != null) {
-            if(s != evaluator.evaluateShort(literalExpr)) {
-                throw ExecutionException("Value $s did not match expected value $literalExpr")
-            }
-        }
-        return s
-    }
-}
-
-class IntegerInstruction: NumberType() {
-
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val i = buffer.int
-        if(literalExpr != null) {
-            if(i != evaluator.evaluateInt(literalExpr)) {
-                throw ExecutionException("Value $i did not match expected value $literalExpr")
-            }
-        }
-        return i
-    }
-}
-
-class LongInstruction: NumberType() {
-
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val l = buffer.long
-        if(literalExpr != null) {
-            if(l != evaluator.evaluateLong(literalExpr)) {
-                throw ExecutionException("Value $l did not match expected value $literalExpr")
-            }
-        }
-        return l
-    }
-}
-
+/*
+* Unsigned numbers are represented by widening to the next widest type i.e. unsigned bytes are shorts,
+* unsigned shorts are ints, unsigned ints are longs, unsigned longs are not supported
+* */
 abstract class FixedLengthUnsignedNumber: NumberType() {
 
     protected fun convertBytesToInts(bytes: ByteArray): IntArray {
@@ -107,24 +101,18 @@ abstract class FixedLengthUnsignedNumber: NumberType() {
 class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        super.address = buffer.position()
         val bytes = ByteArray(1)
         buffer.get(bytes)
 
         val s = convertBytesToInts(bytes)[0].toShort()
 
-        if(literalExpr != null) {
-            if(s != evaluator.evaluateShort(literalExpr)) {
-                throw ExecutionException("Value $s did not match expected value $literalExpr")
-            }
-        }
+        verifyNumber(s, literalExpr) { evaluator.evaluateShort(literalExpr) }
         return s
     }
 }
 
 class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        super.address = buffer.position()
         val bytes = ByteArray(4)
         val signedInt = buffer.int
 
@@ -139,18 +127,14 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
                  or (ubytes[1] shl 16)
                  or (ubytes[2] shl 8)
                  or (ubytes[3])).toLong()
-        if(literalExpr != null) {
-            if(long != evaluator.evaluateLong(literalExpr)) {
-                throw ExecutionException("Value $long did not match expected value $literalExpr")
-            }
-        }
+
+        verifyNumber(long, literalExpr) { evaluator.evaluateLong(literalExpr) }
         return long
     }
 }
 
 class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        super.address = buffer.position()
         val bytes = ByteArray(2)
         val signedShort = buffer.short
 
@@ -161,13 +145,8 @@ class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
 
         val i = (ubytes[0] shl 8) or ubytes[1]
 
-        if(literalExpr != null) {
-            if(i != evaluator.evaluateInt(literalExpr)) {
-                throw ExecutionException("Value $i did not match expected value $literalExpr")
-            }
-        }
+        verifyNumber(i, literalExpr) { evaluator.evaluateInt(literalExpr) }
         return i
-
     }
 }
 
