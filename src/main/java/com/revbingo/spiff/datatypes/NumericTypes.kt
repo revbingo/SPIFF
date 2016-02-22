@@ -23,65 +23,36 @@ import com.revbingo.spiff.evaluator.Evaluator
 abstract class NumberType : Datatype() {
 
     var literalExpr: String? = null
-}
 
-fun verifyNumber(n: Number, expr: String?, evalFunc: () -> Number): Unit {
-    if(expr != null) {
-        val exprResult = evalFunc()
-        if(n != exprResult) throw ExecutionException("Value $n did not match expected value $expr")
+    fun verifyNumber(n: Number, expr: String?, evalFunc: () -> Number): Unit {
+        if(expr != null) {
+            val exprResult = evalFunc()
+            if(n != exprResult) throw ExecutionException("Value $n did not match expected value $expr")
+        }
     }
 }
 
-class ByteInstruction: NumberType() {
+abstract class SimpleNumberType(val bufferFunc: (ByteBuffer) -> Number,
+                                val evaluationFunc: (Evaluator, String?) -> Number): NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val b = buffer.get()
-        verifyNumber(b, literalExpr) { evaluator.evaluateByte(literalExpr) }
-        return b
+        val value = bufferFunc(buffer)
+        verifyNumber(value, literalExpr) { evaluationFunc(evaluator, literalExpr) }
+        return value
     }
 }
 
-class ShortInstruction: NumberType() {
+class ByteInstruction: SimpleNumberType({ it.get() }, { eval, expr -> eval.evaluateByte(expr) })
 
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val s = buffer.short
-        verifyNumber(s, literalExpr) { evaluator.evaluateShort(literalExpr) }
-        return s
-    }
-}
+class ShortInstruction: SimpleNumberType({ it.short }, { eval, expr -> eval.evaluateShort(expr) })
 
-class IntegerInstruction: NumberType() {
+class IntegerInstruction: SimpleNumberType({ it.int }, { eval, expr -> eval.evaluateInt(expr) })
 
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val i = buffer.int
-        verifyNumber(i, literalExpr) { evaluator.evaluateInt(literalExpr) }
-        return i
-    }
-}
+class LongInstruction: SimpleNumberType({ it.long }, { eval, expr -> eval.evaluateLong(expr) })
 
-class LongInstruction: NumberType() {
+class DoubleInstruction : SimpleNumberType({ it.double }, { eval, expr -> eval.evaluateDouble(expr) })
 
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val l = buffer.long
-        verifyNumber(l, literalExpr) { evaluator.evaluateLong(literalExpr) }
-        return l
-    }
-}
-
-class DoubleInstruction : NumberType() {
-
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        return buffer.double
-    }
-
-}
-
-class FloatInstruction: NumberType() {
-
-    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        return buffer.float
-    }
-}
+class FloatInstruction: SimpleNumberType({ it.float }, { eval, expr -> eval.evaluateFloat(expr) })
 
 /*
 * Unsigned numbers are represented by widening to the next widest type i.e. unsigned bytes are shorts,
@@ -92,6 +63,7 @@ abstract class FixedLengthUnsignedNumber: NumberType() {
     protected fun convertBytesToInts(bytes: ByteArray): IntArray {
         return bytes.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
     }
+
 }
 
 class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
@@ -108,6 +80,7 @@ class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
 }
 
 class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
+
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val bytes = ByteArray(4)
         val signedInt = buffer.int
@@ -130,6 +103,7 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
 }
 
 class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
+
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val bytes = ByteArray(2)
         val signedShort = buffer.short
