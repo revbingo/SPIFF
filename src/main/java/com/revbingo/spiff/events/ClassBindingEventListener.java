@@ -53,15 +53,15 @@ public class ClassBindingEventListener<T> implements EventListener {
 	@Override
 	public void notifyData(Datatype ins) {
 		if(skipUnbound && skipCount > 0) return;
-		Binder binder = bindingFactory.getBindingFor(ins.name, currentBinding.getClass());
+		Binder binder = bindingFactory.getBindingFor(ins.getName(), currentBinding.getClass());
 		if(binder == null) {
 			if(isStrict) {
-				throw new ExecutionException("Could not get binding for instruction " + ins.name);
+				throw new ExecutionException("Could not get binding for instruction " + ins.getName());
 			} else {
 				return;
 			}
 		} else {
-			binder.bind(currentBinding, ins.value);
+			binder.bind(currentBinding, ins.getValue());
 		}
 	}
 

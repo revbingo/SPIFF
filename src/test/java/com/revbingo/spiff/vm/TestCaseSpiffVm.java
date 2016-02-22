@@ -101,12 +101,12 @@ public class TestCaseSpiffVm {
 		thread.start();
 		thread.waitForHalt();
 
-		assertThat(ed.lastInstruction.name, is("byteOne"));
+		assertThat(ed.lastInstruction.getName(), is("byteOne"));
 		assertThat(unit.getNextLineNumber(), is(2));
 
 		thread.runToNext();
 
-		assertThat(ed.lastInstruction.name, is("byteTwo"));
+		assertThat(ed.lastInstruction.getName(), is("byteTwo"));
 		assertThat(thread.isAlive(), is(false));
 	}
 
@@ -134,20 +134,20 @@ public class TestCaseSpiffVm {
 		thread.runToNext();
 
 		assertThat(ed.lastInstruction, is(not(nullValue())));
-		assertThat(ed.lastInstruction.name, is("theByte"));
-		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x11));
+		assertThat(ed.lastInstruction.getName(), is("theByte"));
+		assertThat((Byte) ed.lastInstruction.getValue(), is((byte) 0x11));
 
 		thread.runToNext();
 
 		assertThat(ed.lastInstruction, is(not(nullValue())));
-		assertThat(ed.lastInstruction.name, is("theByte"));
-		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x22));
+		assertThat(ed.lastInstruction.getName(), is("theByte"));
+		assertThat((Byte) ed.lastInstruction.getValue(), is((byte) 0x22));
 
 		thread.runToNext();
 
 		assertThat(ed.lastInstruction, is(not(nullValue())));
-		assertThat(ed.lastInstruction.name, is("theByte"));
-		assertThat((Byte) ed.lastInstruction.value, is((byte) 0x33));
+		assertThat(ed.lastInstruction.getName(), is("theByte"));
+		assertThat((Byte) ed.lastInstruction.getValue(), is((byte) 0x33));
 	}
 
 	public class TestEventListener implements EventListener {

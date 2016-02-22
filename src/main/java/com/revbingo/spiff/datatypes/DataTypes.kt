@@ -2,10 +2,36 @@ package com.revbingo.spiff.datatypes
 
 import com.revbingo.spiff.ExecutionException
 import com.revbingo.spiff.evaluator.Evaluator
+import com.revbingo.spiff.events.EventListener
+import com.revbingo.spiff.instructions.AdfInstruction
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.*
+
+abstract class Datatype: AdfInstruction() {
+
+    var address: Int? = null
+    var addressStr: String? = null
+    var name: String? = null
+        set(value) {
+            field = value
+            addressStr = "${value}.address"
+        }
+
+    var value: Any? = null
+
+    override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator): Unit {
+        address = buffer.position()
+        value = this.evaluate(buffer, evaluator)
+        evaluator.addVariable(name, value)
+        evaluator.addVariable(addressStr, address)
+        eventDispatcher.notifyData(this)
+    }
+
+    abstract fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any
+
+}
 
 abstract class StringInstruction(charsetName: String): Datatype() {
 
@@ -68,5 +94,45 @@ class LiteralStringInstruction(val literal: String, charsetName: String) : Strin
         } else {
             throw ExecutionException("Expected literal string ${literal} but got ${String(actualBytes, encoding)}")
         }
+    }
+}
+
+class BytesInstruction: Datatype() {
+
+    var lengthExpr: String? = null
+
+    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
+        val length = evaluator.evaluateInt(lengthExpr)
+        val bytes = ByteArray(length)
+        buffer.get(bytes)
+        return bytes
+    }
+}
+
+class BitsInstruction: Datatype() {
+    var numberOfBitsExpr: String? = null
+
+    override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
+        val numberOfBits = evaluator.evaluateInt(numberOfBitsExpr)
+
+        val bytesToGet = Math.ceil(numberOfBits/8.0).toInt()
+        val bytes = ByteArray(bytesToGet)
+
+        buffer.get(bytes)
+
+        val result = BooleanArray(numberOfBits)
+
+        bytes.forEachIndexed { i, byte ->
+            var tempByte = byte.toInt()
+            for(j in 7 downTo 0) {
+                val b: Int = tempByte and 0x01
+                val bitIndex = (i * 8) + j
+                if(bitIndex < numberOfBits) {
+                    result[bitIndex] = (b == 1)
+                }
+                tempByte = tempByte shr 1
+            }
+        }
+        return result
     }
 }

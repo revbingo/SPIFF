@@ -45,7 +45,7 @@ public class DebugEventListener implements EventListener {
 		for(int i=0;i<tabCount;i++) {
 			System.out.print("\t");
 		}
-		System.out.println("[" + ins.name + "] " + ins.value);
+		System.out.println("[" + ins.getName() + "] " + ins.getValue());
 		wrappedListener.notifyData(ins);
 	}
 

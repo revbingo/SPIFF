@@ -64,23 +64,23 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(9));
 		assertThat(insts.get(0), instanceOf(ByteInstruction.class));
-		assertThat(((Datatype) insts.get(0)).name, is("testByte"));
+		assertThat(((Datatype) insts.get(0)).getName(), is("testByte"));
 		assertThat(insts.get(1), instanceOf(IntegerInstruction.class));
-		assertThat(((Datatype) insts.get(1)).name, is("testInt"));
+		assertThat(((Datatype) insts.get(1)).getName(), is("testInt"));
 		assertThat(insts.get(2), instanceOf(LongInstruction.class));
-		assertThat(((Datatype) insts.get(2)).name, is("testLong"));
+		assertThat(((Datatype) insts.get(2)).getName(), is("testLong"));
 		assertThat(insts.get(3), instanceOf(ShortInstruction.class));
-		assertThat(((Datatype) insts.get(3)).name, is("testShort"));
+		assertThat(((Datatype) insts.get(3)).getName(), is("testShort"));
 		assertThat(insts.get(4), instanceOf(DoubleInstruction.class));
-		assertThat(((Datatype) insts.get(4)).name, is("testDouble"));
+		assertThat(((Datatype) insts.get(4)).getName(), is("testDouble"));
 		assertThat(insts.get(5), instanceOf(FloatInstruction.class));
-		assertThat(((Datatype) insts.get(5)).name, is("testFloat"));
+		assertThat(((Datatype) insts.get(5)).getName(), is("testFloat"));
 		assertThat(insts.get(6), instanceOf(UnsignedByteInstruction.class));
-		assertThat(((Datatype) insts.get(6)).name, is("testUByte"));
+		assertThat(((Datatype) insts.get(6)).getName(), is("testUByte"));
 		assertThat(insts.get(7), instanceOf(UnsignedShortInstruction.class));
-		assertThat(((Datatype) insts.get(7)).name, is("testUShort"));
+		assertThat(((Datatype) insts.get(7)).getName(), is("testUShort"));
 		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
-		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
+		assertThat(((Datatype) insts.get(8)).getName(), is("testUInt"));
 	}
 
 	@Test
@@ -102,37 +102,37 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.get(0), instanceOf(ByteInstruction.class));
 		assertThat(((ByteInstruction) insts.get(0)).getLiteralExpr(), is("0x80"));
-		assertThat(((Datatype) insts.get(0)).name, is("testByte"));
+		assertThat(((Datatype) insts.get(0)).getName(), is("testByte"));
 		assertThat(insts.get(1), instanceOf(IntegerInstruction.class));
-		assertThat(((Datatype) insts.get(1)).name, is("testInt"));
+		assertThat(((Datatype) insts.get(1)).getName(), is("testInt"));
 		assertThat(((IntegerInstruction) insts.get(1)).getLiteralExpr(), is("0xFFFFFFFF"));
 		
 		assertThat(insts.get(2), instanceOf(LongInstruction.class));
-		assertThat(((Datatype) insts.get(2)).name, is("testLong"));
+		assertThat(((Datatype) insts.get(2)).getName(), is("testLong"));
 		assertThat(((LongInstruction) insts.get(2)).getLiteralExpr(), is("0xFFFFFFFFFF"));
 		
 		assertThat(insts.get(3), instanceOf(ShortInstruction.class));
-		assertThat(((Datatype) insts.get(3)).name, is("testShort"));
+		assertThat(((Datatype) insts.get(3)).getName(), is("testShort"));
 		assertThat(((ShortInstruction) insts.get(3)).getLiteralExpr(), is("10"));
 		
 		assertThat(insts.get(4), instanceOf(DoubleInstruction.class));
-		assertThat(((Datatype) insts.get(4)).name, is("testDouble"));
+		assertThat(((Datatype) insts.get(4)).getName(), is("testDouble"));
 		assertThat(((DoubleInstruction) insts.get(4)).getLiteralExpr(), is("1.234"));
 		
 		assertThat(insts.get(5), instanceOf(FloatInstruction.class));
-		assertThat(((Datatype) insts.get(5)).name, is("testFloat"));
+		assertThat(((Datatype) insts.get(5)).getName(), is("testFloat"));
 		assertThat(((FloatInstruction) insts.get(5)).getLiteralExpr(), is("1.234"));
 		
 		assertThat(insts.get(6), instanceOf(UnsignedByteInstruction.class));
-		assertThat(((Datatype) insts.get(6)).name, is("testUByte"));
+		assertThat(((Datatype) insts.get(6)).getName(), is("testUByte"));
 		assertThat(((UnsignedByteInstruction) insts.get(6)).getLiteralExpr(), is("0xab"));
 		
 		assertThat(insts.get(7), instanceOf(UnsignedShortInstruction.class));
-		assertThat(((Datatype) insts.get(7)).name, is("testUShort"));
+		assertThat(((Datatype) insts.get(7)).getName(), is("testUShort"));
 		assertThat(((UnsignedShortInstruction) insts.get(7)).getLiteralExpr(), is("0xFFCC"));
 		
 		assertThat(insts.get(8), instanceOf(UnsignedIntegerInstruction.class));
-		assertThat(((Datatype) insts.get(8)).name, is("testUInt"));
+		assertThat(((Datatype) insts.get(8)).getName(), is("testUInt"));
 		assertThat(((UnsignedIntegerInstruction) insts.get(8)).getLiteralExpr(), is("0xABCD"));
 	}
 	
@@ -193,7 +193,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(FixedLengthString.class));
 
 		FixedLengthString inst = (FixedLengthString) insts.get(0);
-		assertThat(inst.name, is("str"));
+		assertThat(inst.getName(), is("str"));
 		assertThat(inst.getLengthExpr(), is("expr"));
 	}
 
@@ -231,7 +231,7 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 		assertThat(insts.size(), is(1));
 		assertThat(insts.get(0), instanceOf(TerminatedString.class));
-		assertThat(((TerminatedString) insts.get(0)).name, is("terminatedString"));
+		assertThat(((TerminatedString) insts.get(0)).getName(), is("terminatedString"));
 	}
 
 	@Test
@@ -260,7 +260,7 @@ public class TestCaseSpiffParser {
 
 		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
 		assertThat(litStr.getLiteral(), is("mhbd"));
-		assertThat(litStr.name, is("dbhm"));
+		assertThat(litStr.getName(), is("dbhm"));
 	}
 
 	@Test
@@ -789,7 +789,7 @@ public class TestCaseSpiffParser {
 
 		assertThat(insts.size(), is(1));
 		assertThat(insts.get(0), instanceOf(StringReversingInstruction.class));
-		assertThat(((Datatype) insts.get(0)).name, is("customInt"));
+		assertThat(((Datatype) insts.get(0)).getName(), is("customInt"));
 	}
 
 	@Test(expected=AdfFormatException.class)
@@ -848,8 +848,8 @@ public class TestCaseSpiffParser {
 
 		List<Instruction> insts = parse(adf);
 
-		assertThat(((Datatype) insts.get(0)).name, is("the_byte"));
-		assertThat(((Datatype) insts.get(1)).name, is("_beginsWithUnderscore"));
+		assertThat(((Datatype) insts.get(0)).getName(), is("the_byte"));
+		assertThat(((Datatype) insts.get(1)).getName(), is("_beginsWithUnderscore"));
 	}
 
 	private List<Instruction> parse(AdfFile adf) throws Exception {

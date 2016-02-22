@@ -52,7 +52,7 @@ public class TestCustomDatatypes {
 
 		@Override
 		public void notifyData(Datatype ins) {
-			captures.add(ins.value);
+			captures.add(ins.getValue());
 		}
 
 		@Override

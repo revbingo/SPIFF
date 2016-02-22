@@ -70,7 +70,7 @@ public class TestCaseInstructions {
 		IntegerInstruction test = new IntegerInstruction();
 		test.execute(testBuffer, ed, evaluator);
 
-		assertThat((Integer) test.value, is(equalTo(0x74736554)));
+		assertThat((Integer) test.getValue(), is(equalTo(0x74736554)));
 
 		unit.setOrder(ByteOrder.BIG_ENDIAN);
 		unit.execute(testBuffer, ed, evaluator);
@@ -78,7 +78,7 @@ public class TestCaseInstructions {
 		test = new IntegerInstruction();
 		test.execute(testBuffer, ed, evaluator);
 
-		assertThat((Integer) test.value, is(equalTo(0x44617461)));
+		assertThat((Integer) test.getValue(), is(equalTo(0x44617461)));
 	}
 
 	@Test
@@ -184,7 +184,7 @@ public class TestCaseInstructions {
 		unit.execute(testBuffer, ed, evaluator);
 		nextInst.execute(testBuffer, ed, evaluator);
 
-		assertThat((Byte) nextInst.value, is(testData[positionToJumpTo]));
+		assertThat((Byte) nextInst.getValue(), is(testData[positionToJumpTo]));
 		assertThat(testBuffer.position(), is(positionToJumpTo + 1));
 	}
 
@@ -221,8 +221,8 @@ public class TestCaseInstructions {
 
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((Byte) ifInst.value, is((byte) 0x54));
-		assertThat(elseInst2.value, is(nullValue()));
+		assertThat((Byte) ifInst.getValue(), is((byte) 0x54));
+		assertThat(elseInst2.getValue(), is(nullValue()));
 	}
 
 	@Test
@@ -242,8 +242,8 @@ public class TestCaseInstructions {
 
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((Byte) elseInst2.value, is((byte) 0x74));
-		assertThat(ifInst.value, is(nullValue()));
+		assertThat((Byte) elseInst2.getValue(), is((byte) 0x74));
+		assertThat(ifInst.getValue(), is(nullValue()));
 	}
 
 	@Test

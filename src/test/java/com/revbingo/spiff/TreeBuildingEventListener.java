@@ -35,7 +35,7 @@ public class TreeBuildingEventListener implements EventListener {
 	
 	@Override
 	public void notifyData(Datatype ins) {
-		MutableTreeNode thisNode = new DefaultMutableTreeNode("<html><i>"  + ins.name + "</i> : <b>" + ins.value + "</b></html>");
+		MutableTreeNode thisNode = new DefaultMutableTreeNode("<html><i>"  + ins.getName() + "</i> : <b>" + ins.getValue() + "</b></html>");
 		model.insertNodeInto(thisNode, currentNode, currentNode.getChildCount());
 	}
 

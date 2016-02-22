@@ -49,14 +49,14 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		unit.notifyGroup("inner", true);
 
 		Datatype xInst = new IntegerInstruction();
-		xInst.name = "x";
-		xInst.value = Integer.valueOf(3);
+		xInst.setName("x");
+		xInst.setValue(Integer.valueOf(3));
 
 		unit.notifyData(xInst);
 
 		Datatype yInst = new IntegerInstruction();
-		yInst.name = "y";
-		yInst.value = 21;
+		yInst.setName("y");
+		yInst.setValue(21);
 
 		unit.notifyData(yInst);
 
@@ -75,22 +75,22 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		unit.notifyGroup("inner", true);
 
 		Datatype xInst = new IntegerInstruction();
-		xInst.name = "x";
-		xInst.value = new Integer(3);
+		xInst.setName("x");
+		xInst.setValue(Integer.valueOf(3));
 
 		unit.notifyData(xInst);
 
 		Datatype yInst = new IntegerInstruction();
-		yInst.name = "y";
-		yInst.value = 21;
+		yInst.setName("y");
+		yInst.setValue(21);
 
 		unit.notifyData(yInst);
 
 		unit.notifyGroup("inner", false);
 
 		Datatype rootX = new IntegerInstruction();
-		rootX.name = "x";
-		rootX.value = Integer.valueOf(30);
+		rootX.setName("x");
+		rootX.setValue(Integer.valueOf(30));
 		unit.notifyData(rootX);
 
 		RootBinding binding = unit.getResult();
@@ -108,14 +108,14 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		for(int i = 0; i < 3; i++) {
 			unit.notifyGroup("listOfObjects", true);
 			Datatype xInst = new IntegerInstruction();
-			xInst.name = "x";
-			xInst.value = Integer.valueOf(i);
+			xInst.setName("x");
+			xInst.setValue(Integer.valueOf(i));
 
 			unit.notifyData(xInst);
 
 			Datatype yInst = new IntegerInstruction();
-			yInst.name = "y";
-			yInst.value = 21;
+			yInst.setName("y");
+			yInst.setValue(21);
 
 			unit.notifyData(yInst);
 			unit.notifyGroup("listOfObjects", false);
@@ -139,16 +139,16 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		unit.setSkipUnboundGroups(true);
 
 		IntegerInstruction intInst = new IntegerInstruction();
-		intInst.name = "x";
-		intInst.value = 10;
+		intInst.setName("x");
+		intInst.setValue(10);
 
 		unit.notifyData(intInst);
 		unit.notifyGroup("unknown", true);
 		unit.notifyGroup("stillUnknown", true);
-		intInst.value = 20;
+		intInst.setValue(20);
 		unit.notifyData(intInst);
 		unit.notifyGroup("stillUnknown", false);
-		intInst.value = 30;
+		intInst.setValue(30);
 		unit.notifyData(intInst);
 		unit.notifyGroup("unknown", false);
 

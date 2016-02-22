@@ -79,8 +79,8 @@ public class TestCaseDataTypes {
 
 		for(int i = 0; i < 10; i++ ) {
 			unit.execute(testBuffer, ed, evaluator);
-			assertThat((Byte) unit.value, is(equalTo(testData[i])));
-			assertThat(unit.address, is(equalTo(i)));
+			assertThat((Byte) unit.getValue(), is(equalTo(testData[i])));
+			assertThat(unit.getAddress(), is(equalTo(i)));
 		}
 	}
 
@@ -90,8 +90,8 @@ public class TestCaseDataTypes {
 		unit.setLengthExpr("5");
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(unit.value, instanceOf(byte[].class));
-		byte[] bytes = (byte[]) unit.value;
+		assertThat(unit.getValue(), instanceOf(byte[].class));
+		byte[] bytes = (byte[]) unit.getValue();
 		assertThat(bytes.length, is(5));
 		assertThat(bytes, is(new byte[] { 0x54,0x65,0x73,0x74,0x44}));
 		assertThat(testBuffer.position(), is(5));
@@ -105,8 +105,8 @@ public class TestCaseDataTypes {
 
 		for(int i = 0; i < 5; i++) {
 			unit.execute(testBuffer, ed, evaluator);
-			assertThat((Short) unit.value, is(equalTo(expectedValues[i])));
-			assertThat(unit.address, is(equalTo(i*2)));
+			assertThat((Short) unit.getValue(), is(equalTo(expectedValues[i])));
+			assertThat(unit.getAddress(), is(equalTo(i*2)));
 		}
 	}
 
@@ -118,8 +118,8 @@ public class TestCaseDataTypes {
 
 		for(int i = 0; i < 2; i++) {
 			unit.execute(testBuffer, ed, evaluator);
-			assertThat((Integer) unit.value, is(equalTo(expectedValues[i])));
-			assertThat(unit.address, is(equalTo(i*4)));
+			assertThat((Integer) unit.getValue(), is(equalTo(expectedValues[i])));
+			assertThat(unit.getAddress(), is(equalTo(i*4)));
 		}
 	}
 
@@ -133,20 +133,20 @@ public class TestCaseDataTypes {
 		long expectedValue = 0x6573744461746121L;
 
 		unit.execute(testBuffer, ed, evaluator);
-		assertThat((Long) unit.value, is(equalTo(expectedValue)));
-		assertThat(unit.address, is(equalTo(1)));
+		assertThat((Long) unit.getValue(), is(equalTo(expectedValue)));
+		assertThat(unit.getAddress(), is(equalTo(1)));
 	}
 
 	@Test
 	public void testDoubleInstruction() throws Exception {
 		DoubleInstruction unit = new DoubleInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		double expectedValue = 3.66552341002185E98d;
 
 		unit.execute(testBuffer, ed, evaluator);
-		assertThat((Double) unit.value, is(equalTo(expectedValue)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Double) unit.getValue(), is(equalTo(expectedValue)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
@@ -156,9 +156,9 @@ public class TestCaseDataTypes {
 		unit.setNumberOfBitsExpr(numberOfBitsExpression);
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(unit.value, instanceOf(boolean[].class));
+		assertThat(unit.getValue(), instanceOf(boolean[].class));
 
-		boolean[] result = (boolean[]) unit.value;
+		boolean[] result = (boolean[]) unit.getValue();
 		assertThat(result.length, is(Integer.valueOf(numberOfBitsExpression)));
 
 		assertThat(testBuffer.position(), is(2));
@@ -182,38 +182,38 @@ public class TestCaseDataTypes {
 	@Test
 	public void testFloatInstruction() throws Exception {
 		FloatInstruction unit = new FloatInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		float expectedValue = 3.94193797E12f;
 
 		unit.execute(testBuffer, ed, evaluator);
-		assertThat((Float) unit.value, is(equalTo(expectedValue)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Float) unit.getValue(), is(equalTo(expectedValue)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testFixedLengthStringWithExplicitEncoding() throws Exception {
 		FixedLengthString unit = new FixedLengthString("US-ASCII");
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		unit.setLengthExpr("4");
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is(equalTo("Test")));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((String) unit.getValue(), is(equalTo("Test")));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testFixedLengthStringWithNoExplicitEncodingDropsToASystemDefault() throws Exception {
 		FixedLengthString unit = new FixedLengthString("US-ASCII");
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		unit.setLengthExpr("4");
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is(equalTo("Test")));
+		assertThat((String) unit.getValue(), is(equalTo("Test")));
 
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
@@ -227,7 +227,7 @@ public class TestCaseDataTypes {
 		unit.setLengthExpr("12");
 		unit.execute(paddedBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is(equalTo("TestData!")));
+		assertThat((String) unit.getValue(), is(equalTo("TestData!")));
 	}
 
 	@Test(expected=ExecutionException.class)
@@ -245,7 +245,7 @@ public class TestCaseDataTypes {
 		LiteralStringInstruction unit = new LiteralStringInstruction("TestData!", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is("TestData!"));
+		assertThat((String) unit.getValue(), is("TestData!"));
 	}
 
 	@Test
@@ -275,17 +275,17 @@ public class TestCaseDataTypes {
 		LiteralStringInstruction unit = new LiteralStringInstruction("notData", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is("TestData!"));
+		assertThat((String) unit.getValue(), is("TestData!"));
 	}
 
 	@Test
 	public void testTerminatedString() throws Exception {
 		TerminatedString unit = new TerminatedString("US-ASCII");
-		unit.address = -1;
+		unit.setAddress(-1);
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat((String) unit.value, is(equalTo("TestData!")));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((String) unit.getValue(), is(equalTo("TestData!")));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test(expected=BufferUnderflowException.class)
@@ -299,60 +299,60 @@ public class TestCaseDataTypes {
 	@Test
 	public void testUnsignedByteInstruction() throws Exception {
 		UnsignedByteInstruction unit = new UnsignedByteInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xFF });
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Short) unit.value, is(equalTo((short) 0xFF)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Short) unit.getValue(), is(equalTo((short) 0xFF)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testUnsignedShortInstructionWithLittleEndianOrder() throws Exception {
 		UnsignedShortInstruction unit = new UnsignedShortInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
 		unsignedByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Integer) unit.value, is(equalTo(0xFF00)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Integer) unit.getValue(), is(equalTo(0xFF00)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testUnsignedShortInstructionWithBigEndianOrder() throws Exception {
 		UnsignedShortInstruction unit = new UnsignedShortInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
 		unsignedByteBuffer.order(ByteOrder.BIG_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Integer) unit.value, is(equalTo(0x00FF)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Integer) unit.getValue(), is(equalTo(0x00FF)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testUnsignedIntegerInstructionWithBigEndianOrder() throws Exception {
 		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
 		unsignedByteBuffer.order(ByteOrder.BIG_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Long) unit.value, is(equalTo((long) 0xCAFEBABE)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Long) unit.getValue(), is(equalTo((long) 0xCAFEBABE)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
 	public void testUnsignedIntegerInstructionWithLittleEndianOrder() throws Exception {
 		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
-		unit.address = -1;
+		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
 		unsignedByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Long) unit.value, is(equalTo((long) 0xBEBAFECA)));
-		assertThat(unit.address, is(equalTo(0)));
+		assertThat((Long) unit.getValue(), is(equalTo((long) 0xBEBAFECA)));
+		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 
 	@Test
