@@ -24,10 +24,10 @@ abstract class NumberType : Datatype() {
 
     var literalExpr: String? = null
 
-    fun verifyNumber(n: Number, expr: String?, evalFunc: () -> Number): Unit {
-        if(expr != null) {
-            val exprResult = evalFunc()
-            if(n != exprResult) throw ExecutionException("Value $n did not match expected value $expr")
+    fun verifyNumber(numberToCheck: Number, evaluateToType: (String?) -> Number): Unit {
+        if(literalExpr != null) {
+            val expressionResult = evaluateToType(literalExpr)
+            if(numberToCheck != expressionResult) throw ExecutionException("Value $numberToCheck did not match expected value $literalExpr")
         }
     }
 }
@@ -37,7 +37,7 @@ abstract class SimpleNumberType(val bufferFunc: (ByteBuffer) -> Number,
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val value = bufferFunc(buffer)
-        verifyNumber(value, literalExpr) { evaluationFunc(evaluator, literalExpr) }
+        verifyNumber(value) { expr -> evaluationFunc(evaluator, expr) }
         return value
     }
 }
@@ -60,10 +60,7 @@ class FloatInstruction: SimpleNumberType({ it.float }, { eval, expr -> eval.eval
 * */
 abstract class FixedLengthUnsignedNumber: NumberType() {
 
-    protected fun convertBytesToInts(bytes: ByteArray): IntArray {
-        return bytes.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
-    }
-
+    protected fun convertBytesToInts(bytes: ByteArray): IntArray = bytes.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
 }
 
 class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
@@ -74,7 +71,7 @@ class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
 
         val s = convertBytesToInts(bytes)[0].toShort()
 
-        verifyNumber(s, literalExpr) { evaluator.evaluateShort(literalExpr) }
+        this.verifyNumber(s) { evaluator.evaluateShort(literalExpr) }
         return s
     }
 }
@@ -97,7 +94,7 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
                  or (ubytes[2] shl 8)
                  or (ubytes[3])).toLong()
 
-        verifyNumber(long, literalExpr) { evaluator.evaluateLong(literalExpr) }
+        verifyNumber(long) { evaluator.evaluateLong(literalExpr) }
         return long
     }
 }
@@ -105,17 +102,15 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
 class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val bytes = ByteArray(2)
-        val signedShort = buffer.short
+        val bytesAsInts = IntArray(2)
+        val signedShortAsInt = buffer.short.toInt()
 
-        bytes[0] = ((signedShort.toInt() shr 8) and 0xFF).toByte()
-        bytes[1] = (signedShort.toInt() and 0xFF).toByte()
+        bytesAsInts[0] = (signedShortAsInt shr 8) and 0xFF
+        bytesAsInts[1] = signedShortAsInt and 0xFF
 
-        val ubytes = convertBytesToInts(bytes)
+        val i = (bytesAsInts[0] shl 8) or bytesAsInts[1]
 
-        val i = (ubytes[0] shl 8) or ubytes[1]
-
-        verifyNumber(i, literalExpr) { evaluator.evaluateInt(literalExpr) }
+        verifyNumber(i) { evaluator.evaluateInt(literalExpr) }
         return i
     }
 }
