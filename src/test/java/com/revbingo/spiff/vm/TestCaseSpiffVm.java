@@ -36,10 +36,16 @@ import com.revbingo.spiff.parser.SpiffParser;
 
 public class TestCaseSpiffVm {
 
+	private ByteInstruction byteNamed(String name) {
+		ByteInstruction inst = new ByteInstruction();
+		inst.setName(name);
+		return inst;
+	}
+
 	@Test
 	public void canConstructVmWithListOfInstructionsAndByteBufferAndEventDispatcher() {
 		List<Instruction> instructions = new ArrayList<Instruction>();
-		instructions.add(new ByteInstruction("a"));
+		instructions.add(byteNamed("a"));
 		TestEventListener ed = new TestEventListener();
 		SpiffVm unit = new SpiffVm(instructions, ByteBuffer.wrap(new byte[] { 0x7f }), ed);
 		unit.start();

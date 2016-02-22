@@ -32,11 +32,7 @@ fun verifyNumber(n: Number, expr: String?, evalFunc: () -> Number): Unit {
     }
 }
 
-class ByteInstruction(): NumberType() {
-
-    constructor(name: String?) : this() {
-        this.name = name
-    }
+class ByteInstruction: NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val b = buffer.get()

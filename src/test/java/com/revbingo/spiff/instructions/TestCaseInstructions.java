@@ -157,7 +157,12 @@ public class TestCaseInstructions {
 
 	@Test
 	public void blockCanBeUsedAsIterable() throws Exception {
-		List<Instruction> insts = Arrays.asList((Instruction) new ByteInstruction("one"), new ByteInstruction("two"));
+		ByteInstruction one = new ByteInstruction();
+		one.setName("one");
+		ByteInstruction two = new ByteInstruction();
+		two.setName("two");
+
+		List<Instruction> insts = Arrays.asList((Instruction) one, two);
 
 		Block unit = new Block();
 		unit.setInstructions(insts);

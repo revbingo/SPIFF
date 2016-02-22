@@ -64,7 +64,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPublicFieldWhenInstructionNameMatchesField() throws Exception {
-		Datatype ri = new ByteInstruction("byteOne");
+		Datatype ri = new ByteInstruction();
+		ri.setName("byteOne");
 		ri.value = (byte) 3;
 
 		unit.notifyData(ri);
@@ -76,7 +77,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPrivateFieldUsingPublicSetterWhenInstructionNameMatchesSetter() throws Exception {
-		Datatype ri = new ByteInstruction("privateByte");
+		Datatype ri = new ByteInstruction();
+		ri.setName("privateByte");
 		ri.value = (byte) 3;
 
 		unit.notifyData(ri);
@@ -87,7 +89,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfSecurityManagerPreventsFieldBeingSet() throws Exception {
-		Datatype ri = new ByteInstruction("byteOne");
+		Datatype ri = new ByteInstruction();
+		ri.setName("byteOne");
 		ri.value = (byte) 3;
 
 		SecurityManager oldManager = System.getSecurityManager();
@@ -111,20 +114,25 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfNoSuchFieldAndStrictMode() throws Exception {
 		unit.isStrict(true);
-		unit.notifyData(new ByteInstruction("nonExistant"));
+		ByteInstruction inst = new ByteInstruction();
+		inst.setName("nonExistant");
+		unit.notifyData(inst);
 	}
 
 	@Test
 	public void noExceptionThrownIfNoSuchFieldAndInNonStrictMode() throws Exception {
 		unit.isStrict(false);
-		unit.notifyData(new ByteInstruction("nonExistant"));
+		ByteInstruction inst = new ByteInstruction();
+		inst.setName("nonExistant");
+		unit.notifyData(inst);
 
 		assertThat(unit.getResult(), is(notNullValue()));
 	}
 
 	@Test
 	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
-		Datatype ri = new ByteInstruction("setterWithADifferentName");
+		Datatype ri = new ByteInstruction();
+		ri.setName("setterWithADifferentName");
 		ri.value = Byte.valueOf((byte) 3);
 		unit.notifyData(ri);
 
@@ -141,7 +149,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void finalFieldsCanBeAltered() throws Exception {
-		Datatype ri = new ByteInstruction("finalByte");
+		Datatype ri = new ByteInstruction();
+		ri.setName("finalByte");
 		ri.value = Byte.valueOf((byte) 3);
 		unit.notifyData(ri);
 
@@ -150,14 +159,16 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfMethodThrowsException() throws Exception {
-		Datatype ri = new ByteInstruction("exceptionThrower");
+		Datatype ri = new ByteInstruction();
+		ri.setName("exceptionThrower");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 	}
 
 	@Test
 	public void canMakePrivateFieldAccessible() throws Exception {
-		Datatype ri = new ByteInstruction("notSoPrivateByte");
+		Datatype ri = new ByteInstruction();
+		ri.setName("notSoPrivateByte");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 
@@ -167,7 +178,8 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void fieldWithBindingAnnotationIsCalled() throws Exception {
-		Datatype ri = new ByteInstruction("boundField");
+		Datatype ri = new ByteInstruction();
+		ri.setName("boundField");
 		ri.value = (byte) 3;
 		unit.notifyData(ri);
 

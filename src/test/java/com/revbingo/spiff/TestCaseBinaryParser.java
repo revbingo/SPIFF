@@ -81,11 +81,18 @@ public class TestCaseBinaryParser {
 	public void parseAdfStartsParserAndGetsListOfInstructions() throws Exception {
 		context = new Mockery();
 
+		final ByteInstruction one = new ByteInstruction();
+		one.setName("one");
+		final ByteInstruction two = new ByteInstruction();
+		two.setName("two");
+		final ByteInstruction three = new ByteInstruction();
+		three.setName("three");
+
 		final InstructionParser mockParser = context.mock(InstructionParser.class);
 
 		context.checking(new Expectations(){{
 			oneOf(mockParser).parse();
-				will(returnValue(Arrays.asList(new ByteInstruction("one"), new ByteInstruction("two"), new ByteInstruction("three"))));
+				will(returnValue(Arrays.asList(one, two, three)));
 		}});
 
 		BinaryParser unit = new BinaryParser(null);
