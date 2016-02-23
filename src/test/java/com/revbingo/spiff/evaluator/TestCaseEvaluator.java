@@ -37,13 +37,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", 3);
 		unit.addVariable("b", 5);
 
-		assertThat(unit.evaluateInt("a + b"), equalTo(8));
+		assertThat(unit.evaluate("a + b", Integer.TYPE), equalTo(8));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateIntegerExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateInt("1/0");
+		unit.evaluate("1/0", Integer.TYPE);
 	}
 
 	@Test
@@ -53,13 +53,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("b", ((short) 3));
 
 		//Need to cast, evaluates to int by default
-		assertThat(unit.evaluateShort("(short) (a+b)"), equalTo((short) 4));
+		assertThat(unit.evaluate("(short) (a+b)", Short.TYPE), equalTo((short) 4));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateShortExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateShort("1/0");
+		unit.evaluate("1/0", Short.TYPE);
 	}
 
 	@Test
@@ -68,13 +68,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", (byte) 1);
 		unit.addVariable("b", (byte) 4);
 
-		assertThat(unit.evaluateByte("(byte) (a+b)"), equalTo((byte) 5));
+		assertThat(unit.evaluate("(byte) (a+b)", Byte.TYPE), equalTo((byte) 5));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateByteExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateByte("1/0");
+		unit.evaluate("1/0", Byte.TYPE);
 	}
 
 	@Test
@@ -83,13 +83,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", 2.12f);
 		unit.addVariable("b", 3.5f);
 
-		assertThat(unit.evaluateFloat("a+b"), equalTo(5.62f));
+		assertThat(unit.evaluate("a+b", Float.TYPE), equalTo(5.62f));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateFloatExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateFloat("1/0");
+		unit.evaluate("1/0", Float.TYPE);
 	}
 
 	@Test
@@ -98,13 +98,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", 2L);
 		unit.addVariable("b", 3L);
 
-		assertThat(unit.evaluateLong("a+b"), equalTo(5L));
+		assertThat(unit.evaluate("a+b", Long.TYPE), equalTo(5L));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateLongExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateLong("1/0");
+		unit.evaluate("1/0", Long.TYPE);
 	}
 
 	@Test
@@ -113,13 +113,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", 3.512d);
 		unit.addVariable("b", 5.123d);
 
-		assertThat(unit.evaluateDouble("a+b"), equalTo(8.635d));
+		assertThat(unit.evaluate("a+b", Double.TYPE), equalTo(8.635d));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateDoubleExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateDouble("1/0");
+		unit.evaluate("1/0", Double.TYPE);
 	}
 
 	@Test
@@ -153,13 +153,13 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", "one");
 		unit.addVariable("b", "two");
 
-		assertThat(unit.evaluateString("a + b"), equalTo("onetwo"));
+		assertThat(unit.evaluate("a + b", String.class), equalTo("onetwo"));
 	}
 
 	@Test
 	public void evaluateHexLiteralAsInteger() throws Exception {
 		Evaluator unit = new Evaluator();
-		assertThat(unit.evaluateInt("0x04 + 0xFF"), equalTo(259));
+		assertThat(unit.evaluate("0x04 + 0xFF", Integer.TYPE), equalTo(259));
 	}
 
 	@Test
@@ -194,7 +194,7 @@ public class TestCaseEvaluator {
 		unit.clear();
 
 		try {
-			unit.evaluateInt("a + 3");
+			unit.evaluate("a + 3", Integer.TYPE);
 			fail("Should not have been able to evaluate variable a");
 		} catch(ExecutionException e) {}
 	}
@@ -202,7 +202,7 @@ public class TestCaseEvaluator {
 	@Test(expected=ExecutionException.class)
 	public void evaluateStringThrowsExceptionIfNotAString() throws ExecutionException {
 		Evaluator unit = new Evaluator();
-		unit.evaluateString("1 + 2");
+		unit.evaluate("1 + 2", String.class);
 	}
 
 	@Test(expected=ExecutionException.class)

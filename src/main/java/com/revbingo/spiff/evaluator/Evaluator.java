@@ -124,25 +124,19 @@ public class Evaluator {
 		}
 	}
 
-	public String evaluateString(String expression) throws ExecutionException{
-		Object o;
+	public Object evaluate(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression);
-			o = c.evaluate(context);
-			if(o instanceof String){
-				return (String) o;
-			} else {
-				throw new ExecutionException("Expression resulted in non-String");
-			}
+			return c.evaluate(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
 		}
 	}
 
-	public Object evaluate(String expression) throws ExecutionException{
+	public <X, T extends Class<X>> X evaluate(String expression, T type) {
 		try {
-			CompiledExpression c = getCompiledExpression(expression);
-			return c.evaluate(context);
+			CompiledExpression c = getCompiledExpression(expression, type);
+			return (X) c.evaluate(context);
 		} catch (Throwable e) {
 			throw new ExecutionException("Could not evaluate expression " + expression, e);
 		}
