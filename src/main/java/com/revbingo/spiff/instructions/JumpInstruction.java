@@ -27,7 +27,7 @@ public class JumpInstruction extends AdfInstruction {
 
 	@Override
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
-		int result = evaluator.evaluateInt(expression);
+		int result = evaluator.evaluate(expression, Integer.TYPE);
 		buffer.position(result);
 	}
 

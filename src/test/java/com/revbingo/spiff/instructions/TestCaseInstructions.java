@@ -133,7 +133,7 @@ public class TestCaseInstructions {
 		previousInstruction.execute(testBuffer, ed, evaluator);
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(evaluator.evaluateInt("testMark"), is(equalTo(4)));
+		assertThat(evaluator.evaluate("testMark", Integer.TYPE), is(equalTo(4)));
 	}
 
 	@Test
@@ -191,7 +191,7 @@ public class TestCaseInstructions {
 	@Test
 	public void setInstructionAddsExpressionResultToEvaluator() throws Exception {
 		try {
-			evaluator.evaluateInt("theResult");
+			evaluator.evaluate("theResult", Integer.TYPE);
 			fail("Should not have been able to resolve theResult");
 		} catch (ExecutionException e) {}
 
@@ -201,7 +201,7 @@ public class TestCaseInstructions {
 
 		unit.execute(testBuffer, ed, evaluator);
 
-		assertThat(evaluator.evaluateInt("theResult"), is(8));
+		assertThat(evaluator.evaluate("theResult", Integer.TYPE), is(8));
 	}
 
 	@Test

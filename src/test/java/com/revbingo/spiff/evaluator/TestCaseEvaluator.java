@@ -23,6 +23,8 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import gnu.jel.CompiledExpression;
 
 import org.junit.Test;
@@ -128,17 +130,17 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", true);
 		unit.addVariable("b", false);
 
-		assertThat(unit.evaluateBoolean("a || b"), equalTo(true));
-		assertThat(unit.evaluateBoolean("a && b"), equalTo(false));
+		assertThat(unit.evaluate("a || b", Boolean.TYPE), equalTo(true));
+		assertThat(unit.evaluate("a && b", Boolean.TYPE), equalTo(false));
 
 		unit.addVariable("c", true);
-		assertThat(unit.evaluateBoolean("a && (b || c)"), equalTo(true));
+		assertThat(unit.evaluate("a && (b || c)", Boolean.TYPE), equalTo(true));
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateBooleanExprWithDiv0() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateBoolean("1/0");
+		unit.evaluate("1/0", Boolean.TYPE);
 	}
 
 	@Test
@@ -187,7 +189,7 @@ public class TestCaseEvaluator {
 	public void clearEvaluatorClearsExpressionsAndVariables() throws Exception {
 		Evaluator unit = new Evaluator();
 		unit.addVariable("a", 2);
-		int i = unit.evaluateInt("a + 3");
+		int i = unit.evaluate("a + 3", Integer.TYPE);
 
 		assertThat(i, is(5));
 
@@ -226,7 +228,7 @@ public class TestCaseEvaluator {
 	@Test(expected=ExecutionException.class)
 	public void badTypedExpressionThrowsException() throws Exception {
 		Evaluator unit = new Evaluator();
-		unit.evaluateBoolean("a---");
+		unit.evaluate("a--", Boolean.TYPE);
 	}
 
 }

@@ -27,7 +27,7 @@ public class SkipInstruction extends AdfInstruction {
 
 	@Override
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
-		int length = evaluator.evaluateInt(skipExpr);
+		int length = evaluator.evaluate(skipExpr, Integer.TYPE);
 		buffer.position(buffer.position() + length);
 	}
 

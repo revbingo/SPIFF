@@ -35,8 +35,11 @@ public class RepeatBlock extends Block {
 
 	@Override
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
-		long repeatCount = (long) evaluator.evaluateDouble(repeatCountExpr);
-		for(int x=0;x<repeatCount;x++){
+		//Can't remember why this has to be a double, but it does...
+		//also need to autobox into another variable before the cast to keep the compiler happy
+		double d = evaluator.evaluate(repeatCountExpr, Double.TYPE);
+		long repeatCount = (long) d;
+		for(int x = 0; x < repeatCount; x++){
 			super.execute(buffer, eventDispatcher, evaluator);
 		}
 	}

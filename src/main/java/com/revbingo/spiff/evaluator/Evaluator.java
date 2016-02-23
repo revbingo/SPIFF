@@ -61,69 +61,6 @@ public class Evaluator {
 		return c;
 	}
 
-	public int evaluateInt(String expression) throws ExecutionException {
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Integer.TYPE);
-			return c.evaluate_int(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public long evaluateLong(String expression) throws ExecutionException {
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Long.TYPE);
-			return c.evaluate_long(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public short evaluateShort(String expression) throws ExecutionException {
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Short.TYPE);
-			return c.evaluate_short(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public boolean evaluateBoolean(String expression) throws ExecutionException{
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Boolean.TYPE);
-			return c.evaluate_boolean(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public byte evaluateByte(String expression) throws ExecutionException{
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Byte.TYPE);
-			return c.evaluate_byte(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public double evaluateDouble(String expression) throws ExecutionException{
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Double.TYPE);
-			return c.evaluate_double(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
-	public float evaluateFloat(String expression) throws ExecutionException{
-		try {
-			CompiledExpression c = getCompiledExpression(expression, Float.TYPE);
-			return c.evaluate_float(context);
-		} catch (Throwable e) {
-			throw new ExecutionException("Could not evaluate expression " + expression, e);
-		}
-	}
-
 	public Object evaluate(String expression) throws ExecutionException {
 		try {
 			CompiledExpression c = getCompiledExpression(expression);

@@ -30,7 +30,7 @@ public class IfBlock extends Block {
 
 	@Override
 	public void execute(ByteBuffer buffer, EventListener eventDispatcher, Evaluator evaluator) throws ExecutionException {
-		boolean result = evaluator.evaluateBoolean(expression);
+		boolean result = evaluator.evaluate(expression, Boolean.TYPE);
 		if(result){
 			super.execute(buffer, eventDispatcher, evaluator);
 		}else{
