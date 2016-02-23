@@ -24,35 +24,35 @@ abstract class NumberType : Datatype() {
 
     var literalExpr: String? = null
 
-    fun verifyNumber(numberToCheck: Number, evaluateToType: (String?) -> Number): Unit {
+    fun verifyNumber(numberToCheck: Number, type: Class<out Any>, evaluator: Evaluator): Unit {
         if(literalExpr != null) {
-            val expressionResult = evaluateToType(literalExpr)
+            val expressionResult = evaluator.evaluate(literalExpr, type as Class<Any>)
             if(numberToCheck != expressionResult) throw ExecutionException("Value $numberToCheck did not match expected value $literalExpr")
         }
     }
 }
 
-abstract class SimpleNumberType(val bufferFunc: (ByteBuffer) -> Number,
-                                val evaluationFunc: (Evaluator, String?) -> Number): NumberType() {
+abstract class SimpleNumberType(val type: Class<out Any>,
+                                val bufferFunc: (ByteBuffer) -> Number): NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val value = bufferFunc(buffer)
-        verifyNumber(value) { expr -> evaluationFunc(evaluator, expr) }
+        verifyNumber(value, type, evaluator)
         return value
     }
 }
 
-class ByteInstruction: SimpleNumberType({ it.get() }, { eval, expr -> eval.evaluateByte(expr) })
+class ByteInstruction: SimpleNumberType(Byte::class.java, { it.get() })
 
-class ShortInstruction: SimpleNumberType({ it.short }, { eval, expr -> eval.evaluateShort(expr) })
+class ShortInstruction: SimpleNumberType(Short::class.java, { it.short })
 
-class IntegerInstruction: SimpleNumberType({ it.int }, { eval, expr -> eval.evaluateInt(expr) })
+class IntegerInstruction: SimpleNumberType(Int::class.java, { it.int })
 
-class LongInstruction: SimpleNumberType({ it.long }, { eval, expr -> eval.evaluateLong(expr) })
+class LongInstruction: SimpleNumberType(Long::class.java, { it.long })
 
-class DoubleInstruction : SimpleNumberType({ it.double }, { eval, expr -> eval.evaluateDouble(expr) })
+class DoubleInstruction : SimpleNumberType(Double::class.java, { it.double })
 
-class FloatInstruction: SimpleNumberType({ it.float }, { eval, expr -> eval.evaluateFloat(expr) })
+class FloatInstruction: SimpleNumberType(Float::class.java, { it.float })
 
 /*
 * Unsigned numbers are represented by widening to the next widest type i.e. unsigned bytes are shorts,
@@ -71,7 +71,7 @@ class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
 
         val s = convertBytesToInts(bytes)[0].toShort()
 
-        this.verifyNumber(s) { evaluator.evaluateShort(literalExpr) }
+        this.verifyNumber(s, Short::class.java, evaluator)
         return s
     }
 }
@@ -94,7 +94,7 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
                  or (ubytes[2] shl 8)
                  or (ubytes[3])).toLong()
 
-        verifyNumber(long) { evaluator.evaluateLong(literalExpr) }
+        verifyNumber(long, Long::class.java, evaluator)
         return long
     }
 }
@@ -110,7 +110,7 @@ class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
 
         val i = (bytesAsInts[0] shl 8) or bytesAsInts[1]
 
-        verifyNumber(i) { evaluator.evaluateInt(literalExpr) }
+        verifyNumber(i, Int::class.java, evaluator)
         return i
     }
 }
