@@ -33,7 +33,8 @@ public class EvaluatorMap extends DVMap {
 	public void addVariable(String var, Object obj) throws IllegalArgumentException {
 		varMap.put(var, obj);
 	}
-	
+
+	//These methods are called by the evaluation engine
 	public long getLongProperty(String name){
 		return getProperty(name, Long.class);
 	}

@@ -60,23 +60,25 @@ class FloatInstruction: SimpleNumberType(Float::class.java, { it.float })
 * */
 abstract class FixedLengthUnsignedNumber: NumberType() {
 
-    protected fun convertBytesToInts(bytes: ByteArray): IntArray = bytes.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
+
 }
 
-class UnsignedByteInstruction: FixedLengthUnsignedNumber() {
+fun ByteArray.convertToInts(): IntArray = this.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
+
+class UnsignedByteInstruction: NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val bytes = ByteArray(1)
         buffer.get(bytes)
 
-        val s = convertBytesToInts(bytes)[0].toShort()
+        val s = bytes.convertToInts()[0].toShort()
 
         this.verifyNumber(s, Short::class.java, evaluator)
         return s
     }
 }
 
-class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
+class UnsignedIntegerInstruction: NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val bytes = ByteArray(4)
@@ -87,7 +89,7 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
         bytes[2] = (signedInt shr 8).toByte()
         bytes[3] = signedInt.toByte()
 
-        val ubytes = convertBytesToInts(bytes)
+        val ubytes = bytes.convertToInts()
 
         val long = ((ubytes[0] shl 24)
                  or (ubytes[1] shl 16)
@@ -99,7 +101,7 @@ class UnsignedIntegerInstruction: FixedLengthUnsignedNumber() {
     }
 }
 
-class UnsignedShortInstruction: FixedLengthUnsignedNumber() {
+class UnsignedShortInstruction: NumberType() {
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val bytesAsInts = IntArray(2)
