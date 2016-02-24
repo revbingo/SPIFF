@@ -301,9 +301,9 @@ public class TestCaseDataTypes {
 		UnsignedByteInstruction unit = new UnsignedByteInstruction();
 		unit.setAddress(-1);
 
-		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xFF });
+		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xE7 });
 		unit.execute(unsignedByteBuffer, ed, evaluator);
-		assertThat((Short) unit.getValue(), is(equalTo((short) 0xFF)));
+		assertThat((Short) unit.getValue(), is(equalTo((short) 231)));
 		assertThat(unit.getAddress(), is(equalTo(0)));
 	}
 

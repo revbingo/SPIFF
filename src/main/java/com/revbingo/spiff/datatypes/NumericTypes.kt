@@ -58,12 +58,7 @@ class FloatInstruction: SimpleNumberType(Float::class.java, { it.float })
 * Unsigned numbers are represented by widening to the next widest type i.e. unsigned bytes are shorts,
 * unsigned shorts are ints, unsigned ints are longs, unsigned longs are not supported
 * */
-abstract class FixedLengthUnsignedNumber: NumberType() {
-
-
-}
-
-fun ByteArray.convertToInts(): IntArray = this.map { byte -> 0x000000FF and byte.toInt() }.toIntArray()
+fun ByteArray.convertToInts(): IntArray = this.map { byte -> byte.toInt() and 0xFF }.toIntArray()
 
 class UnsignedByteInstruction: NumberType() {
 
