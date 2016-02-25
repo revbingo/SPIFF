@@ -20,6 +20,23 @@ import java.nio.ByteBuffer
 
 import com.revbingo.spiff.evaluator.Evaluator
 
+class FixedLengthNumberFactory {
+
+    fun getInstruction(type: String): NumberType {
+        when (type) {
+            "int" -> return IntegerInstruction()
+            "long" -> return LongInstruction()
+            "float" -> return FloatInstruction()
+            "short" -> return ShortInstruction()
+            "double" -> return DoubleInstruction()
+            "byte" -> return ByteInstruction()
+            "ubyte" -> return UnsignedByteInstruction()
+            "ushort" -> return UnsignedShortInstruction()
+            else -> return UnsignedIntegerInstruction()
+        }
+    }
+}
+
 abstract class NumberType(val type: Class<out Any>,
                           val bufferFunc: (ByteBuffer) -> Number) : Datatype() {
 
