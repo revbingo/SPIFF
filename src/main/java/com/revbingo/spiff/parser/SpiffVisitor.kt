@@ -14,8 +14,11 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     private var defaultEncoding = Charset.defaultCharset().displayName()
 
-    private val defines = HashMap<String?, List<Instruction>>()
-    private val datatypes = HashMap<String?, Class<Datatype>>()
+    private val defines = HashMap<String, List<Instruction>>()
+    private val datatypes = HashMap<String, Class<Datatype>>()
+
+    fun SimpleNode.getLastTokenImage(): String = this.jjtGetLastToken().image
+    fun SimpleNode.getFirstTokenImage(): String = this.jjtGetFirstToken().image
 
     override fun visit(node: SimpleNode, data: List<Instruction>): List<Instruction> {
         node.childrenAccept(this, data)
@@ -34,7 +37,8 @@ class SpiffVisitor : SpiffTreeParserVisitor {
             if (!Datatype::class.java.isAssignableFrom(datatypeClass)) {
                 throw AdfFormatException("Custom datatype $datatypeClass does not extend com.revbingo.spiff.datatypes.Datatype")
             }
-            datatypes.put(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER), datatypeClass)
+            val identifier = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER) ?: throw AdfFormatException("Can't find identifier for ${node.getLastTokenImage()}")
+            datatypes.put(identifier, datatypeClass)
         } catch (e: ClassNotFoundException) {
             throw AdfFormatException("Unknown datatype class " + className)
         }
@@ -56,23 +60,22 @@ class SpiffVisitor : SpiffTreeParserVisitor {
             inst.name = identifier
             return decorateAndAdd(node, inst, data)
         } catch (e: InstantiationException) {
-            throw AdfFormatException("Custom datatype " + userType.name + " does not have a no-args constructor or threw an exception")
+            throw AdfFormatException("Custom datatype ${userType.name} does not have a no-args constructor or threw an exception")
         } catch (e: IllegalAccessException) {
-            throw AdfFormatException("Custom datatype " + userType.name + " does not have a publically accessible no args constructor")
+            throw AdfFormatException("Custom datatype ${userType.name} does not have a publically accessible no args constructor")
         }
-
     }
 
     override fun visit(node: ASTbits, data: MutableList<Instruction>): List<Instruction> {
         val inst = BitsInstruction()
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         inst.numberOfBitsExpr = getExpr(node.jjtGetChild(0))
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTbytes, data: MutableList<Instruction>): List<Instruction> {
         val inst = BytesInstruction()
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         inst.lengthExpr = getExpr(node.jjtGetChild(0))
 
         return decorateAndAdd(node, inst, data)
@@ -80,7 +83,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     override fun visit(node: ASTincludeInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
-        val include = defines[node.jjtGetLastToken().image] ?: throw AdfFormatException("Could not get defined block with name " + node.jjtGetLastToken())
+        val include = defines[node.getLastTokenImage()] ?: throw AdfFormatException("Could not get defined block with name " + node.getLastTokenImage())
         data.addAll(include)
         return data
     }
@@ -89,7 +92,9 @@ class SpiffVisitor : SpiffTreeParserVisitor {
                        data: List<Instruction>): List<Instruction> {
         val nestedInstructions = ArrayList<Instruction>()
         node.childrenAccept(this, nestedInstructions)
-        defines.put(findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER), nestedInstructions)
+
+        val identifier = findTokenValue(node, SpiffTreeParserConstants.IDENTIFIER)!!
+        defines.put(identifier, nestedInstructions)
         return data
     }
 
@@ -127,7 +132,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
                        data: MutableList<Instruction>): List<Instruction> {
 
         val inst = SetOrderInstruction()
-        var order: ByteOrder? = null
+        var order: ByteOrder?
         val byteOrder = findTokenValue(node, SpiffTreeParserConstants.BYTEORDER)
         if (byteOrder == "LITTLE_ENDIAN") {
             order = ByteOrder.LITTLE_ENDIAN
@@ -178,17 +183,17 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTmarkInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
         val inst = MarkInstruction()
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTfixedNumber, data: MutableList<Instruction>): List<Instruction> {
         val insF = FixedLengthNumberFactory()
-        val inst = insF.getInstruction(node.jjtGetFirstToken().image)
+        val inst = insF.getInstruction(node.getFirstTokenImage())
         if (node.jjtGetNumChildren() == 1) {
             inst.literalExpr = getExpr(node.jjtGetChild(0))
         }
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
     }
 
@@ -230,34 +235,31 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     }
 
     override fun visit(node: ASTfixedString, data: MutableList<Instruction>): List<Instruction> {
-        var encoding: String? = findTokenValue(node, SpiffTreeParserConstants.ENCODING)
-        if (encoding == null) encoding = defaultEncoding
+        var encoding = findTokenValue(node, SpiffTreeParserConstants.ENCODING) ?: defaultEncoding
 
-        val inst = FixedLengthString(encoding!!)
+        val inst = FixedLengthString(encoding)
         inst.lengthExpr = getExpr(node.jjtGetChild(0))
 
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTliteralString, data: MutableList<Instruction>): List<Instruction> {
-        var encoding: String? = findTokenValue(node, SpiffTreeParserConstants.ENCODING)
-        if (encoding == null) encoding = defaultEncoding
+        var encoding: String = findTokenValue(node, SpiffTreeParserConstants.ENCODING) ?: defaultEncoding
 
-        val literal = (node.jjtGetChild(0) as ASTIdentifier).jjtGetFirstToken().image
-        val inst = LiteralStringInstruction(literal, encoding!!)
+        val literal = (node.jjtGetChild(0) as ASTIdentifier).getFirstTokenImage()
+        val inst = LiteralStringInstruction(literal, encoding)
 
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTterminatedString, data: MutableList<Instruction>): List<Instruction> {
-        var encoding: String? = findTokenValue(node, SpiffTreeParserConstants.ENCODING)
-        if (encoding == null) encoding = defaultEncoding
+        var encoding: String = findTokenValue(node, SpiffTreeParserConstants.ENCODING) ?: defaultEncoding
 
-        val inst = TerminatedString(encoding!!)
+        val inst = TerminatedString(encoding)
 
-        inst.name = node.jjtGetLastToken().image
+        inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
     }
 
