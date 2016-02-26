@@ -6,7 +6,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 interface Instruction {
-    open fun execute(byteBuffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator)
+    open fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator)
 }
 
 abstract class AdfInstruction: Instruction {
@@ -17,7 +17,6 @@ abstract class AdfInstruction: Instruction {
 abstract class InstructionWithExpression(val expression:String): AdfInstruction()
 
 class JumpInstruction(expression: String): InstructionWithExpression(expression) {
-
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val result = evaluator.evaluate(expression, Int::class.java)
         buffer.position(result)
@@ -39,33 +38,29 @@ class SetInstruction(expression: String, val varname: String?): InstructionWithE
 }
 
 class SetOrderInstruction(val order: ByteOrder): AdfInstruction() {
-
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         buffer.order(order)
     }
 }
 
-class SkipInstruction: AdfInstruction() {
-    var expression: String? = null
-
+class SkipInstruction(expression: String): InstructionWithExpression(expression) {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val length = evaluator.evaluate(expression, Int::class.java)
         buffer.position(buffer.position() + length)
     }
-
 }
 
-class GroupInstruction(val groupName: String): AdfInstruction() {
+class GroupInstruction(groupName: String): InstructionWithExpression(groupName) {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        eventDispatcher.notifyGroup(groupName, true)
+        eventDispatcher.notifyGroup(expression, true)
     }
 }
 
-class EndGroupInstruction(val groupName: String): AdfInstruction() {
+class EndGroupInstruction(groupName: String): InstructionWithExpression(groupName) {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        eventDispatcher.notifyGroup(groupName, false)
+        eventDispatcher.notifyGroup(expression, false)
     }
 }
 
@@ -116,14 +111,14 @@ class RepeatBlock: Block() {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val d = evaluator.evaluate(repeatCountExpression, Double::class.java)
         val repeatCount = d.toInt()
-        repeatCount.times_Do {
+        repeatCount.times_do {
             super.execute(buffer, eventDispatcher, evaluator)
         }
     }
 
 }
 
-fun Int.times_Do(func: () -> Any): Unit {
+fun Int.times_do(func: () -> Any): Unit {
     for(i in 1..this.toInt()) {
         func()
     }

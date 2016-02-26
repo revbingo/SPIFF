@@ -240,8 +240,7 @@ public class TestCaseInstructions {
 
 	@Test
 	public void skipInstructionSkipsSpecifiedNumberOfBytes() {
-		SkipInstruction skipInst = new SkipInstruction();
-		skipInst.setExpression("2");
+		SkipInstruction skipInst = new SkipInstruction("2");
 
 		skipInst.execute(testBuffer, ed, evaluator);
 

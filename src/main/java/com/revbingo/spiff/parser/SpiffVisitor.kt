@@ -195,8 +195,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     override fun visit(node: ASTskipInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
-        val inst = SkipInstruction()
-        inst.expression = node.getExpression()
+        val inst = SkipInstruction(node.getExpression())
         return decorateAndAdd(node, inst, data)
     }
 

@@ -566,8 +566,8 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(GroupInstruction.class));
 		assertThat(insts.get(1), instanceOf(EndGroupInstruction.class));
 
-		assertThat(((GroupInstruction) insts.get(0)).getGroupName(), is("groupName"));
-		assertThat(((EndGroupInstruction) insts.get(1)).getGroupName(), is("groupName"));
+		assertThat(((GroupInstruction) insts.get(0)).getExpression(), is("groupName"));
+		assertThat(((EndGroupInstruction) insts.get(1)).getExpression(), is("groupName"));
 	}
 
 	@Test
