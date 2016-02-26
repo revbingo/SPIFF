@@ -207,8 +207,7 @@ public class TestCaseInstructions {
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
-		IfBlock unit = new IfBlock();
-		unit.setIfExpression("1 == 1");
+		IfBlock unit = new IfBlock("1 == 1");
 		unit.setInstructions(ifInsts);
 		unit.setElseInstructions(elseInsts);
 
@@ -227,8 +226,7 @@ public class TestCaseInstructions {
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
-		IfBlock unit = new IfBlock();
-		unit.setIfExpression("1 != 1");
+		IfBlock unit = new IfBlock("1 != 1");
 		unit.setInstructions(ifInsts);
 		unit.setElseInstructions(elseInsts);
 

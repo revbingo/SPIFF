@@ -79,9 +79,8 @@ open class Block: AdfInstruction(), Iterable<Instruction> {
 
 }
 
-class IfBlock: Block() {
+class IfBlock(val ifExpression: String): Block() {
 
-    var ifExpression: String? = null
     var elseInstructions: Block? = null
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {

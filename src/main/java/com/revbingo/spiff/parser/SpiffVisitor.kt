@@ -139,9 +139,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     }
 
     override fun visit(node: ASTifElseBlock, data: MutableList<Instruction>): List<Instruction> {
-        val inst = IfBlock()
-
-        inst.ifExpression = node.getExpression()
+        val inst = IfBlock(node.getExpression())
 
         val ifInsts = node.jjtGetChild(1).jjtAccept(this, ArrayList<Instruction>())
         inst.instructions = ifInsts
