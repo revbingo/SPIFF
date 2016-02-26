@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revbingo.spiff.parser.AdfFile;
 import org.junit.Test;
 
 import com.revbingo.spiff.AdfFormatException;

@@ -134,7 +134,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTsetInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
 
-        val inst = SetInstruction(node.getExpression(), node.findTokenValue(IDENTIFIER))
+        val inst = SetInstruction(node.getExpression(), node.findTokenValue(IDENTIFIER) ?: "undefined")
         return decorateAndAdd(node, inst, data)
     }
 

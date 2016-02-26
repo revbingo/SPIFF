@@ -30,7 +30,7 @@ class MarkInstruction(name: String): InstructionWithExpression(name) {
     }
 }
 
-class SetInstruction(expression: String, val varname: String?): InstructionWithExpression(expression) {
+class SetInstruction(expression: String, val varname: String): InstructionWithExpression(expression) {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val result = evaluator.evaluate(expression)
         evaluator.addVariable(varname, result)
@@ -64,18 +64,13 @@ class EndGroupInstruction(groupName: String): InstructionWithExpression(groupNam
     }
 }
 
-open class Block(val instructions: List<Instruction>): AdfInstruction(), Iterable<Instruction> {
+open class Block(val instructions: List<Instruction>): AdfInstruction() {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         instructions.forEach {
             it.execute(buffer, eventDispatcher, evaluator)
         }
     }
-
-    override fun iterator(): Iterator<Instruction> {
-        return instructions.iterator()
-    }
-
 }
 
 class IfBlock(val ifExpression: String, instructions: List<Instruction>, val elseBlock: Block): Block(instructions) {

@@ -149,20 +149,6 @@ public class TestCaseInstructions {
 	}
 
 	@Test
-	public void blockCanBeUsedAsIterable() throws Exception {
-		ByteInstruction one = new ByteInstruction();
-		one.setName("one");
-		ByteInstruction two = new ByteInstruction();
-		two.setName("two");
-
-		List<Instruction> insts = Arrays.asList((Instruction) one, two);
-
-		Block unit = new Block(insts);
-
-		assertThat(unit, instanceOf(Iterable.class));
-	}
-
-	@Test
 	public void jumpInstruction() throws Exception {
 		int positionToJumpTo = 4;
 		JumpInstruction unit = new JumpInstruction(String.valueOf(positionToJumpTo));
