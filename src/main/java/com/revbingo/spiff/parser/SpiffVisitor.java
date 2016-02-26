@@ -192,7 +192,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 	    node.childrenAccept(this, data);
 
 	    EndGroupInstruction endGroupInst = new EndGroupInstruction(groupName);
-	    endGroupInst.lineNumber = node.jjtGetLastToken().beginLine;
+	    endGroupInst.setLineNumber(node.jjtGetLastToken().beginLine);
 	    data.add(endGroupInst);
 		return data;
 	}
@@ -267,7 +267,7 @@ public class SpiffVisitor implements SpiffTreeParserVisitor {
 
 	private List<Instruction> decorateAndAdd(SimpleNode node, Instruction inst, List<Instruction> list) {
 		if(inst instanceof AdfInstruction) {
-			((AdfInstruction) inst).lineNumber = node.jjtGetFirstToken().beginLine;
+			((AdfInstruction) inst).setLineNumber(node.jjtGetFirstToken().beginLine);
 		}
 		list.add(inst);
 		return list;

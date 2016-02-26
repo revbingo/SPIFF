@@ -151,10 +151,10 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(3));
-		assertThat(((AdfInstruction) insts.get(0)).lineNumber, is(1));
-		assertThat(((AdfInstruction) insts.get(1)).lineNumber, is(3));
-		assertThat(((AdfInstruction) insts.get(2)).lineNumber, is(5));
-		assertThat(((AdfInstruction) ((RepeatBlock) insts.get(2)).getInstructions().get(0)).lineNumber, is(6));
+		assertThat(((AdfInstruction) insts.get(0)).getLineNumber(), is(1));
+		assertThat(((AdfInstruction) insts.get(1)).getLineNumber(), is(3));
+		assertThat(((AdfInstruction) insts.get(2)).getLineNumber(), is(5));
+		assertThat(((AdfInstruction) ((RepeatBlock) insts.get(2)).getInstructions().get(0)).getLineNumber(), is(6));
 	}
 	@Test
 	public void bitsTakesArgForNumberOfBits() throws Exception {

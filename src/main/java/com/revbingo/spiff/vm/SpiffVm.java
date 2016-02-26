@@ -46,9 +46,9 @@ public class SpiffVm {
 		for(Instruction i : instructions) {
 			if(i instanceof AdfInstruction) {
 				AdfInstruction vmi = (AdfInstruction) i;
-				programCounter =vmi.lineNumber;
+				programCounter = vmi.getLineNumber();
 
-				if(vmi.isBreakpoint) {
+				if(vmi.isBreakpoint()) {
 					isSuspended = true;
 					synchronized (suspendedLock) {
 						try {
@@ -76,8 +76,8 @@ public class SpiffVm {
 
 	public void setBreakpoint(int i) {
 		for(Instruction inst : instructions) {
-			if(((AdfInstruction) inst).lineNumber == i) {
-				((AdfInstruction) inst).isBreakpoint = true;
+			if(((AdfInstruction) inst).getLineNumber() == i) {
+				((AdfInstruction) inst).setBreakpoint(true);
 			}
 		}
 	}

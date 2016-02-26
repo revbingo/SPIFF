@@ -149,8 +149,8 @@ public class TestCaseInstructions {
 
 		GroupInstruction unitStart = new GroupInstruction(groupName);
 		EndGroupInstruction unitEnd = new EndGroupInstruction(groupName);
-		unitStart.execute(testBuffer, dispatcher, null);
-		unitEnd.execute(testBuffer, dispatcher, null);
+		unitStart.execute(testBuffer, dispatcher, evaluator);
+		unitEnd.execute(testBuffer, dispatcher, evaluator);
 
 		context.assertIsSatisfied();
 	}
