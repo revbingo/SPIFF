@@ -64,61 +64,40 @@ class EndGroupInstruction(groupName: String): InstructionWithExpression(groupNam
     }
 }
 
-open class Block: AdfInstruction(), Iterable<Instruction> {
-    var instructions: List<Instruction>? = null
+open class Block(val instructions: List<Instruction>): AdfInstruction(), Iterable<Instruction> {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        instructions?.forEach {
+        instructions.forEach {
             it.execute(buffer, eventDispatcher, evaluator)
         }
     }
 
     override fun iterator(): Iterator<Instruction> {
-        return instructions!!.iterator()
+        return instructions.iterator()
     }
 
 }
 
-class IfBlock(val ifExpression: String): Block() {
-
-    var elseInstructions: Block? = null
+class IfBlock(val ifExpression: String, instructions: List<Instruction>, val elseBlock: Block): Block(instructions) {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val result = evaluator.evaluate(ifExpression, Boolean::class.java)
         if(result) {
             super.execute(buffer, eventDispatcher, evaluator)
         } else {
-            elseInstructions?.forEach { it.execute(buffer, eventDispatcher, evaluator) }
+            elseBlock.execute(buffer, eventDispatcher, evaluator)
         }
-    }
-
-    fun setElseInstructions(inst: List<Instruction>) {
-        elseInstructions = Block()
-        elseInstructions!!.instructions = inst
-    }
-
-    fun getIfInstructions(): Block {
-        val ifInstructions = Block()
-        ifInstructions.instructions = instructions
-        return ifInstructions
     }
 }
 
-class RepeatBlock: Block() {
+class RepeatBlock(val repeatCountExpression: String, instructions: List<Instruction>): Block(instructions) {
 
-    var repeatCountExpression: String? = null
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val d = evaluator.evaluate(repeatCountExpression, Double::class.java)
         val repeatCount = d.toInt()
-        repeatCount.times_do {
+        for(i in 1..repeatCount) {
             super.execute(buffer, eventDispatcher, evaluator)
         }
     }
 
-}
-
-fun Int.times_do(func: () -> Any): Unit {
-    for(i in 1..this.toInt()) {
-        func()
-    }
 }

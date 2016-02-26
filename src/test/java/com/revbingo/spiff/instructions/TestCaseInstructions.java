@@ -18,12 +18,14 @@ package com.revbingo.spiff.instructions;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -90,9 +92,7 @@ public class TestCaseInstructions {
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));
 		}});
 
-		RepeatBlock unit = new RepeatBlock();
-		unit.setInstructions(Arrays.asList((Instruction) theInstruction));
-		unit.setRepeatCountExpression("10");
+		RepeatBlock unit = new RepeatBlock("10", Collections.singletonList(theInstruction));
 
 		unit.execute(testBuffer, dispatcher, evaluator);
 
@@ -110,13 +110,9 @@ public class TestCaseInstructions {
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));
 		}});
 
-		RepeatBlock outerUnit = new RepeatBlock();
-		outerUnit.setRepeatCountExpression("5");
-		RepeatBlock innerUnit = new RepeatBlock();
-		innerUnit.setInstructions(Arrays.asList((Instruction) theInstruction));
-		innerUnit.setRepeatCountExpression("2");
+		RepeatBlock innerUnit = new RepeatBlock("2", Collections.singletonList(theInstruction));
+		RepeatBlock outerUnit = new RepeatBlock("5", Collections.singletonList(innerUnit));
 
-		outerUnit.setInstructions(Arrays.asList(new Instruction[] { innerUnit }));
 		outerUnit.execute(testBuffer, dispatcher, evaluator);
 
 		context.assertIsSatisfied();
@@ -161,14 +157,9 @@ public class TestCaseInstructions {
 
 		List<Instruction> insts = Arrays.asList((Instruction) one, two);
 
-		Block unit = new Block();
-		unit.setInstructions(insts);
+		Block unit = new Block(insts);
 
-		int count = 0;
-		for(Instruction i : unit) {
-			count++;
-		}
-		assertThat(count, is(2));
+		assertThat(unit, instanceOf(Iterable.class));
 	}
 
 	@Test
@@ -201,15 +192,13 @@ public class TestCaseInstructions {
 	@Test
 	public void ifBlockRunsIfInstructionsWhenExpressionIsTrue() throws Exception {
 		ByteInstruction ifInst = new ByteInstruction();
-		List<Instruction> ifInsts = Arrays.asList((Instruction) ifInst);
+		List<Instruction> ifInsts = Collections.singletonList((Instruction) ifInst);
 
 		JumpInstruction elseInst1 = new JumpInstruction("3");
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
-		IfBlock unit = new IfBlock("1 == 1");
-		unit.setInstructions(ifInsts);
-		unit.setElseInstructions(elseInsts);
+		IfBlock unit = new IfBlock("1 == 1", ifInsts, new Block(elseInsts));
 
 		unit.execute(testBuffer, ed, evaluator);
 
@@ -220,15 +209,13 @@ public class TestCaseInstructions {
 	@Test
 	public void ifBlockRunsElseInstructionsWhenExpressionIsFalse() throws Exception {
 		ByteInstruction ifInst = new ByteInstruction();
-		List<Instruction> ifInsts = Arrays.asList((Instruction) ifInst);
+		List<Instruction> ifInsts = Collections.singletonList((Instruction) ifInst);
 
 		JumpInstruction elseInst1 = new JumpInstruction("3");
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
-		IfBlock unit = new IfBlock("1 != 1");
-		unit.setInstructions(ifInsts);
-		unit.setElseInstructions(elseInsts);
+		IfBlock unit = new IfBlock("1 != 1", ifInsts, new Block(elseInsts));
 
 		unit.execute(testBuffer, ed, evaluator);
 

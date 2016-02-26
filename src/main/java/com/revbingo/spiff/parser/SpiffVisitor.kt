@@ -139,15 +139,13 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     }
 
     override fun visit(node: ASTifElseBlock, data: MutableList<Instruction>): List<Instruction> {
-        val inst = IfBlock(node.getExpression())
-
         val ifInsts = node.jjtGetChild(1).jjtAccept(this, ArrayList<Instruction>())
-        inst.instructions = ifInsts
 
+        var elseInsts: List<Instruction> = arrayListOf()
         if (node.jjtGetNumChildren() == 3) {
-            val elseInsts = node.jjtGetChild(2).jjtAccept(this, ArrayList<Instruction>())
-            inst.setElseInstructions(elseInsts)
+            elseInsts = node.jjtGetChild(2).jjtAccept(this, ArrayList<Instruction>())
         }
+        val inst = IfBlock(node.getExpression(), ifInsts, Block(elseInsts))
         return decorateAndAdd(node, inst, data)
     }
 
@@ -165,10 +163,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTrepeatInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
 
-        val inst = RepeatBlock()
-        inst.repeatCountExpression = node.getExpression()
-        val nestedInstructions = ArrayList<Instruction>()
-        inst.instructions = nestedInstructions
+        val inst = RepeatBlock(node.getExpression(), ArrayList<Instruction>())
         node.childrenAccept(this, inst.instructions)
         return decorateAndAdd(node, inst, data)
     }

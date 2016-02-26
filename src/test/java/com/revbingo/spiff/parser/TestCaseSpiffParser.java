@@ -587,8 +587,8 @@ public class TestCaseSpiffParser {
 
 		IfBlock theBlock = (IfBlock) insts.get(0);
 
-		assertThat(theBlock.getIfInstructions().getInstructions().size(), is(1));
-		assertThat(theBlock.getElseInstructions().getInstructions().size(), is(1));
+		assertThat(theBlock.getInstructions().size(), is(1));
+		assertThat(theBlock.getElseBlock().getInstructions().size(), is(1));
 	}
 
 	@Test
