@@ -70,6 +70,7 @@ public class Evaluator {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <X, T extends Class<X>> X evaluate(String expression, T type) {
 		try {
 			CompiledExpression c = getCompiledExpression(expression, type);
