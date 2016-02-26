@@ -134,9 +134,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTsetInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
 
-        val inst = SetInstruction()
-        inst.varname = node.findTokenValue(IDENTIFIER)
-        inst.expression = node.getExpression()
+        val inst = SetInstruction(node.getExpression(), node.findTokenValue(IDENTIFIER))
         return decorateAndAdd(node, inst, data)
     }
 
@@ -158,11 +156,11 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTsetOrderInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
 
-        val inst = SetOrderInstruction()
-        inst.order = when(node.findTokenValue(BYTEORDER)) {
+        val order = when(node.findTokenValue(BYTEORDER)) {
             "LITTLE_ENDIAN" -> ByteOrder.LITTLE_ENDIAN
             else -> ByteOrder.BIG_ENDIAN
         }
+        val inst = SetOrderInstruction(order)
         return decorateAndAdd(node, inst, data)
     }
 
@@ -172,8 +170,8 @@ class SpiffVisitor : SpiffTreeParserVisitor {
         val inst = RepeatBlock()
         inst.repeatCountExpression = node.getExpression()
         val nestedInstructions = ArrayList<Instruction>()
-        node.childrenAccept(this, nestedInstructions)
         inst.instructions = nestedInstructions
+        node.childrenAccept(this, inst.instructions)
         return decorateAndAdd(node, inst, data)
     }
 
@@ -191,8 +189,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     override fun visit(node: ASTjumpInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
-        val inst = JumpInstruction()
-        inst.expression = node.getExpression()
+        val inst = JumpInstruction(node.getExpression())
         return decorateAndAdd(node, inst, data)
     }
 
@@ -205,8 +202,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     override fun visit(node: ASTmarkInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
-        val inst = MarkInstruction()
-        inst.name = node.getLastTokenImage()
+        val inst = MarkInstruction(node.getLastTokenImage())
         return decorateAndAdd(node, inst, data)
     }
 

@@ -62,9 +62,7 @@ public class TestCaseInstructions {
 
 	@Test
 	public void testSetOrderInstruction() throws Exception {
-		SetOrderInstruction unit = new SetOrderInstruction();
-
-		unit.setOrder(ByteOrder.LITTLE_ENDIAN);
+		SetOrderInstruction unit = new SetOrderInstruction(ByteOrder.LITTLE_ENDIAN);
 		unit.execute(testBuffer, ed, evaluator);
 
 		IntegerInstruction test = new IntegerInstruction();
@@ -72,7 +70,7 @@ public class TestCaseInstructions {
 
 		assertThat((Integer) test.getValue(), is(equalTo(0x74736554)));
 
-		unit.setOrder(ByteOrder.BIG_ENDIAN);
+		unit = new SetOrderInstruction(ByteOrder.BIG_ENDIAN);
 		unit.execute(testBuffer, ed, evaluator);
 
 		test = new IntegerInstruction();
@@ -126,8 +124,7 @@ public class TestCaseInstructions {
 
 	@Test
 	public void testMarkInstruction() throws Exception {
-		MarkInstruction unit = new MarkInstruction();
-		unit.setName("testMark");
+		MarkInstruction unit = new MarkInstruction("testMark");
 
 		IntegerInstruction previousInstruction = new IntegerInstruction();
 		previousInstruction.execute(testBuffer, ed, evaluator);
@@ -177,8 +174,7 @@ public class TestCaseInstructions {
 	@Test
 	public void jumpInstruction() throws Exception {
 		int positionToJumpTo = 4;
-		JumpInstruction unit = new JumpInstruction();
-		unit.setExpression(String.valueOf(positionToJumpTo));
+		JumpInstruction unit = new JumpInstruction(String.valueOf(positionToJumpTo));
 		ByteInstruction nextInst = new ByteInstruction();
 
 		unit.execute(testBuffer, ed, evaluator);
@@ -195,9 +191,7 @@ public class TestCaseInstructions {
 			fail("Should not have been able to resolve theResult");
 		} catch (ExecutionException e) {}
 
-		SetInstruction unit = new SetInstruction();
-		unit.setExpression("8");
-		unit.setVarname("theResult");
+		SetInstruction unit = new SetInstruction("8", "theResult");
 
 		unit.execute(testBuffer, ed, evaluator);
 
@@ -209,8 +203,7 @@ public class TestCaseInstructions {
 		ByteInstruction ifInst = new ByteInstruction();
 		List<Instruction> ifInsts = Arrays.asList((Instruction) ifInst);
 
-		JumpInstruction elseInst1 = new JumpInstruction();
-		elseInst1.setExpression("3");
+		JumpInstruction elseInst1 = new JumpInstruction("3");
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
@@ -230,8 +223,7 @@ public class TestCaseInstructions {
 		ByteInstruction ifInst = new ByteInstruction();
 		List<Instruction> ifInsts = Arrays.asList((Instruction) ifInst);
 
-		JumpInstruction elseInst1 = new JumpInstruction();
-		elseInst1.setExpression("3");
+		JumpInstruction elseInst1 = new JumpInstruction("3");
 		ByteInstruction elseInst2 = new ByteInstruction();
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 

@@ -14,9 +14,9 @@ abstract class AdfInstruction: Instruction {
     var isBreakpoint: Boolean? = false
 }
 
-class JumpInstruction: AdfInstruction() {
+abstract class InstructionWithExpression(val expression:String): AdfInstruction()
 
-    var expression: String? = null
+class JumpInstruction(expression: String): InstructionWithExpression(expression) {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val result = evaluator.evaluate(expression, Int::class.java)
@@ -24,30 +24,24 @@ class JumpInstruction: AdfInstruction() {
     }
 }
 
-class MarkInstruction: AdfInstruction() {
-    var name: String? = null
-
+class MarkInstruction(name: String): InstructionWithExpression(name) {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        evaluator.addVariable(name, buffer.position())
-        evaluator.addVariable("$name.address", buffer.position())
+        evaluator.addVariable(expression, buffer.position())
+        evaluator.addVariable("$expression.address", buffer.position())
     }
 }
 
-class SetInstruction: AdfInstruction() {
-    var expression: String? = null
-    var varname: String? = null
-
+class SetInstruction(expression: String, val varname: String?): InstructionWithExpression(expression) {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         val result = evaluator.evaluate(expression)
         evaluator.addVariable(varname, result)
     }
 }
 
-class SetOrderInstruction: AdfInstruction() {
-    var order: ByteOrder? = null
+class SetOrderInstruction(val order: ByteOrder): AdfInstruction() {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        buffer.order(order!!)
+        buffer.order(order)
     }
 }
 
