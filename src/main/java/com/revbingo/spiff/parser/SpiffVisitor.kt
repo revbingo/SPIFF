@@ -20,6 +20,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     fun SimpleNode.getLastTokenImage(): String = this.jjtGetLastToken().image
     fun SimpleNode.getFirstTokenImage(): String = this.jjtGetFirstToken().image
+
     fun SimpleNode.findTokenValue(kind: Int, count: Int = 1): String? {
         var count = count
         var t = this.jjtGetFirstToken()
@@ -29,6 +30,22 @@ class SpiffVisitor : SpiffTreeParserVisitor {
         } while (t !== this.jjtGetLastToken().next)
         return null
     }
+
+    fun SimpleNode.getExpression(): String {
+        val exprNode = this.jjtGetChild(0) as ASTexpression
+        var t = exprNode.jjtGetFirstToken()
+        val expression = StringBuffer()
+        do {
+            var tokenText = t.image
+            if (t.kind == SpiffTreeParserConstants.ID_ADDRESS) {
+                tokenText = tokenText.substring(1, tokenText.length) + ".address"
+            }
+            expression.append(tokenText)
+            t = t.next
+        } while (t !== exprNode.jjtGetLastToken().next)
+        return expression.toString()
+    }
+
 
     override fun visit(node: SimpleNode, data: List<Instruction>): List<Instruction> {
         node.childrenAccept(this, data)
@@ -79,14 +96,14 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTbits, data: MutableList<Instruction>): List<Instruction> {
         val inst = BitsInstruction()
         inst.name = node.getLastTokenImage()
-        inst.numberOfBitsExpr = getExpr(node.jjtGetChild(0))
+        inst.numberOfBitsExpr = node.getExpression()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTbytes, data: MutableList<Instruction>): List<Instruction> {
         val inst = BytesInstruction()
         inst.name = node.getLastTokenImage()
-        inst.lengthExpr = getExpr(node.jjtGetChild(0))
+        inst.lengthExpr = node.getExpression()
 
         return decorateAndAdd(node, inst, data)
     }
@@ -119,14 +136,14 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
         val inst = SetInstruction()
         inst.varname = node.findTokenValue(IDENTIFIER)
-        inst.expression = getExpr(node.jjtGetChild(0))
+        inst.expression = node.getExpression()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTifElseBlock, data: MutableList<Instruction>): List<Instruction> {
         val inst = IfBlock()
 
-        inst.ifExpression = getExpr(node.jjtGetChild(0))
+        inst.ifExpression = node.getExpression()
 
         val ifInsts = node.jjtGetChild(1).jjtAccept(this, ArrayList<Instruction>())
         inst.instructions = ifInsts
@@ -142,14 +159,10 @@ class SpiffVisitor : SpiffTreeParserVisitor {
                        data: MutableList<Instruction>): List<Instruction> {
 
         val inst = SetOrderInstruction()
-        var order: ByteOrder?
-        val byteOrder = node.findTokenValue(BYTEORDER)
-        if (byteOrder == "LITTLE_ENDIAN") {
-            order = ByteOrder.LITTLE_ENDIAN
-        } else {
-            order = ByteOrder.BIG_ENDIAN
+        inst.order = when(node.findTokenValue(BYTEORDER)) {
+            "LITTLE_ENDIAN" -> ByteOrder.LITTLE_ENDIAN
+            else -> ByteOrder.BIG_ENDIAN
         }
-        inst.order = order
         return decorateAndAdd(node, inst, data)
     }
 
@@ -157,7 +170,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
                        data: MutableList<Instruction>): List<Instruction> {
 
         val inst = RepeatBlock()
-        inst.repeatCountExpression = getExpr(node.jjtGetChild(0))
+        inst.repeatCountExpression = node.getExpression()
         val nestedInstructions = ArrayList<Instruction>()
         node.childrenAccept(this, nestedInstructions)
         inst.instructions = nestedInstructions
@@ -179,14 +192,14 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTjumpInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
         val inst = JumpInstruction()
-        inst.expression = getExpr(node.jjtGetChild(0))
+        inst.expression = node.getExpression()
         return decorateAndAdd(node, inst, data)
     }
 
     override fun visit(node: ASTskipInstruction,
                        data: MutableList<Instruction>): List<Instruction> {
         val inst = SkipInstruction()
-        inst.expression = getExpr(node.jjtGetChild(0))
+        inst.expression = node.getExpression()
         return decorateAndAdd(node, inst, data)
     }
 
@@ -201,7 +214,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
         val insF = FixedLengthNumberFactory()
         val inst = insF.getInstruction(node.getFirstTokenImage())
         if (node.jjtGetNumChildren() == 1) {
-            inst.literalExpr = getExpr(node.jjtGetChild(0))
+            inst.literalExpr = node.getExpression()
         }
         inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
@@ -209,21 +222,6 @@ class SpiffVisitor : SpiffTreeParserVisitor {
 
     override fun visit(node: ASTexpression, data: List<Instruction>): List<Instruction> {
         return data
-    }
-
-    private fun getExpr(node: Node): String {
-        val exprNode = node as ASTexpression
-        var t = exprNode.jjtGetFirstToken()
-        val expression = StringBuffer()
-        do {
-            var tokenText = t.image
-            if (t.kind == SpiffTreeParserConstants.ID_ADDRESS) {
-                tokenText = tokenText.substring(1, tokenText.length) + ".address"
-            }
-            expression.append(tokenText)
-            t = t.next
-        } while (t !== exprNode.jjtGetLastToken().next)
-        return expression.toString()
     }
 
     private fun decorateAndAdd(node: SimpleNode, inst: Instruction, list: MutableList<Instruction>): List<Instruction> {
@@ -238,7 +236,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
         var encoding = node.findTokenValue(ENCODING) ?: defaultEncoding
 
         val inst = FixedLengthString(encoding)
-        inst.lengthExpr = getExpr(node.jjtGetChild(0))
+        inst.lengthExpr = node.getExpression()
 
         inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)
