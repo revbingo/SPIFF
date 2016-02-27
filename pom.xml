@@ -24,8 +24,6 @@
       <groupId>com.gnu</groupId>
       <artifactId>jel</artifactId>
       <version>1</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/jel.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
