@@ -23,10 +23,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -196,10 +192,9 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithExplicitEncoding() throws Exception {
-		FixedLengthString unit = new FixedLengthString("US-ASCII");
+		FixedLengthString unit = new FixedLengthString("4", "US-ASCII");
 		unit.setAddress(-1);
 
-		unit.setLengthExpr("4");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.getValue(), is(equalTo("Test")));
@@ -208,10 +203,9 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithNoExplicitEncodingDropsToASystemDefault() throws Exception {
-		FixedLengthString unit = new FixedLengthString("US-ASCII");
+		FixedLengthString unit = new FixedLengthString("4", "US-ASCII");
 		unit.setAddress(-1);
 
-		unit.setLengthExpr("4");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.getValue(), is(equalTo("Test")));
@@ -221,13 +215,12 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void fixedLengthStringIsTrimmed() throws Exception {
-		FixedLengthString unit = new FixedLengthString("US-ASCII");
+		FixedLengthString unit = new FixedLengthString("12", "US-ASCII");
 
 		byte[] paddedData = new byte[testData.length + 3];
 		System.arraycopy(testData, 0, paddedData, 0, testData.length);
 
 		ByteBuffer paddedBuffer = ByteBuffer.wrap(paddedData);
-		unit.setLengthExpr("12");
 		unit.execute(paddedBuffer, ed, evaluator);
 
 		assertThat((String) unit.getValue(), is(equalTo("TestData!")));
@@ -235,7 +228,7 @@ public class TestCaseDataTypes {
 
 	@Test(expected=ExecutionException.class)
 	public void testBadEncodingForStringThrowsException() throws Exception {
-		new FixedLengthString("HMMM");
+		new FixedLengthString("", "HMMM");
 	}
 
 	@Test(expected=ExecutionException.class)
@@ -364,7 +357,7 @@ public class TestCaseDataTypes {
 		Datatype unit = new Datatype() {
 			@Override
 			public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
-				return null;
+				return "";
 			}
 		};
 

@@ -197,7 +197,7 @@ public class TestCaseSpiffParser {
 
 		FixedLengthString inst = (FixedLengthString) insts.get(0);
 		assertThat(inst.getName(), is("str"));
-		assertThat(inst.getLengthExpr(), is("expr"));
+		assertThat(inst.getExpression(), is("expr"));
 	}
 
 	@Test
@@ -212,7 +212,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(FixedLengthString.class));
 
 		FixedLengthString inst = (FixedLengthString) insts.get(0);
-		assertThat(inst.getLengthExpr(), is("expr"));
+		assertThat(inst.getExpression(), is("expr"));
 		assertThat(inst.getEncoding().displayName(), is("UTF-8"));
 	}
 
@@ -262,7 +262,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(LiteralStringInstruction.class));
 
 		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
-		assertThat(litStr.getLiteral(), is("mhbd"));
+		assertThat(litStr.getExpression(), is("mhbd"));
 		assertThat(litStr.getName(), is("dbhm"));
 	}
 
@@ -277,7 +277,7 @@ public class TestCaseSpiffParser {
 		assertThat(insts.get(0), instanceOf(LiteralStringInstruction.class));
 
 		LiteralStringInstruction litStr = (LiteralStringInstruction) insts.get(0);
-		assertThat(litStr.getLiteral(), is("mhbd"));
+		assertThat(litStr.getExpression(), is("mhbd"));
 		assertThat(litStr.getEncoding().displayName(), is("UTF-8"));
 	}
 
@@ -860,13 +860,14 @@ public class TestCaseSpiffParser {
 		return unit.parse();
 	}
 
+	@SuppressWarnings("unused")
 	public static class PrivateConstructor extends Datatype {
 
 		private PrivateConstructor() { }
 
 		@Override
 		public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
-			return null;
+			return new Object();
 		}
 	}
 }

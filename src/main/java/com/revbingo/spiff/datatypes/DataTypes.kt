@@ -52,7 +52,7 @@ abstract class Datatype: AdfInstruction() {
 
 }
 
-abstract class StringInstruction(charsetName: String): Datatype() {
+abstract class StringInstruction(val expression: String, charsetName: String): Datatype() {
 
     val encoding: Charset
 
@@ -74,21 +74,19 @@ abstract class StringInstruction(charsetName: String): Datatype() {
     abstract fun getBytes(buffer: ByteBuffer, evaluator: Evaluator): ByteArray
 }
 
-class FixedLengthString(charsetName: String) : StringInstruction(charsetName) {
+class FixedLengthString(expression: String, charsetName: String) : StringInstruction(expression, charsetName) {
 
-    var lengthExpr: String? = null
-
-    public override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator): ByteArray {
-        val length = (evaluator.evaluate(lengthExpr) as Number).toInt()
+    override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator): ByteArray {
+        val length = (evaluator.evaluate(expression) as Number).toInt()
         val bytes = ByteArray(length)
         buffer.get(bytes)
         return bytes
     }
 }
 
-class TerminatedString(charsetName: String) : StringInstruction(charsetName) {
+class TerminatedString(charsetName: String) : StringInstruction("", charsetName) {
 
-    public override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
+    override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
         val baos = ByteArrayOutputStream()
 
         while(true) {
@@ -100,10 +98,10 @@ class TerminatedString(charsetName: String) : StringInstruction(charsetName) {
     }
 }
 
-class LiteralStringInstruction(val literal: String, charsetName: String) : StringInstruction(charsetName) {
+class LiteralStringInstruction(expression: String, charsetName: String) : StringInstruction(expression, charsetName) {
 
-    public override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
-        val expectedBytes = literal.toByteArray(encoding)
+    override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
+        val expectedBytes = expression.toByteArray(encoding)
         val actualBytes = ByteArray(expectedBytes.size)
 
         buffer.get(actualBytes)
@@ -111,7 +109,7 @@ class LiteralStringInstruction(val literal: String, charsetName: String) : Strin
         if(Arrays.equals(expectedBytes, actualBytes)) {
             return actualBytes
         } else {
-            throw ExecutionException("Expected literal string ${literal} but got ${String(actualBytes, encoding)}")
+            throw ExecutionException("Expected literal string ${expression} but got ${String(actualBytes, encoding)}")
         }
     }
 }

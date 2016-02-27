@@ -242,8 +242,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
     override fun visit(node: ASTfixedString, data: MutableList<Instruction>): List<Instruction> {
         var encoding = node.findTokenValue(ENCODING) ?: defaultEncoding
 
-        val inst = FixedLengthString(encoding)
-        inst.lengthExpr = node.getExpression()
+        val inst = FixedLengthString(node.getExpression(), encoding)
 
         inst.name = node.getLastTokenImage()
         return decorateAndAdd(node, inst, data)

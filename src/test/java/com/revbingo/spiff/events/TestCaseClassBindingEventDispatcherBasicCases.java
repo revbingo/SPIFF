@@ -45,7 +45,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Before
 	public void setUp() {
-		unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
+		unit = new ClassBindingEventListener<>(RootBinding.class);
 	}
 
 	@Test
@@ -57,12 +57,12 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void executionExceptionThrownIfClassCannotBeInstantiatedWithNoArgs() throws Exception {
-		new ClassBindingEventListener<ArgsRequired>(ArgsRequired.class);
+		new ClassBindingEventListener<>(ArgsRequired.class);
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void executionExceptionThrownIfClassHasPrivateConstructor() throws Exception {
-		new ClassBindingEventListener<Private>(Private.class);
+		new ClassBindingEventListener<>(Private.class);
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
 		Datatype ri = new ByteInstruction();
 		ri.setName("setterWithADifferentName");
-		ri.setValue(Byte.valueOf((byte) 3));
+		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
 		assertThat(unit.getResult().gotASetter, is((byte) 3));
@@ -144,7 +144,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfWrongType() throws Exception {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("byteOne");
 		ri.setValue("oops");
 		unit.notifyData(ri);
@@ -154,7 +154,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	public void finalFieldsCanBeAltered() throws Exception {
 		Datatype ri = new ByteInstruction();
 		ri.setName("finalByte");
-		ri.setValue(Byte.valueOf((byte) 3));
+		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
 		assertThat(unit.getResult().finalByte, is((byte) 3));
@@ -192,7 +192,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionTypesArePopulated() throws Exception {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("stringList");
 
 		for(int i=0;i<3;i++) {
@@ -209,7 +209,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void setInterfaceHasConcreteImplementationMapped() throws Exception {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("aSet");
 		ri.setValue("one");
 
@@ -221,7 +221,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void queueInterfaceHasConcreteImplementationMapped() throws Exception {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("aQueue");
 		ri.setValue("one");
 
@@ -233,7 +233,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionsWorkWithRenamedBinding() throws Exception {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("notTheList");
 
 		for(int i=0;i<3;i++) {
@@ -250,7 +250,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void existingCollectionIsAddedTo() {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("existingStringList");
 		ri.setValue("anotherElement");
 		unit.notifyData(ri);
@@ -263,7 +263,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void strictModeIgnoresUnboundedFields() {
-		Datatype ri = new FixedLengthString("US-ASCII");
+		Datatype ri = new FixedLengthString("", "US-ASCII");
 		ri.setName("existingStringList");
 		ri.setValue("anotherElement");
 		unit.notifyData(ri);
@@ -273,7 +273,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	public void autoboxedTypesAreHandled() {
 		Datatype ri = new IntegerInstruction();
 		ri.setName("primitiveInt");
-		ri.setValue(Integer.valueOf(10));
+		ri.setValue(10);
 
 		unit.notifyData(ri);
 
@@ -288,6 +288,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		unit.notifyGroup("stringList", true);
 	}
 
+	@SuppressWarnings("unused")
 	public static class RootBinding {
 		public byte byteOne;
 		//need to use Byte because primtive byte would get inlined, so test assertion fails
@@ -302,7 +303,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 		public byte notTheSameName;
 
 		public List<String> stringList;
-		public List<String> existingStringList = new ArrayList<String>();
+		public List<String> existingStringList = new ArrayList<>();
 
 		@Binding("notTheList")
 		public List<String> anotherList;
