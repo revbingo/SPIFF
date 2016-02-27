@@ -26,7 +26,7 @@ class BinaryParser(private val eventDispatcher: EventListener?) {
             val fis = FileInputStream(adfFile)
             return parseAdf(SpiffParser(fis))
         } catch (e: FileNotFoundException) {
-            throw AdfFormatException("File " + adfFile.absolutePath + " does not exist")
+            throw AdfFormatException("File ${adfFile.absolutePath} does not exist")
         }
 
     }
@@ -55,7 +55,7 @@ class BinaryParser(private val eventDispatcher: EventListener?) {
 
             fc.close()
         } catch (e: IOException) {
-            throw ExecutionException("Could not read file " + binaryFile.absolutePath, e)
+            throw ExecutionException("Could not read file ${binaryFile.absolutePath}", e)
         }
 
     }
