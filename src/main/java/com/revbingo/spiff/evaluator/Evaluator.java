@@ -32,17 +32,13 @@ public class Evaluator {
 
 	public Evaluator() {
 
-		Class<?>[] staticLib=new Class[1];
-		Class<?>[] dynamicLib = new Class[1];
-		Class<?>[] dotLib = new Class[0];
-
-		staticLib[0] = java.lang.Math.class;
-		dynamicLib[0] = EvaluatorMap.class;
+		Class<?>[] staticLib=new Class[] { java.lang.Math.class };
+		Class<?>[] dynamicLib = new Class[] { EvaluatorMap.class };
+		Class<?>[] dotLib = new Class[] {};
 
 		variableMap = new EvaluatorMap();
 		lib = new Library(staticLib, dynamicLib, dotLib, variableMap, null);
-		context = new Object[1];
-		context[0] = variableMap;
+		context = new Object[] { variableMap };
 	}
 
 	public void addVariable(String name, Object var){
