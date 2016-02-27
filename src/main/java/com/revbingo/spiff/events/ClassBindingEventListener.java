@@ -54,14 +54,12 @@ public class ClassBindingEventListener<T> implements EventListener {
 	public void notifyData(Datatype ins) {
 		if(skipUnbound && skipCount > 0) return;
 		Binder binder = bindingFactory.getBindingFor(ins.getName(), currentBinding.getClass());
-		if(binder == null) {
+		if(binder != null) {
+			binder.bind(currentBinding, ins.getValue());
+		} else {
 			if(isStrict) {
 				throw new ExecutionException("Could not get binding for instruction " + ins.getName());
-			} else {
-				return;
 			}
-		} else {
-			binder.bind(currentBinding, ins.getValue());
 		}
 	}
 
@@ -71,15 +69,14 @@ public class ClassBindingEventListener<T> implements EventListener {
 			bindingStack.push(currentBinding);
 
 			Binder binder = bindingFactory.getBindingFor(groupName, currentBinding.getClass());
-			if(binder == null) {
+			if(binder != null) {
+				currentBinding = binder.createAndBind(currentBinding);
+			} else {
 				if(isStrict) {
 					throw new ExecutionException("Could not get binding for group " + groupName);
 				} else {
 					if(skipUnbound) skipCount++;
-					return;
 				}
-			} else {
-				currentBinding = binder.createAndBind(currentBinding);
 			}
 		} else {
 			if(skipUnbound && skipCount > 0) skipCount--;

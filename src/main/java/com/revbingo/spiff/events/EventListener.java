@@ -19,6 +19,6 @@ import com.revbingo.spiff.datatypes.Datatype;
 
 public interface EventListener {
 
-	public void notifyData(Datatype ins);
-	public void notifyGroup(String groupName, boolean start);
+	void notifyData(Datatype ins);
+	void notifyGroup(String groupName, boolean start);
 }

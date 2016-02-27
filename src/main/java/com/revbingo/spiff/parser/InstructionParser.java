@@ -22,5 +22,5 @@ import com.revbingo.spiff.parser.gen.ParseException;
 
 public interface InstructionParser {
 
-	public List<Instruction> parse() throws ParseException;
+	List<Instruction> parse() throws ParseException;
 }

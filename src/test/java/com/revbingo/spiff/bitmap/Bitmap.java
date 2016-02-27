@@ -66,7 +66,7 @@ public class Bitmap {
 	@Binding("pixelBits")
 	public void convert1BitPixelData(boolean[] bits) {
 		for(int i = 0; i < bits.length; i++) {
-			mapPixelFromColourTable((bits[i] == true) ? 1 : 0);
+			mapPixelFromColourTable(bits[i] ? 1 : 0);
 		}
 	}
 
