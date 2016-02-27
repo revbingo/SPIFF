@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThat;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -36,6 +37,8 @@ import com.revbingo.spiff.parser.SpiffParser;
 
 public class TestCaseSpiffVm {
 
+	final List<Instruction> NO_INSTRUCTIONS = Collections.emptyList();
+
 	private ByteInstruction byteNamed(String name) {
 		ByteInstruction inst = new ByteInstruction();
 		inst.setName(name);
@@ -44,7 +47,7 @@ public class TestCaseSpiffVm {
 
 	@Test
 	public void canConstructVmWithListOfInstructionsAndByteBufferAndEventDispatcher() {
-		List<Instruction> instructions = new ArrayList<Instruction>();
+		List<Instruction> instructions = new ArrayList<>();
 		instructions.add(byteNamed("a"));
 		TestEventListener ed = new TestEventListener();
 		SpiffVm unit = new SpiffVm(instructions, ByteBuffer.wrap(new byte[] { 0x7f }), ed);
@@ -54,7 +57,7 @@ public class TestCaseSpiffVm {
 
 	@Test
 	public void evaluatorIsInitialisedWithLengthOfFileAsSpecialVar() {
-		SpiffVm unit = new SpiffVm(null, ByteBuffer.wrap(new byte[] { 0x00, 0x00, 0x00, 0x00 }), null);
+		SpiffVm unit = new SpiffVm(NO_INSTRUCTIONS, ByteBuffer.wrap(new byte[] { 0x00, 0x00, 0x00, 0x00 }), new NullEventListener());
 		assertThat((Integer) unit.getVar("fileLength"), is(4));
 	}
 
@@ -173,7 +176,7 @@ public class TestCaseSpiffVm {
 			this.vm = unit;
 		}
 
-		public void runToNext() {
+		public void runToNext() throws Exception {
 			vm.resume();
 			waitForHalt();
 		}
@@ -183,9 +186,9 @@ public class TestCaseSpiffVm {
 			vm.start();
 		}
 
-		public void waitForHalt() {
+		public void waitForHalt() throws Exception {
 			do {
-				try { Thread.sleep(100); } catch(Exception e) {}
+				Thread.sleep(100);
 			} while(this.isAlive() && !vm.isSuspended());
 		}
 

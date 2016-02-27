@@ -10,8 +10,8 @@ interface Instruction {
 }
 
 abstract class AdfInstruction: Instruction {
-    var lineNumber: Int? = 0
-    var isBreakpoint: Boolean? = false
+    var lineNumber: Int = 0
+    var isBreakpoint: Boolean = false
 }
 
 abstract class InstructionWithExpression(val expression:String): AdfInstruction()

@@ -5,6 +5,7 @@ import com.revbingo.spiff.instructions.Instruction
 import com.revbingo.spiff.parser.InstructionParser
 import com.revbingo.spiff.parser.SpiffParser
 import com.revbingo.spiff.parser.gen.ParseException
+import com.revbingo.spiff.vm.NullEventListener
 import com.revbingo.spiff.vm.SpiffVm
 import java.io.File
 import java.io.FileInputStream
@@ -12,7 +13,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.ByteBuffer
 
-class BinaryParser(private val eventDispatcher: EventListener?) {
+class BinaryParser(private val eventDispatcher: EventListener = NullEventListener()) {
 
     @Throws(AdfFormatException::class, ExecutionException::class)
     fun parse(adfFile: File, parseFile: File) {
@@ -28,7 +29,6 @@ class BinaryParser(private val eventDispatcher: EventListener?) {
         } catch (e: FileNotFoundException) {
             throw AdfFormatException("File ${adfFile.absolutePath} does not exist")
         }
-
     }
 
     @Throws(AdfFormatException::class)

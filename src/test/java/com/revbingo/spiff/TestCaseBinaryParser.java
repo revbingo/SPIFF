@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.revbingo.spiff.vm.NullEventListener;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -46,7 +47,7 @@ public class TestCaseBinaryParser {
 
 	@Test(expected = AdfFormatException.class)
 	public void parseAdfThrowsExceptionForNonExistantFile() throws Exception {
-		BinaryParser unit = new BinaryParser(null);
+		BinaryParser unit = new BinaryParser();
 
 		unit.parseAdf(new File("not/a/file"));
 	}
@@ -59,14 +60,14 @@ public class TestCaseBinaryParser {
 		pw.write("aloadofbollocks");
 		pw.close();
 
-		BinaryParser unit = new BinaryParser(null);
+		BinaryParser unit = new BinaryParser();
 
 		unit.parseAdf(badAdf);
 	}
 
 	@Test(expected = ExecutionException.class)
 	public void exceptionWhenFileIsMissing() throws Exception {
-		BinaryParser unit = new BinaryParser(null);
+		BinaryParser unit = new BinaryParser();
 
 		unit.read(new File("not/a/file"), NO_INSTRUCTIONS);
 	}
@@ -77,7 +78,7 @@ public class TestCaseBinaryParser {
 		boolean wasMadeUnreadable = unreadableFile.setReadable(false);
 		assertThat(wasMadeUnreadable, is(true));
 
-		BinaryParser unit = new BinaryParser(null);
+		BinaryParser unit = new BinaryParser();
 		unit.read(unreadableFile, NO_INSTRUCTIONS);
 	}
 
@@ -99,7 +100,7 @@ public class TestCaseBinaryParser {
 				will(returnValue(Arrays.asList(one, two, three)));
 		}});
 
-		BinaryParser unit = new BinaryParser(null);
+		BinaryParser unit = new BinaryParser();
 		List<Instruction> instructions = unit.parseAdf(mockParser);
 
 		assertThat(instructions.size(), is(3));
