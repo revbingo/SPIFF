@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -40,6 +41,8 @@ import com.revbingo.spiff.parser.InstructionParser;
 public class TestCaseBinaryParser {
 
 	Mockery context = new Mockery();
+
+	final List<Instruction> NO_INSTRUCTIONS = Collections.emptyList();
 
 	@Test(expected = AdfFormatException.class)
 	public void parseAdfThrowsExceptionForNonExistantFile() throws Exception {
@@ -65,16 +68,17 @@ public class TestCaseBinaryParser {
 	public void exceptionWhenFileIsMissing() throws Exception {
 		BinaryParser unit = new BinaryParser(null);
 
-		unit.read(new File("not/a/file"), null);
+		unit.read(new File("not/a/file"), NO_INSTRUCTIONS);
 	}
 
 	@Test(expected = ExecutionException.class)
 	public void exceptionWhenFileCannotBeRead() throws Exception {
 		File unreadableFile = File.createTempFile("unreadable", "txt");
-		unreadableFile.setReadable(false);
+		boolean wasMadeUnreadable = unreadableFile.setReadable(false);
+		assertThat(wasMadeUnreadable, is(true));
 
 		BinaryParser unit = new BinaryParser(null);
-		unit.read(unreadableFile, null);
+		unit.read(unreadableFile, NO_INSTRUCTIONS);
 	}
 
 	@Test
@@ -112,7 +116,7 @@ public class TestCaseBinaryParser {
 			exactly(3).of(mockInstruction).execute(with(aNonNull(ByteBuffer.class)), with(same(eventDispatcher)), with(any(Evaluator.class)));
 		}});
 
-		List<Instruction> instructions = Arrays.asList(new Instruction[] { mockInstruction, mockInstruction, mockInstruction });
+		List<Instruction> instructions = Arrays.asList(mockInstruction, mockInstruction, mockInstruction);
 
 		BinaryParser parser = new BinaryParser(eventDispatcher);
 		parser.read(File.createTempFile("samplebytes", "tmp"), instructions);
