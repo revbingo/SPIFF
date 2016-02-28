@@ -3,4 +3,4 @@ cache:
   directories:
     - '$HOME/.m2/repository'
 
-install: mvn install:install-file -Dfile=lib/jel.jar -DgroupId=com.gnu -DartifactId=jel -Dversion-2.1.0 -Dpackaging=jar
+install: mvn install:install-file -Dfile=lib/jel.jar -DgroupId=com.gnu -DartifactId=jel -Dversion=2.1.0 -Dpackaging=jar
