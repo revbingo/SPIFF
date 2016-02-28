@@ -118,6 +118,7 @@ TOKEN : /* OPERATORS */
 | < LESS_OR_EQUAL : "<=" >
 | < PL_MI_OPERATOR : "+" | "-" >
 | < MUL_DIV_OPERATOR : "*" | "/" | "%" >
+| < BITWISE_OP : "&" | "^" | "|" >
 }
 
 TOKEN : /* OTHERS */
@@ -361,7 +362,13 @@ void groupInstruction() : {}
 // ************ EXPRESSIONS ****************
 void expression() : {}
 {
-	comparitiveExpression()
+	bitwiseExpression()
+}
+
+void bitwiseExpression() #void : {}
+{
+    comparitiveExpression()
+    ( <BITWISE_OP> comparitiveExpression() )*
 }
 
 void comparitiveExpression() #void : {}
@@ -405,7 +412,7 @@ void unaryExpression() #void :
   | <ID_ADDRESS>
   | <ID_VALUE>
   | <FLOAT>
-  | <OPEN_PAR> comparitiveExpression() <CLOSE_PAR>
+  | <OPEN_PAR> bitwiseExpression() <CLOSE_PAR>
   )
 }
 

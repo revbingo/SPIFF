@@ -665,6 +665,8 @@ public class TestCaseSpiffParser {
 			.add("      .if(b < 4) {")
 			.add("         .if(b <= 10) {")
 			.add("            .if(c > 6) {")
+			.add("              .if((c & 0xFF) == a | 0xFF) {")
+			.add("}")
 			.add("}")
 			.add("}")
 			.add("}")
