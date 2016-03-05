@@ -45,7 +45,7 @@ public class TestITunesParse {
 	public void testITunesParse() throws Exception {
 		ClassBindingEventListener<SongList> ed = new ClassBindingEventListener<SongList>(SongList.class);
 		BinaryParser parser = new BinaryParser(ed);
-		ed.isStrict(false);
+		ed.setStrict(false);
 		parser.parse(new File("samples/itunesdb.adf"), new File("test-resources/iTunesDB"));
 
 		SongList result = ed.getResult();

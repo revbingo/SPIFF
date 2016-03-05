@@ -93,7 +93,7 @@ public class TestCaseFunctionalPopulateClass {
 	@Test
 	public void testNonStrictMode() throws Exception {
 		ClassBindingEventListener<IncompleteBitmap> eventDispatcher = new ClassBindingEventListener<IncompleteBitmap>(IncompleteBitmap.class);
-		eventDispatcher.isStrict(false);
+		eventDispatcher.setStrict(false);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		
@@ -112,7 +112,7 @@ public class TestCaseFunctionalPopulateClass {
 	@Test(expected=ExecutionException.class)
 	public void testThrowsExceptionInStrictMode() throws Exception {
 		ClassBindingEventListener<IncompleteBitmap> eventDispatcher = new ClassBindingEventListener<IncompleteBitmap>(IncompleteBitmap.class);
-		eventDispatcher.isStrict(true);
+		eventDispatcher.setStrict(true);
 		
 		BinaryParser unit = new BinaryParser(eventDispatcher);
 		

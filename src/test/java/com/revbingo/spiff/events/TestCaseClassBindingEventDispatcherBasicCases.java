@@ -116,7 +116,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfNoSuchFieldAndStrictMode() throws Exception {
-		unit.isStrict(true);
+		unit.setStrict(true);
 		ByteInstruction inst = new ByteInstruction();
 		inst.setName("nonExistant");
 		unit.notifyData(inst);
@@ -124,7 +124,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void noExceptionThrownIfNoSuchFieldAndInNonStrictMode() throws Exception {
-		unit.isStrict(false);
+		unit.setStrict(false);
 		ByteInstruction inst = new ByteInstruction();
 		inst.setName("nonExistant");
 		unit.notifyData(inst);

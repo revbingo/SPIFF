@@ -138,7 +138,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	@Test
 	public void skipGroupsPreventsDataBeingNotified() {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
-		unit.isStrict(false);
+		unit.setStrict(false);
 		unit.setSkipUnboundGroups(true);
 
 		IntegerInstruction intInst = new IntegerInstruction();
@@ -164,7 +164,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 	public void exceptionThrownIfStrictAndNoBindingForGroup() {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 
-		unit.isStrict(true);
+		unit.setStrict(true);
 
 		unit.notifyGroup("unbound", true);
 	}

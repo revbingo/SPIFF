@@ -37,7 +37,7 @@ public class TestCaseBitmapAdf {
 	@Test
 	public void parses1BitBitmap() throws ExecutionException, AdfFormatException {
 		ClassBindingEventListener<Bitmap> ed = new ClassBindingEventListener<Bitmap>(Bitmap.class);
-		ed.isStrict(false);
+		ed.setStrict(false);
 
 		BinaryParser parser = new BinaryParser(ed);
 		parser.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/1bit.bmp"));
@@ -54,7 +54,7 @@ public class TestCaseBitmapAdf {
 	@Ignore
 	public void parses4BitBitmap() throws ExecutionException, AdfFormatException {
 		ClassBindingEventListener<Bitmap> ed = new ClassBindingEventListener<Bitmap>(Bitmap.class);
-		ed.isStrict(false);
+		ed.setStrict(false);
 
 		BinaryParser parser = new BinaryParser(ed);
 		parser.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/4bit.bmp"));
@@ -70,7 +70,7 @@ public class TestCaseBitmapAdf {
 	@Test
 	public void parses8BitBitmap() throws ExecutionException, AdfFormatException {
 		ClassBindingEventListener<Bitmap> ed = new ClassBindingEventListener<Bitmap>(Bitmap.class);
-		ed.isStrict(false);
+		ed.setStrict(false);
 
 		BinaryParser parser = new BinaryParser(ed);
 		parser.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/8bit.bmp"));
@@ -87,7 +87,7 @@ public class TestCaseBitmapAdf {
 	@Ignore
 	public void parses24BitBitmap() throws ExecutionException, AdfFormatException {
 		ClassBindingEventListener<Bitmap> ed = new ClassBindingEventListener<Bitmap>(Bitmap.class);
-		ed.isStrict(false);
+		ed.setStrict(false);
 
 		BinaryParser parser = new BinaryParser(ed);
 		parser.parse(new File("test-resources/bitmap_class.adf"), new File("test-resources/24bit.bmp"));

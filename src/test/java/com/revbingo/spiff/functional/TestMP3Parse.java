@@ -35,7 +35,7 @@ public class TestMP3Parse {
 	@Test
 	public void parsesId3v1_1Tags() throws Exception {
 		ClassBindingEventListener<Id3v1> listener = new ClassBindingEventListener<Id3v1>(Id3v1.class);
-		listener.isStrict(false);
+		listener.setStrict(false);
 
 		BinaryParser parser = new BinaryParser(listener);
 		parser.parse(new File("samples/id3v1.adf"), new File("test-resources/ShakingThrough.mp3"));

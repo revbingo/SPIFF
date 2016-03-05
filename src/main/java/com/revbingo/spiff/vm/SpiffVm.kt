@@ -82,6 +82,6 @@ class SpiffVm(private val instructions: List<Instruction>, private val buffer: B
 }
 
 class NullEventListener: EventListener {
-    override fun notifyGroup(groupName: String?, start: Boolean) {}
-    override fun notifyData(ins: Datatype?) {}
+    override fun notifyGroup(groupName: String, start: Boolean) {}
+    override fun notifyData(ins: Datatype) {}
 }
