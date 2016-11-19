@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.revbingo.spiff.vm.NullEventListener;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -89,12 +88,9 @@ public class TestCaseBinaryParser {
 	public void parseAdfStartsParserAndGetsListOfInstructions() throws Exception {
 		context = new Mockery();
 
-		final ByteInstruction one = new ByteInstruction();
-		one.setName("one");
-		final ByteInstruction two = new ByteInstruction();
-		two.setName("two");
-		final ByteInstruction three = new ByteInstruction();
-		three.setName("three");
+		final ByteInstruction one = new ByteInstruction("one");
+		final ByteInstruction two = new ByteInstruction("two");
+		final ByteInstruction three = new ByteInstruction("three");
 
 		final InstructionParser mockParser = context.mock(InstructionParser.class);
 

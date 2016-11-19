@@ -865,7 +865,7 @@ public class TestCaseSpiffParser {
 	@SuppressWarnings("unused")
 	public static class PrivateConstructor extends Datatype {
 
-		private PrivateConstructor() { }
+		private PrivateConstructor() { super("aName"); }
 
 		@Override
 		public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {

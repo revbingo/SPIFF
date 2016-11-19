@@ -43,9 +43,7 @@ public class TestCaseSpiffVm {
 	final List<Instruction> NO_INSTRUCTIONS = Collections.emptyList();
 
 	private ByteInstruction byteNamed(String name) {
-		ByteInstruction inst = new ByteInstruction();
-		inst.setName(name);
-		return inst;
+		return new ByteInstruction(name);
 	}
 
 	@Test

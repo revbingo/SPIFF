@@ -25,23 +25,23 @@ import com.revbingo.spiff.evaluator.Evaluator
 
 class FixedLengthNumberFactory {
 
-    fun getInstruction(type: String): NumberType {
+    fun getInstruction(name: String, type: String): NumberType {
         when (type) {
-            "int" -> return IntegerInstruction()
-            "long" -> return LongInstruction()
-            "float" -> return FloatInstruction()
-            "short" -> return ShortInstruction()
-            "double" -> return DoubleInstruction()
-            "byte" -> return ByteInstruction()
-            "ubyte" -> return UnsignedByteInstruction()
-            "ushort" -> return UnsignedShortInstruction()
-            else -> return UnsignedIntegerInstruction()
+            "int" -> return IntegerInstruction(name)
+            "long" -> return LongInstruction(name)
+            "float" -> return FloatInstruction(name)
+            "short" -> return ShortInstruction(name)
+            "double" -> return DoubleInstruction(name)
+            "byte" -> return ByteInstruction(name)
+            "ubyte" -> return UnsignedByteInstruction(name)
+            "ushort" -> return UnsignedShortInstruction(name)
+            else -> return UnsignedIntegerInstruction(name)
         }
     }
 }
 
-abstract class NumberType(val type: Class<out Any>,
-                          val bufferFunc: (ByteBuffer) -> Number) : Datatype() {
+abstract class NumberType(name: String, val type: Class<out Any>,
+                          val bufferFunc: (ByteBuffer) -> Number) : Datatype(name) {
 
     var literalExpr: String? = null
 
@@ -55,17 +55,17 @@ abstract class NumberType(val type: Class<out Any>,
     }
 }
 
-class ByteInstruction: NumberType(Byte::class.java, { it.get() })
+class ByteInstruction(name: String): NumberType(name, Byte::class.java, { it.get() })
 
-class ShortInstruction: NumberType(Short::class.java, { it.short })
+class ShortInstruction(name: String): NumberType(name, Short::class.java, { it.short })
 
-class IntegerInstruction: NumberType(Int::class.java, { it.int })
+class IntegerInstruction(name: String): NumberType(name, Int::class.java, { it.int })
 
-class LongInstruction: NumberType(Long::class.java, { it.long })
+class LongInstruction(name: String): NumberType(name, Long::class.java, { it.long })
 
-class DoubleInstruction : NumberType(Double::class.java, { it.double })
+class DoubleInstruction(name: String): NumberType(name, Double::class.java, { it.double })
 
-class FloatInstruction: NumberType(Float::class.java, { it.float })
+class FloatInstruction(name: String): NumberType(name, Float::class.java, { it.float })
 
 /*
 * Unsigned numbers are represented by widening to the next widest type i.e. unsigned bytes are shorts,
@@ -73,14 +73,14 @@ class FloatInstruction: NumberType(Float::class.java, { it.float })
 * */
 fun ByteArray.convertToUnsignedInts(): IntArray = this.map { byte -> byte.toInt() and 0xFF }.toIntArray()
 
-class UnsignedByteInstruction: NumberType(Short::class.java, {
+class UnsignedByteInstruction(name: String): NumberType(name, Short::class.java, {
     val bytes = ByteArray(1)
     it.get(bytes)
 
     bytes.convertToUnsignedInts()[0].toShort()
 })
 
-class UnsignedIntegerInstruction: NumberType(Long::class.java, {
+class UnsignedIntegerInstruction(name: String): NumberType(name, Long::class.java, {
     val bytes = ByteArray(4)
     val signedInt = it.int
 
@@ -98,7 +98,7 @@ class UnsignedIntegerInstruction: NumberType(Long::class.java, {
 })
 
 
-class UnsignedShortInstruction: NumberType(Int::class.java, {
+class UnsignedShortInstruction(name: String): NumberType(name, Int::class.java, {
     val bytesAsInts = IntArray(2)
     val signedShortAsInt = it.short.toInt()
 

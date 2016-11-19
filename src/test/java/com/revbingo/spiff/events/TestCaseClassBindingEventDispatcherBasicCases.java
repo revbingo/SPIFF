@@ -67,8 +67,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPublicFieldWhenInstructionNameMatchesField() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("byteOne");
+		Datatype ri = new ByteInstruction("byteOne");
 		ri.setValue((byte) 3);
 
 		unit.notifyData(ri);
@@ -80,8 +79,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void populatesPrivateFieldUsingPublicSetterWhenInstructionNameMatchesSetter() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("privateByte");
+		Datatype ri = new ByteInstruction("privateByte");
 		ri.setValue((byte) 3);
 
 		unit.notifyData(ri);
@@ -92,8 +90,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfSecurityManagerPreventsFieldBeingSet() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("byteOne");
+		Datatype ri = new ByteInstruction("byteOne");
 		ri.setValue((byte) 3);
 
 		SecurityManager oldManager = System.getSecurityManager();
@@ -117,16 +114,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfNoSuchFieldAndStrictMode() throws Exception {
 		unit.setStrict(true);
-		ByteInstruction inst = new ByteInstruction();
-		inst.setName("nonExistant");
+		ByteInstruction inst = new ByteInstruction("nonExistant");
 		unit.notifyData(inst);
 	}
 
 	@Test
 	public void noExceptionThrownIfNoSuchFieldAndInNonStrictMode() throws Exception {
 		unit.setStrict(false);
-		ByteInstruction inst = new ByteInstruction();
-		inst.setName("nonExistant");
+		ByteInstruction inst = new ByteInstruction("nonExistant");
 		unit.notifyData(inst);
 
 		assertThat(unit.getResult(), is(notNullValue()));
@@ -134,8 +129,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void dispatchesToNamedSetterIfNoSuchField() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("setterWithADifferentName");
+		Datatype ri = new ByteInstruction("setterWithADifferentName");
 		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
@@ -144,16 +138,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfWrongType() throws Exception {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("byteOne");
+		Datatype ri = new FixedLengthString("byteOne", "", "US-ASCII");
 		ri.setValue("oops");
 		unit.notifyData(ri);
 	}
 
 	@Test
 	public void finalFieldsCanBeAltered() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("finalByte");
+		Datatype ri = new ByteInstruction("finalByte");
 		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
@@ -162,16 +154,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionThrownIfMethodThrowsException() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("exceptionThrower");
+		Datatype ri = new ByteInstruction("exceptionThrown");
 		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 	}
 
 	@Test
 	public void canMakePrivateFieldAccessible() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("notSoPrivateByte");
+		Datatype ri = new ByteInstruction("notSoPrivateByte");
 		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
@@ -181,8 +171,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void fieldWithBindingAnnotationIsCalled() throws Exception {
-		Datatype ri = new ByteInstruction();
-		ri.setName("boundField");
+		Datatype ri = new ByteInstruction("boundField");
 		ri.setValue((byte) 3);
 		unit.notifyData(ri);
 
@@ -192,8 +181,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionTypesArePopulated() throws Exception {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("stringList");
+		Datatype ri = new FixedLengthString("stringList", "", "US-ASCII");
 
 		for(int i=0;i<3;i++) {
 			ri.setValue("inst" + i);
@@ -209,8 +197,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void setInterfaceHasConcreteImplementationMapped() throws Exception {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("aSet");
+		Datatype ri = new FixedLengthString("aSet", "", "US-ASCII");
 		ri.setValue("one");
 
 		unit.notifyData(ri);
@@ -221,8 +208,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void queueInterfaceHasConcreteImplementationMapped() throws Exception {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("aQueue");
+		Datatype ri = new FixedLengthString("aQueue", "", "US-ASCII");
 		ri.setValue("one");
 
 		unit.notifyData(ri);
@@ -233,8 +219,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void collectionsWorkWithRenamedBinding() throws Exception {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("notTheList");
+		Datatype ri = new FixedLengthString("notTheList", "", "US-ASCII");
 
 		for(int i=0;i<3;i++) {
 			ri.setValue("inst" + i);
@@ -250,8 +235,7 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void existingCollectionIsAddedTo() {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("existingStringList");
+		Datatype ri = new FixedLengthString("existingStringList", "", "US-ASCII");
 		ri.setValue("anotherElement");
 		unit.notifyData(ri);
 
@@ -263,16 +247,14 @@ public class TestCaseClassBindingEventDispatcherBasicCases {
 
 	@Test
 	public void strictModeIgnoresUnboundedFields() {
-		Datatype ri = new FixedLengthString("", "US-ASCII");
-		ri.setName("existingStringList");
+		Datatype ri = new FixedLengthString("existingStringList", "", "US-ASCII");
 		ri.setValue("anotherElement");
 		unit.notifyData(ri);
 	}
 
 	@Test
 	public void autoboxedTypesAreHandled() {
-		Datatype ri = new IntegerInstruction();
-		ri.setName("primitiveInt");
+		Datatype ri = new IntegerInstruction("primitiveInt");
 		ri.setValue(10);
 
 		unit.notifyData(ri);

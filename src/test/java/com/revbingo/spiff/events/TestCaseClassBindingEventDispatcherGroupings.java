@@ -51,14 +51,12 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 
-		Datatype xInst = new IntegerInstruction();
-		xInst.setName("x");
+		Datatype xInst = new IntegerInstruction("x");
 		xInst.setValue(Integer.valueOf(3));
 
 		unit.notifyData(xInst);
 
-		Datatype yInst = new IntegerInstruction();
-		yInst.setName("y");
+		Datatype yInst = new IntegerInstruction("y");
 		yInst.setValue(21);
 
 		unit.notifyData(yInst);
@@ -77,22 +75,19 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		ClassBindingEventListener<RootBinding> unit = new ClassBindingEventListener<RootBinding>(RootBinding.class);
 		unit.notifyGroup("inner", true);
 
-		Datatype xInst = new IntegerInstruction();
-		xInst.setName("x");
+		Datatype xInst = new IntegerInstruction("x");
 		xInst.setValue(Integer.valueOf(3));
 
 		unit.notifyData(xInst);
 
-		Datatype yInst = new IntegerInstruction();
-		yInst.setName("y");
+		Datatype yInst = new IntegerInstruction("y");
 		yInst.setValue(21);
 
 		unit.notifyData(yInst);
 
 		unit.notifyGroup("inner", false);
 
-		Datatype rootX = new IntegerInstruction();
-		rootX.setName("x");
+		Datatype rootX = new IntegerInstruction("x");
 		rootX.setValue(Integer.valueOf(30));
 		unit.notifyData(rootX);
 
@@ -110,14 +105,12 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 
 		for(int i = 0; i < 3; i++) {
 			unit.notifyGroup("listOfObjects", true);
-			Datatype xInst = new IntegerInstruction();
-			xInst.setName("x");
+			Datatype xInst = new IntegerInstruction("x");
 			xInst.setValue(Integer.valueOf(i));
 
 			unit.notifyData(xInst);
 
-			Datatype yInst = new IntegerInstruction();
-			yInst.setName("y");
+			Datatype yInst = new IntegerInstruction("y");
 			yInst.setValue(21);
 
 			unit.notifyData(yInst);
@@ -141,8 +134,7 @@ public class TestCaseClassBindingEventDispatcherGroupings {
 		unit.setStrict(false);
 		unit.setSkipUnboundGroups(true);
 
-		IntegerInstruction intInst = new IntegerInstruction();
-		intInst.setName("x");
+		IntegerInstruction intInst = new IntegerInstruction("x");
 		intInst.setValue(10);
 
 		unit.notifyData(intInst);

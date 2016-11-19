@@ -28,23 +28,16 @@ import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.*
 
-abstract class Datatype: AdfInstruction() {
+abstract class Datatype(val name: String): AdfInstruction() {
 
     var address: Int? = null
-    var addressStr: String? = null
-    var name: String? = null
-        set(value) {
-            field = value
-            addressStr = "${value}.address"
-        }
-
     var value: Any? = null
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator): Unit {
         address = buffer.position()
         value = this.evaluate(buffer, evaluator)
         evaluator.addVariable(name, value)
-        evaluator.addVariable(addressStr, address)
+        evaluator.addVariable("$name.address", address)
         eventDispatcher.notifyData(this)
     }
 
@@ -52,7 +45,7 @@ abstract class Datatype: AdfInstruction() {
 
 }
 
-abstract class StringInstruction(val expression: String, charsetName: String): Datatype() {
+abstract class StringInstruction(name: String, val expression: String, charsetName: String): Datatype(name) {
 
     val encoding: Charset
 
@@ -74,7 +67,7 @@ abstract class StringInstruction(val expression: String, charsetName: String): D
     abstract fun getBytes(buffer: ByteBuffer, evaluator: Evaluator): ByteArray
 }
 
-class FixedLengthString(expression: String, charsetName: String) : StringInstruction(expression, charsetName) {
+class FixedLengthString(name: String, expression: String, charsetName: String) : StringInstruction(name, expression, charsetName) {
 
     override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator): ByteArray {
         val length = (evaluator.evaluate(expression) as Number).toInt()
@@ -84,7 +77,7 @@ class FixedLengthString(expression: String, charsetName: String) : StringInstruc
     }
 }
 
-class TerminatedString(charsetName: String) : StringInstruction("", charsetName) {
+class TerminatedString(name: String, charsetName: String) : StringInstruction(name, "", charsetName) {
 
     override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
         val baos = ByteArrayOutputStream()
@@ -98,7 +91,7 @@ class TerminatedString(charsetName: String) : StringInstruction("", charsetName)
     }
 }
 
-class LiteralStringInstruction(expression: String, charsetName: String) : StringInstruction(expression, charsetName) {
+class LiteralStringInstruction(name: String, expression: String, charsetName: String) : StringInstruction(name, expression, charsetName) {
 
     override fun getBytes(buffer: ByteBuffer, evaluator: Evaluator) : ByteArray {
         val expectedBytes = expression.toByteArray(encoding)
@@ -114,7 +107,7 @@ class LiteralStringInstruction(expression: String, charsetName: String) : String
     }
 }
 
-class BytesInstruction: Datatype() {
+class BytesInstruction(name: String): Datatype(name) {
 
     var lengthExpr: String? = null
 
@@ -126,7 +119,7 @@ class BytesInstruction: Datatype() {
     }
 }
 
-class BitsInstruction: Datatype() {
+class BitsInstruction(name: String): Datatype(name) {
     var numberOfBitsExpr: String? = null
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {

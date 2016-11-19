@@ -74,7 +74,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testByteInstruction() throws Exception {
-		ByteInstruction unit = new ByteInstruction();
+		ByteInstruction unit = new ByteInstruction("aName");
 
 		for(int i = 0; i < 10; i++ ) {
 			unit.execute(testBuffer, ed, evaluator);
@@ -85,7 +85,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testBytesInstruction() throws Exception {
-		BytesInstruction unit = new BytesInstruction();
+		BytesInstruction unit = new BytesInstruction("aName");
 		unit.setLengthExpr("5");
 		unit.execute(testBuffer, ed, evaluator);
 
@@ -98,7 +98,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testShortInstruction() throws Exception {
-		ShortInstruction unit = new ShortInstruction();
+		ShortInstruction unit = new ShortInstruction("aName");
 
 		short[] expectedValues = new short[] { 0x5465, 0x7374, 0x4461, 0x7461, 0x2100 };
 
@@ -111,7 +111,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testIntegerInstruction() throws Exception {
-		IntegerInstruction unit = new IntegerInstruction();
+		IntegerInstruction unit = new IntegerInstruction("aName");
 
 		int[] expectedValues = new int[] { 0x54657374, 0x44617461 };
 
@@ -124,10 +124,10 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testLongInstruction() throws Exception {
-		ByteInstruction padder = new ByteInstruction();
+		ByteInstruction padder = new ByteInstruction("aName");
 		padder.execute(testBuffer, ed, evaluator);
 
-		LongInstruction unit = new LongInstruction();
+		LongInstruction unit = new LongInstruction("aName");
 
 		long expectedValue = 0x6573744461746121L;
 
@@ -138,7 +138,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testDoubleInstruction() throws Exception {
-		DoubleInstruction unit = new DoubleInstruction();
+		DoubleInstruction unit = new DoubleInstruction("aName");
 		unit.setAddress(-1);
 
 		double expectedValue = 3.66552341002185E98d;
@@ -150,7 +150,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testBitsInstruction() throws Exception {
-		BitsInstruction unit = new BitsInstruction();
+		BitsInstruction unit = new BitsInstruction("aName");
 		String numberOfBitsExpression = "13";
 		unit.setNumberOfBitsExpr(numberOfBitsExpression);
 		unit.execute(testBuffer, ed, evaluator);
@@ -180,7 +180,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFloatInstruction() throws Exception {
-		FloatInstruction unit = new FloatInstruction();
+		FloatInstruction unit = new FloatInstruction("aName");
 		unit.setAddress(-1);
 
 		float expectedValue = 3.94193797E12f;
@@ -192,7 +192,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithExplicitEncoding() throws Exception {
-		FixedLengthString unit = new FixedLengthString("4", "US-ASCII");
+		FixedLengthString unit = new FixedLengthString("aName","4", "US-ASCII");
 		unit.setAddress(-1);
 
 		unit.execute(testBuffer, ed, evaluator);
@@ -203,7 +203,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testFixedLengthStringWithNoExplicitEncodingDropsToASystemDefault() throws Exception {
-		FixedLengthString unit = new FixedLengthString("4", "US-ASCII");
+		FixedLengthString unit = new FixedLengthString("aName","4", "US-ASCII");
 		unit.setAddress(-1);
 
 		unit.execute(testBuffer, ed, evaluator);
@@ -215,7 +215,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void fixedLengthStringIsTrimmed() throws Exception {
-		FixedLengthString unit = new FixedLengthString("12", "US-ASCII");
+		FixedLengthString unit = new FixedLengthString("aName","12", "US-ASCII");
 
 		byte[] paddedData = new byte[testData.length + 3];
 		System.arraycopy(testData, 0, paddedData, 0, testData.length);
@@ -228,17 +228,17 @@ public class TestCaseDataTypes {
 
 	@Test(expected=ExecutionException.class)
 	public void testBadEncodingForStringThrowsException() throws Exception {
-		new FixedLengthString("", "HMMM");
+		new FixedLengthString("aName","", "HMMM");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void testBadEncodingForTerminatedStringThrowsException() throws Exception {
-		new TerminatedString("HMMM");
+		new TerminatedString("aName", "HMMM");
 	}
 
 	@Test
 	public void testLiteralStringInstructionConsumesIfStringMatches() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction("TestData!", "US-ASCII");
+		LiteralStringInstruction unit = new LiteralStringInstruction("aName","TestData!", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.getValue(), is("TestData!"));
@@ -253,22 +253,22 @@ public class TestCaseDataTypes {
 		ByteBuffer utf16le = ByteBuffer.wrap(testString.getBytes("UTF-16LE"));
 		ByteBuffer ascii = ByteBuffer.wrap(testString.getBytes("US-ASCII"));
 
-		LiteralStringInstruction strInstAscii = new LiteralStringInstruction("Hello", "US-ASCII");
+		LiteralStringInstruction strInstAscii = new LiteralStringInstruction("aName","Hello", "US-ASCII");
 		strInstAscii.evaluate(ascii, evaluator);
 
-		LiteralStringInstruction strInstUtf8 = new LiteralStringInstruction("Hello", "UTF-8");
+		LiteralStringInstruction strInstUtf8 = new LiteralStringInstruction("aName","Hello", "UTF-8");
 		strInstUtf8.evaluate(utf8, evaluator);
 
-		LiteralStringInstruction strInstUtf16 = new LiteralStringInstruction("Hello", "UTF-16BE");
+		LiteralStringInstruction strInstUtf16 = new LiteralStringInstruction("aName","Hello", "UTF-16BE");
 		strInstUtf16.evaluate(utf16, evaluator);
 
-		LiteralStringInstruction strInstUtf16LE = new LiteralStringInstruction("Hello", "UTF-16LE");
+		LiteralStringInstruction strInstUtf16LE = new LiteralStringInstruction("aName","Hello", "UTF-16LE");
 		strInstUtf16LE.evaluate(utf16le, evaluator);
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void testLiteralStringInstructionThrowsExecutionInstructionIfStringDoesNotMatch() throws Exception {
-		LiteralStringInstruction unit = new LiteralStringInstruction("notData", "US-ASCII");
+		LiteralStringInstruction unit = new LiteralStringInstruction("aName","notData", "US-ASCII");
 		unit.execute(testBuffer, ed, evaluator);
 
 		assertThat((String) unit.getValue(), is("TestData!"));
@@ -276,7 +276,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testTerminatedString() throws Exception {
-		TerminatedString unit = new TerminatedString("US-ASCII");
+		TerminatedString unit = new TerminatedString("aName", "US-ASCII");
 		unit.setAddress(-1);
 		unit.execute(testBuffer, ed, evaluator);
 
@@ -286,7 +286,7 @@ public class TestCaseDataTypes {
 
 	@Test(expected=BufferUnderflowException.class)
 	public void testPastEndOfBufferThrowsException() throws ExecutionException {
-		LongInstruction unit = new LongInstruction();
+		LongInstruction unit = new LongInstruction("aName");
 
 		unit.execute(testBuffer, ed, evaluator);
 		unit.execute(testBuffer, ed, evaluator);
@@ -294,7 +294,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testUnsignedByteInstruction() throws Exception {
-		UnsignedByteInstruction unit = new UnsignedByteInstruction();
+		UnsignedByteInstruction unit = new UnsignedByteInstruction("aName");
 		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xE7 });
@@ -305,7 +305,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testUnsignedShortInstructionWithLittleEndianOrder() throws Exception {
-		UnsignedShortInstruction unit = new UnsignedShortInstruction();
+		UnsignedShortInstruction unit = new UnsignedShortInstruction("aName");
 		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
@@ -317,7 +317,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testUnsignedShortInstructionWithBigEndianOrder() throws Exception {
-		UnsignedShortInstruction unit = new UnsignedShortInstruction();
+		UnsignedShortInstruction unit = new UnsignedShortInstruction("aName");
 		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0x00, (byte) 0xFF });
@@ -329,7 +329,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testUnsignedIntegerInstructionWithBigEndianOrder() throws Exception {
-		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
+		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction("aName");
 		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
@@ -341,7 +341,7 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void testUnsignedIntegerInstructionWithLittleEndianOrder() throws Exception {
-		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction();
+		UnsignedIntegerInstruction unit = new UnsignedIntegerInstruction("aName");
 		unit.setAddress(-1);
 
 		ByteBuffer unsignedByteBuffer = ByteBuffer.wrap(new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
@@ -353,8 +353,8 @@ public class TestCaseDataTypes {
 
 	@Test
 	public void referencedInstructionStoresAddressWhenExecuted() throws Exception {
-		IntegerInstruction previousInstruction = new IntegerInstruction();
-		Datatype unit = new Datatype() {
+		IntegerInstruction previousInstruction = new IntegerInstruction("aName");
+		Datatype unit = new Datatype("aName") {
 			@Override
 			public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
 				return "";
@@ -369,7 +369,7 @@ public class TestCaseDataTypes {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfByteLiteralNumberDoesNotMatch() throws Exception {
-		ByteInstruction inst = new ByteInstruction();
+		ByteInstruction inst = new ByteInstruction("aName");
 		inst.setLiteralExpr("0x54");
 	
 		try {
@@ -385,7 +385,7 @@ public class TestCaseDataTypes {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfShortLiteralNumberDoesNotMatch() throws Exception {
-		ShortInstruction inst = new ShortInstruction();
+		ShortInstruction inst = new ShortInstruction("aName");
 		inst.setLiteralExpr("0x5465");
 	
 		try {
@@ -401,7 +401,7 @@ public class TestCaseDataTypes {
 
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfIntegerLiteralNumberDoesNotMatch() throws Exception {
-		IntegerInstruction inst = new IntegerInstruction();
+		IntegerInstruction inst = new IntegerInstruction("aName");
 		inst.setLiteralExpr("0x54657374");
 	
 		try {
@@ -420,7 +420,7 @@ public class TestCaseDataTypes {
 		byte[] testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 		ByteBuffer longerBuffer = ByteBuffer.wrap(testData);
 		
-		LongInstruction inst = new LongInstruction();
+		LongInstruction inst = new LongInstruction("aName");
 		inst.setLiteralExpr("0x5465737444617461L");
 		
 		try {
@@ -436,7 +436,7 @@ public class TestCaseDataTypes {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedByteLiteralNumberDoesNotMatch() throws Exception {
-		UnsignedByteInstruction inst = new UnsignedByteInstruction();
+		UnsignedByteInstruction inst = new UnsignedByteInstruction("aName");
 		inst.setLiteralExpr("0x54");
 		
 		try {
@@ -452,7 +452,7 @@ public class TestCaseDataTypes {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedShortLiteralNumberDoesNotMatch() throws Exception {
-		UnsignedShortInstruction inst = new UnsignedShortInstruction();
+		UnsignedShortInstruction inst = new UnsignedShortInstruction("aName");
 		inst.setLiteralExpr("0x5465");
 		
 		try {
@@ -468,7 +468,7 @@ public class TestCaseDataTypes {
 	
 	@Test(expected=ExecutionException.class)
 	public void exceptionIfUnsignedIntegerLiteralNumberDoesNotMatch() throws Exception {
-		UnsignedIntegerInstruction inst = new UnsignedIntegerInstruction();
+		UnsignedIntegerInstruction inst = new UnsignedIntegerInstruction("aName");
 		inst.setLiteralExpr("0x54657374");
 		
 		try {

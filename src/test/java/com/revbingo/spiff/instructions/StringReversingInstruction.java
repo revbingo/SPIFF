@@ -26,6 +26,8 @@ import com.revbingo.spiff.evaluator.Evaluator;
 
 public class StringReversingInstruction extends Datatype {
 
+	public StringReversingInstruction(String name) { super(name); }
+
 	@Override
 	public Object evaluate(ByteBuffer buffer, Evaluator evaluator) throws ExecutionException {
 		byte[] bytes = new byte[4];

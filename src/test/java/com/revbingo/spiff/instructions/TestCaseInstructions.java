@@ -70,7 +70,7 @@ public class TestCaseInstructions {
 		SetOrderInstruction unit = new SetOrderInstruction(ByteOrder.LITTLE_ENDIAN);
 		unit.execute(testBuffer, ed, evaluator);
 
-		IntegerInstruction test = new IntegerInstruction();
+		IntegerInstruction test = new IntegerInstruction("aName");
 		test.execute(testBuffer, ed, evaluator);
 
 		assertThat((Integer) test.getValue(), is(equalTo(0x74736554)));
@@ -78,7 +78,7 @@ public class TestCaseInstructions {
 		unit = new SetOrderInstruction(ByteOrder.BIG_ENDIAN);
 		unit.execute(testBuffer, ed, evaluator);
 
-		test = new IntegerInstruction();
+		test = new IntegerInstruction("aName");
 		test.execute(testBuffer, ed, evaluator);
 
 		assertThat((Integer) test.getValue(), is(equalTo(0x44617461)));
@@ -89,7 +89,7 @@ public class TestCaseInstructions {
 		context = new Mockery();
 
 		final EventListener dispatcher = context.mock(EventListener.class);
-		final Datatype theInstruction = new ByteInstruction();
+		final Datatype theInstruction = new ByteInstruction("aName");
 
 		context.checking(new Expectations() {{
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));
@@ -107,7 +107,7 @@ public class TestCaseInstructions {
 		context = new Mockery();
 
 		final EventListener dispatcher = context.mock(EventListener.class);
-		final Datatype theInstruction = new ByteInstruction();
+		final Datatype theInstruction = new ByteInstruction("aName");
 
 		context.checking(new Expectations() {{
 			exactly(10).of(dispatcher).notifyData(with(theInstruction));
@@ -125,7 +125,7 @@ public class TestCaseInstructions {
 	public void testMarkInstruction() throws Exception {
 		MarkInstruction unit = new MarkInstruction("testMark");
 
-		IntegerInstruction previousInstruction = new IntegerInstruction();
+		IntegerInstruction previousInstruction = new IntegerInstruction("aName");
 		previousInstruction.execute(testBuffer, ed, evaluator);
 		unit.execute(testBuffer, ed, evaluator);
 
@@ -155,7 +155,7 @@ public class TestCaseInstructions {
 	public void jumpInstruction() throws Exception {
 		int positionToJumpTo = 4;
 		JumpInstruction unit = new JumpInstruction(String.valueOf(positionToJumpTo));
-		ByteInstruction nextInst = new ByteInstruction();
+		ByteInstruction nextInst = new ByteInstruction("aName");
 
 		unit.execute(testBuffer, ed, evaluator);
 		nextInst.execute(testBuffer, ed, evaluator);
@@ -180,11 +180,11 @@ public class TestCaseInstructions {
 
 	@Test
 	public void ifBlockRunsIfInstructionsWhenExpressionIsTrue() throws Exception {
-		ByteInstruction ifInst = new ByteInstruction();
+		ByteInstruction ifInst = new ByteInstruction("aName");
 		List<Instruction> ifInsts = Collections.singletonList((Instruction) ifInst);
 
 		JumpInstruction elseInst1 = new JumpInstruction("3");
-		ByteInstruction elseInst2 = new ByteInstruction();
+		ByteInstruction elseInst2 = new ByteInstruction("aName");
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
 		IfBlock unit = new IfBlock("1 == 1", ifInsts, new Block(elseInsts));
@@ -197,11 +197,11 @@ public class TestCaseInstructions {
 
 	@Test
 	public void ifBlockRunsElseInstructionsWhenExpressionIsFalse() throws Exception {
-		ByteInstruction ifInst = new ByteInstruction();
+		ByteInstruction ifInst = new ByteInstruction("aName");
 		List<Instruction> ifInsts = Collections.singletonList((Instruction) ifInst);
 
 		JumpInstruction elseInst1 = new JumpInstruction("3");
-		ByteInstruction elseInst2 = new ByteInstruction();
+		ByteInstruction elseInst2 = new ByteInstruction("aName");
 		List<Instruction> elseInsts = Arrays.asList((Instruction) elseInst1, elseInst2);
 
 		IfBlock unit = new IfBlock("1 != 1", ifInsts, new Block(elseInsts));
