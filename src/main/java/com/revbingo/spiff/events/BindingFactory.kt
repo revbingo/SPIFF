@@ -34,7 +34,7 @@ class BindingFactory() {
 
     private val matchers: List<Matcher> = listOf(BoundMethodMatcher(), BoundFieldMatcher(), SetterMatcher(), FieldMatcher())
 
-    private val binderCache = mutableMapOf<Class<*>, MutableMap<String, Binder?>>();
+    private val binderCache = mutableMapOf<Class<*>, MutableMap<String, Binder>>();
 
     fun getBindingFor(name: String, clazz: Class<*>): Binder? {
         val classCache = binderCache.get(clazz) ?: emptyMap<String, Binder>()
@@ -57,10 +57,10 @@ class BindingFactory() {
         return null
     }
 
-    private fun addToCache(clazz: Class<*>, name: String, b: Binder?): Unit {
+    private fun addToCache(clazz: Class<*>, name: String, b: Binder): Unit {
         var classCache = binderCache.get(clazz)
         if(classCache == null) {
-            classCache = mutableMapOf<String, Binder?>()
+            classCache = mutableMapOf<String, Binder>()
             binderCache.put(clazz, classCache)
         }
         classCache.put(name, b)
@@ -87,8 +87,8 @@ class BindingFactory() {
     private class BoundMethodMatcher : Matcher() {
 
         override fun match(name: String, clazz: Class<*>): Binder? {
-            val method = clazz.methods.find { it.hasBindingAnnotationFor(name) }
-            return method?.binder() ?: null
+            val method = clazz.methods.find { it.hasBindingAnnotationFor(name) } ?: return null
+            return method.binder()
         }
     }
 
