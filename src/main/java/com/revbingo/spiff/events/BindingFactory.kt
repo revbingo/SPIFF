@@ -23,29 +23,26 @@ import com.revbingo.spiff.ExecutionException
 import com.revbingo.spiff.annotations.Binding
 import com.revbingo.spiff.annotations.BindingCollection
 import com.revbingo.spiff.binders.*
-import org.junit.runners.Parameterized
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
-import java.util.*
 import kotlin.reflect.KClass
 
 class BindingFactory() {
 
     private val matchers: List<Matcher> = listOf(BoundMethodMatcher(), BoundFieldMatcher(), SetterMatcher(), FieldMatcher())
 
-    private val binderCache = mutableMapOf<Class<*>, MutableMap<String, Binder>>();
+    private val binderCache = mutableMapOf<Class<*>, MutableMap<String, Binder>>()
 
     fun getBindingFor(name: String, clazz: Class<*>): Binder? {
-        val classCache = binderCache.get(clazz) ?: emptyMap<String, Binder>()
+        val classCache = binderCache[clazz] ?: emptyMap<String, Binder>()
         if(classCache.containsKey(name)) {
-            return classCache.get(name)!!
+            return classCache[name]
         }
 
-        var b: Binder? = null
         try {
             for(matcher in matchers) {
-                b = matcher.match(name, clazz)
+                val b = matcher.match(name, clazz)
                 if (b != null) {
                     addToCache(clazz, name, b)
                     return b
@@ -58,7 +55,7 @@ class BindingFactory() {
     }
 
     private fun addToCache(clazz: Class<*>, name: String, b: Binder): Unit {
-        var classCache = binderCache.get(clazz)
+        var classCache = binderCache[clazz]
         if(classCache == null) {
             classCache = mutableMapOf<String, Binder>()
             binderCache.put(clazz, classCache)
@@ -67,7 +64,7 @@ class BindingFactory() {
     }
 
     abstract class Matcher {
-        open val primitiveTypes = Arrays.asList(*arrayOf(Int::class, Float::class, Double::class, Short::class, Long::class, Byte::class, Char::class, String::class))
+        open val primitiveTypes = listOf(Int::class, Float::class, Double::class, Short::class, Long::class, Byte::class, Char::class, String::class)
 
         abstract fun match(name: String, clazz: Class<*>): Binder?
 
