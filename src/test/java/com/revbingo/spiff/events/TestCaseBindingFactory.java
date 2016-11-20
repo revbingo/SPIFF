@@ -154,7 +154,26 @@ public class TestCaseBindingFactory {
 		Binder binder = unit.getBindingFor("shorts", BindingTest.class);
 
 		assertThat(binder, is(nullValue()));
+	}
 
+	@Test
+	public void explicitlyNamedBindingToACollectionOfNonPrimitives() throws Exception {
+		BindingFactory unit = new BindingFactory();
+
+		Binder binder = unit.getBindingFor("nonPrimitiveCollection", BindingTest.class);
+
+		assertThat(binder, is(not(nullValue())));
+		assertThat(binder, is(instanceOf(ObjectCollectionBinder.class)));
+	}
+
+	@Test
+	public void explicitlyNamedBindingToACollectionOfPrimitives() throws Exception {
+		BindingFactory unit = new BindingFactory();
+
+		Binder binder = unit.getBindingFor("AnotherName", BindingTest.class);
+
+		assertThat(binder, is(not(nullValue())));
+		assertThat(binder, is(instanceOf(PrimitiveCollectionBinder.class)));
 	}
 
 	public static class BindingTest {
@@ -169,6 +188,9 @@ public class TestCaseBindingFactory {
 		public List<Short> shorts;
 
 		public List<Object> objects;
+
+		@BindingCollection(type=Object.class, value="nonPrimitiveCollection")
+		public List<Object> nonPrimitiveCollection;
 
 		@Binding("notExplicitlyACollection")
 		public List<Integer> moreInts;
