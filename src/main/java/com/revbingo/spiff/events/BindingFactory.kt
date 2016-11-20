@@ -23,10 +23,7 @@ import com.revbingo.spiff.ExecutionException
 import com.revbingo.spiff.annotations.Binding
 import com.revbingo.spiff.annotations.BindingCollection
 import com.revbingo.spiff.binders.*
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
+import java.lang.reflect.*
 
 class BindingFactory() {
 
@@ -59,86 +56,63 @@ class BindingFactory() {
     }
 
     abstract class Matcher {
-        val primitiveTypes: List<Type?> = listOf(Int::class.java, Float::class.java, Double::class.java, Short::class.java, Long::class.java, Byte::class.java, Char::class.java, String::class.java)
-
         abstract fun match(name: String, clazz: Class<*>): Binder?
-
-        fun Method.hasBindingAnnotationFor(name: String) : Boolean {
-            return this.isAnnotationPresent(Binding::class.java) && this.getAnnotation(Binding::class.java).value == name
-        }
-
-        fun Field.hasBindingAnnotationFor(name: String) : Boolean {
-            return this.isAnnotationPresent(Binding::class.java) && this.getAnnotation(Binding::class.java).value == name
-        }
-
-        fun Field.hasBindingCollectionAnnotationFor(name: String) : Boolean {
-            return this.isAnnotationPresent(BindingCollection::class.java) && this.getAnnotation(BindingCollection::class.java).value == name
-        }
-
-        fun binderFor(field: Field): Binder {
-            if (Collection::class.java.isAssignableFrom(field.type)) {
-                var genericType: Type? = null
-                val fieldType = field.genericType
-                if (fieldType is ParameterizedType) {
-                    genericType = fieldType.actualTypeArguments[0]
-                }
-
-                if (primitiveTypes.contains(genericType)) {
-                    return PrimitiveCollectionBinder(field)
-                } else {
-                    return ObjectCollectionBinder(field, genericType?.javaClass)
-                }
-            } else {
-                return FieldBinder(field)
-            }
-        }
     }
 
     private class BoundMethodMatcher : Matcher() {
 
         override fun match(name: String, clazz: Class<*>): Binder? {
-            val method = clazz.methods.find { it.hasBindingAnnotationFor(name) } ?: return null
-            return MethodBinder(method)
+            val matchingMethod = clazz.methods.find { it.annotatedName() == name } ?: return null
+            return matchingMethod.binder()
         }
     }
 
     private class BoundFieldMatcher : Matcher() {
+
         override fun match(name: String, clazz: Class<*>): Binder? {
-            for (field in clazz.declaredFields) {
-                if(field.hasBindingAnnotationFor(name)) {
-                    return binderFor(field)
-                } else if(field.hasBindingCollectionAnnotationFor(name)) {
-                    return binderFor(field)
-                }
-            }
-            return null
+            val matchingField = clazz.declaredFields.find { it.annotatedName() == name } ?: return null
+            return matchingField.binder()
         }
     }
 
     private class SetterMatcher : Matcher() {
+
         override fun match(name: String, clazz: Class<*>): Binder? {
-            val setterName = "set${name.capitalize()}"
-            val method = clazz.methods.find { it.name == setterName } ?: return null
-            return MethodBinder(method)
+            val matchingMethod = clazz.methods.find { it.name == "set${name.capitalize()}" } ?: return null
+            return matchingMethod.binder()
         }
     }
 
     private class FieldMatcher : Matcher() {
 
         override fun match(name: String, clazz: Class<*>): Binder? {
-            val matchingField = clazz.declaredFields.find { it.name == name && getAnnotatedName(it).isNullOrEmpty() } ?: return null
-            return binderFor(matchingField)
+            val matchingField = clazz.declaredFields.find { it.name == name && it.annotatedName().isNullOrEmpty() } ?: return null
+            return matchingField.binder()
+        }
+    }
+}
+
+val primitiveTypes: List<Type?> = listOf(Int::class.java, Float::class.java, Double::class.java, Short::class.java,
+                                            Long::class.java, Byte::class.java, Char::class.java, String::class.java)
+
+fun AccessibleObject.annotatedName() = this.getAnnotation(BindingCollection::class.java)?.value ?: this.getAnnotation(Binding::class.java)?.value ?: null
+
+fun Method.binder() = MethodBinder(this)
+
+fun Field.binder() : Binder {
+    if (Collection::class.java.isAssignableFrom(this.type)) {
+        var genericType: Type? = null
+        val fieldType = this.genericType
+        if (fieldType is ParameterizedType) {
+            genericType = fieldType.actualTypeArguments[0]
         }
 
-        private fun getAnnotatedName(field: Field): String? {
-            val bcAnno = field.getAnnotation(BindingCollection::class.java)
-            if (bcAnno != null) return bcAnno.value
-
-            val bAnno = field.getAnnotation(Binding::class.java)
-            if (bAnno != null) return bAnno.value
-
-            return null
+        if (primitiveTypes.contains(genericType)) {
+            return PrimitiveCollectionBinder(this)
+        } else {
+            return ObjectCollectionBinder(this, genericType as Class<*>)
         }
-
+    } else {
+        return FieldBinder(this)
     }
 }
