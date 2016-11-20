@@ -42,11 +42,9 @@ class BindingFactory() {
 
         try {
             for(matcher in matchers) {
-                val b = matcher.match(name, clazz)
-                if (b != null) {
-                    addToCache(clazz, name, b)
-                    return b
-                }
+                val binder = matcher.match(name, clazz) ?: continue
+                addToCache(clazz, name, binder)
+                return binder
             }
         } catch(e: SecurityException) {
             throw ExecutionException("SecurityManager prevents access to method/field", e)
@@ -54,17 +52,14 @@ class BindingFactory() {
         return null
     }
 
-    private fun addToCache(clazz: Class<*>, name: String, b: Binder): Unit {
-        var classCache = binderCache[clazz]
-        if(classCache == null) {
-            classCache = mutableMapOf<String, Binder>()
-            binderCache.put(clazz, classCache)
-        }
-        classCache.put(name, b)
+    private fun addToCache(clazz: Class<*>, name: String, binder: Binder): Unit {
+        val classCache = binderCache[clazz] ?: mutableMapOf<String, Binder>()
+        binderCache.put(clazz, classCache)
+        classCache.put(name, binder)
     }
 
     abstract class Matcher {
-        open val primitiveTypes = listOf(Int::class, Float::class, Double::class, Short::class, Long::class, Byte::class, Char::class, String::class)
+        val primitiveTypes = listOf(Int::class, Float::class, Double::class, Short::class, Long::class, Byte::class, Char::class, String::class)
 
         abstract fun match(name: String, clazz: Class<*>): Binder?
 
@@ -75,17 +70,13 @@ class BindingFactory() {
         fun Field.hasBindingAnnotationFor(name: String) : Boolean {
             return this.isAnnotationPresent(Binding::class.java) && this.getAnnotation(Binding::class.java).value == name
         }
-
-        fun Method.binder() : MethodBinder {
-            return MethodBinder(this)
-        }
     }
 
     private class BoundMethodMatcher : Matcher() {
 
         override fun match(name: String, clazz: Class<*>): Binder? {
             val method = clazz.methods.find { it.hasBindingAnnotationFor(name) } ?: return null
-            return method.binder()
+            return MethodBinder(method)
         }
     }
 
@@ -124,9 +115,8 @@ class BindingFactory() {
     private class SetterMatcher : Matcher() {
         override fun match(name: String, clazz: Class<*>): Binder? {
             val setterName = "set${name.capitalize()}"
-            val method = clazz.methods.find { it.name == setterName }
-
-            return method?.binder() ?: null
+            val method = clazz.methods.find { it.name == setterName } ?: return null
+            return MethodBinder(method)
         }
     }
 
