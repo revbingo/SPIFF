@@ -92,7 +92,7 @@ class BindingFactory() {
     }
 }
 
-val primitiveTypes: List<Type?> = listOf(Int::class.java, Float::class.java, Double::class.java, Short::class.java,
+val primitiveTypes: List<Class<*>?> = listOf(Int::class.java, Float::class.java, Double::class.java, Short::class.java,
                                             Long::class.java, Byte::class.java, Char::class.java, String::class.java)
 
 fun AccessibleObject.annotatedName() = this.getAnnotation(BindingCollection::class.java)?.value ?: this.getAnnotation(Binding::class.java)?.value ?: null
@@ -101,16 +101,16 @@ fun Method.binder() = MethodBinder(this)
 
 fun Field.binder() : Binder {
     if (Collection::class.java.isAssignableFrom(this.type)) {
-        var genericType: Type? = null
+        var genericType: Class<*>? = null
         val fieldType = this.genericType
         if (fieldType is ParameterizedType) {
-            genericType = fieldType.actualTypeArguments[0]
+            genericType = fieldType.actualTypeArguments[0] as Class<*>
         }
 
         if (primitiveTypes.contains(genericType)) {
             return PrimitiveCollectionBinder(this)
         } else {
-            return ObjectCollectionBinder(this, genericType as Class<*>)
+            return ObjectCollectionBinder(this, genericType)
         }
     } else {
         return FieldBinder(this)
