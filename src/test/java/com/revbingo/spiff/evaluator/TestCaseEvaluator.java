@@ -24,10 +24,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import gnu.jel.CompiledExpression;
 
 import org.junit.Test;
@@ -182,10 +180,10 @@ public class TestCaseEvaluator {
 		unit.addVariable("a", 2);
 		unit.addVariable("b", 3);
 
-		CompiledExpression shortExpr = unit.getCompiledExpression("a + b", long.class);
+		CompiledExpression longExpr = unit.getCompiledExpression("a + b", long.class);
 
-		assertThat(shortExpr, is(sameInstance(unit.getCompiledExpression("a + b", long.class))));
-		assertThat(shortExpr, is(not(sameInstance(unit.getCompiledExpression("a + b", int.class)))));
+		assertThat(longExpr, is(sameInstance(unit.getCompiledExpression("a + b", long.class))));
+		assertThat(longExpr, is(not(sameInstance(unit.getCompiledExpression("a + b", int.class)))));
 	}
 
 	@Test
@@ -201,7 +199,7 @@ public class TestCaseEvaluator {
 		try {
 			unit.evaluate("a + 3", Integer.TYPE);
 			fail("Should not have been able to evaluate variable a");
-		} catch(ExecutionException e) {}
+		} catch(ExecutionException ignored) {}
 	}
 
 	@Test(expected=ExecutionException.class)

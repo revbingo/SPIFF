@@ -36,8 +36,8 @@ abstract class Datatype(val name: String): AdfInstruction() {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator): Unit {
         address = buffer.position()
         value = this.evaluate(buffer, evaluator)
-        evaluator.addVariable(name, value)
-        evaluator.addVariable("$name.address", address)
+        evaluator.addVariable(name, value!!)
+        evaluator.addVariable("$name.address", address!!)
         eventDispatcher.notifyData(this)
     }
 
@@ -112,7 +112,7 @@ class BytesInstruction(name: String): Datatype(name) {
     var lengthExpr: String? = null
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val length = evaluator.evaluate(lengthExpr, Int::class.java)
+        val length = evaluator.evaluate(lengthExpr!!, Int::class.java)
         val bytes = ByteArray(length)
         buffer.get(bytes)
         return bytes
@@ -123,7 +123,7 @@ class BitsInstruction(name: String): Datatype(name) {
     var numberOfBitsExpr: String? = null
 
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
-        val numberOfBits = evaluator.evaluate(numberOfBitsExpr, Int::class.java)
+        val numberOfBits = evaluator.evaluate(numberOfBitsExpr!!, Int::class.java)
 
         val bytesToGet = Math.ceil(numberOfBits/8.0).toInt()
         val bytes = ByteArray(bytesToGet)

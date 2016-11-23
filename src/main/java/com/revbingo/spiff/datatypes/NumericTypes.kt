@@ -48,7 +48,7 @@ abstract class NumberType(name: String, val type: Class<out Any>,
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val value = bufferFunc(buffer)
         if(literalExpr != null) {
-            val expressionResult = evaluator.evaluate(literalExpr, type as Class<Any>)
+            val expressionResult = evaluator.evaluate(literalExpr!!, type as Class<Any>)
             if(value != expressionResult) throw ExecutionException("Value $value did not match expected value $literalExpr")
         }
         return value
