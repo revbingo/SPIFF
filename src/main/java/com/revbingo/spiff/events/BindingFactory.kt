@@ -32,7 +32,7 @@ class BindingFactory() {
     private val binderCache = mutableMapOf<Class<*>, MutableMap<String, Binder>>()
 
     fun getBindingFor(name: String, clazz: Class<*>): Binder? {
-        val classCache = binderCache[clazz] ?: emptyMap<String, Binder>()
+        val classCache = binderCache.getOrPut(clazz, { mutableMapOf<String, Binder>() })
         if(classCache.containsKey(name)) {
             return classCache[name]
         }
@@ -40,19 +40,13 @@ class BindingFactory() {
         try {
             for(matcher in matchers) {
                 val binder = matcher.match(name, clazz) ?: continue
-                addToCache(clazz, name, binder)
+                classCache.put(name, binder)
                 return binder
             }
         } catch(e: SecurityException) {
             throw ExecutionException("SecurityManager prevents access to method/field", e)
         }
         return null
-    }
-
-    private fun addToCache(clazz: Class<*>, name: String, binder: Binder): Unit {
-        val classCache = binderCache[clazz] ?: mutableMapOf<String, Binder>()
-        binderCache.put(clazz, classCache)
-        classCache.put(name, binder)
     }
 
     abstract class Matcher {
