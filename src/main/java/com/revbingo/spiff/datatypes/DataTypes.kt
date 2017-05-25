@@ -37,7 +37,7 @@ abstract class Datatype(val name: String): AdfInstruction() {
         address = buffer.position()
         value = this.evaluate(buffer, evaluator)
         evaluator.addVariable(name, value!!)
-        evaluator.addVariable("$name.address", address!!)
+        evaluator.addVariable("${name}_address", address!!)
         eventDispatcher.notifyData(this)
     }
 

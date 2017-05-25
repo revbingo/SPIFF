@@ -756,7 +756,7 @@ public class TestCaseSpiffParser {
 		List<Instruction> insts = parse(adf);
 
 		assertThat(insts.size(), is(1));
-		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("byteOne.address==3"));
+		assertThat(((IfBlock) insts.get(0)).getIfExpression(), is("byteOne_address==3"));
 	}
 
 	@Test

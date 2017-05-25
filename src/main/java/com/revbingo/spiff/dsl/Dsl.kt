@@ -20,7 +20,8 @@
 package com.revbingo.spiff.dsl
 
 import com.revbingo.spiff.datatypes.*
-import com.revbingo.spiff.evaluator.JELEvaluator
+import com.revbingo.spiff.evaluator.EvalExEvaluator
+import com.revbingo.spiff.evaluator.Evaluator
 import com.revbingo.spiff.events.EventListener
 import com.revbingo.spiff.instructions.*
 import java.io.File
@@ -35,7 +36,7 @@ fun readBinary(file: File, listener: EventListener, init: BinaryReader.() -> Uni
     fc.read(buffer)
     buffer.flip()
 
-    val evaluator = JELEvaluator().apply {
+    val evaluator = EvalExEvaluator().apply {
         addVariable("fileLength", buffer.limit())
     }
 
@@ -50,7 +51,7 @@ fun readBinary(file: File, listener: EventListener, init: BinaryReader.() -> Uni
     return adf
 }
 
-class BinaryReader(val buffer: ByteBuffer, val listener: EventListener, val evaluator: JELEvaluator) {
+class BinaryReader(val buffer: ByteBuffer, val listener: EventListener, val evaluator: Evaluator) {
     val instructions: MutableList<Instruction> = mutableListOf<Instruction>()
 
     var defaultEncoding: String = "utf-8"

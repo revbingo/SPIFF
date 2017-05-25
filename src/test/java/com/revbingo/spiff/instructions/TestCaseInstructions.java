@@ -18,11 +18,17 @@
  */
 package com.revbingo.spiff.instructions;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.ByteInstruction;
+import com.revbingo.spiff.datatypes.Datatype;
+import com.revbingo.spiff.datatypes.IntegerInstruction;
+import com.revbingo.spiff.evaluator.EvalExEvaluator;
+import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.events.EventListener;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -30,17 +36,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.datatypes.ByteInstruction;
-import com.revbingo.spiff.datatypes.Datatype;
-import com.revbingo.spiff.datatypes.IntegerInstruction;
-import com.revbingo.spiff.evaluator.JELEvaluator;
-import com.revbingo.spiff.events.EventListener;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class TestCaseInstructions {
 
@@ -49,13 +47,13 @@ public class TestCaseInstructions {
 
 	Mockery context = new Mockery();
 	EventListener ed;
-	JELEvaluator evaluator;
+	Evaluator evaluator;
 
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
-		evaluator = new JELEvaluator();
+		evaluator = new EvalExEvaluator();
 		ed = context.mock(EventListener.class);
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{

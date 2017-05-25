@@ -60,7 +60,7 @@
 
 .if(biBitCount != 24) {
     # there will be an RGBQUAD array
-	.set randomVar pow(2, biBitCount)
+	.set randomVar 2^biBitCount
 	.repeat(randomVar) {
 	    .group(RGBQUAD) {
 			ubyte	rgbBlue

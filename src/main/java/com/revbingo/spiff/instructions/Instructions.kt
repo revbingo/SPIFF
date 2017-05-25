@@ -21,6 +21,7 @@ package com.revbingo.spiff.instructions
 
 import com.revbingo.spiff.evaluator.Evaluator
 import com.revbingo.spiff.events.EventListener
+import java.math.BigDecimal
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -45,7 +46,7 @@ class JumpInstruction(expression: String): InstructionWithExpression(expression)
 class MarkInstruction(name: String): InstructionWithExpression(name) {
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
         evaluator.addVariable(expression, buffer.position())
-        evaluator.addVariable("$expression.address", buffer.position())
+        evaluator.addVariable("${expression}_address", buffer.position())
     }
 }
 
@@ -95,8 +96,8 @@ open class Block(val instructions: List<Instruction>): AdfInstruction() {
 class IfBlock(val ifExpression: String, instructions: List<Instruction>, val elseBlock: Block): Block(instructions) {
 
     override fun execute(buffer: ByteBuffer, eventDispatcher: EventListener, evaluator: Evaluator) {
-        val result = evaluator.evaluate(ifExpression, Boolean::class.java)
-        if(result) {
+        val result = evaluator.evaluate(ifExpression, BigDecimal::class.java)
+        if(result.compareTo(BigDecimal(1)) == 0) {
             super.execute(buffer, eventDispatcher, evaluator)
         } else {
             elseBlock.execute(buffer, eventDispatcher, evaluator)

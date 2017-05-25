@@ -46,7 +46,7 @@ class JELEvaluator : Evaluator {
     }
 
     private fun compile(expression: String): CompiledExpression {
-        val replacedExpr = expression.replace(Regex("(&[A-za-z0-9]+)"), { result -> "${result.value.substring(1)}.address"})
+        val replacedExpr = expression.replace(Regex("(&[A-za-z0-9]+)"), { result -> "${result.value.substring(1)}_address"})
         try {
             val c = gnu.jel.Evaluator.compile(replacedExpr, lib)
             compiledExpressions.put(expression, c)
@@ -57,7 +57,7 @@ class JELEvaluator : Evaluator {
     }
 
     private fun compile(expression: String, type: Class<*>): CompiledExpression {
-         val replacedExpr = expression.replace(Regex("(&[A-za-z0-9]+)"), { result -> "${result.value.substring(1)}.address"})
+         val replacedExpr = expression.replace(Regex("(&[A-za-z0-9]+)"), { result -> "${result.value.substring(1)}_address"})
          try {
             val c = gnu.jel.Evaluator.compile(replacedExpr, lib, type)
             compiledExpressions.put(expression + "@" + type.simpleName, c)
@@ -76,7 +76,7 @@ class JELEvaluator : Evaluator {
         }
     }
 
-    override fun <X> evaluate(expression: String, type: Class<X>): X {
+    override fun <X:Number> evaluate(expression: String, type: Class<X>): X {
         try {
             val c = getCompiledExpression(expression, type)
             return c.evaluate(context) as X

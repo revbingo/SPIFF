@@ -22,6 +22,7 @@ import java.io.File;
 
 import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.events.EventListener;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.revbingo.spiff.BinaryParser;
@@ -30,6 +31,7 @@ import com.revbingo.spiff.events.DebugEventListener;
 public class TestClassFileParse {
 
 	@Test
+	@Ignore("Not supported by EvalEx")
 	public void canParseClassFile() throws Exception {
 		EventListener noopListener = new EventListener(){
 

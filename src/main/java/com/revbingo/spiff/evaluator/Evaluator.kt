@@ -25,6 +25,6 @@ interface Evaluator {
     fun addVariable(name: String, variable: Any)
 
     fun evaluate(expression: String): Any
-    fun <X> evaluate(expression: String, type: Class<X>): X
+    fun <X: Number> evaluate(expression: String, type: Class<X>): X
     fun clear()
 }

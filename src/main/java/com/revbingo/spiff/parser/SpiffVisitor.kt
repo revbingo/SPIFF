@@ -58,7 +58,7 @@ class SpiffVisitor : SpiffTreeParserVisitor {
         do {
             var tokenText = t.image
             if (t.kind == SpiffTreeParserConstants.ID_ADDRESS) {
-                tokenText = tokenText.substring(1, tokenText.length) + ".address"
+                tokenText = tokenText.substring(1, tokenText.length) + "_address"
             }
             expression.append(tokenText)
             t = t.next

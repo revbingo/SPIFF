@@ -23,6 +23,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +60,7 @@ public class TestCaseSpiffVm {
 	@Test
 	public void evaluatorIsInitialisedWithLengthOfFileAsSpecialVar() {
 		SpiffVm unit = new SpiffVm(NO_INSTRUCTIONS, ByteBuffer.wrap(new byte[] { 0x00, 0x00, 0x00, 0x00 }), new NullEventListener());
-		assertThat((Integer) unit.getVar("fileLength"), is(4));
+		assertThat((BigDecimal) unit.getVar("fileLength"), is(new BigDecimal(4)));
 	}
 
 //	@Test

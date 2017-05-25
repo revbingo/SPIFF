@@ -19,9 +19,8 @@
 package com.revbingo.spiff.datatypes
 
 import com.revbingo.spiff.ExecutionException
-import java.nio.ByteBuffer
-
 import com.revbingo.spiff.evaluator.Evaluator
+import java.nio.ByteBuffer
 
 class FixedLengthNumberFactory {
 
@@ -40,7 +39,7 @@ class FixedLengthNumberFactory {
     }
 }
 
-abstract class NumberType(name: String, val type: Class<out Any>,
+abstract class NumberType(name: String, val type: Class<out Number>,
                           val bufferFunc: (ByteBuffer) -> Number) : Datatype(name) {
 
     var literalExpr: String? = null
@@ -48,7 +47,7 @@ abstract class NumberType(name: String, val type: Class<out Any>,
     override fun evaluate(buffer: ByteBuffer, evaluator: Evaluator): Any {
         val value = bufferFunc(buffer)
         if(literalExpr != null) {
-            val expressionResult = evaluator.evaluate(literalExpr!!, type as Class<Any>)
+            val expressionResult = evaluator.evaluate(literalExpr!!, type)
             if(value != expressionResult) throw ExecutionException("Value $value did not match expected value $literalExpr")
         }
         return value
