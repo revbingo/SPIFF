@@ -18,25 +18,19 @@
  */
 package com.revbingo.spiff.evaluator;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
+import com.revbingo.spiff.ExecutionException;
 import gnu.jel.CompiledExpression;
-
 import org.junit.Test;
 
-import com.revbingo.spiff.ExecutionException;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class TestCaseEvaluator {
 
 	@Test
 	public void evaluateIntegerExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 3);
 		unit.addVariable("b", 5);
 
@@ -45,13 +39,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateIntegerExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Integer.TYPE);
 	}
 
 	@Test
 	public void evaluateShortExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", ((short) 1));
 		unit.addVariable("b", ((short) 3));
 
@@ -61,13 +55,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateShortExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Short.TYPE);
 	}
 
 	@Test
 	public void evaluateByteExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", (byte) 1);
 		unit.addVariable("b", (byte) 4);
 
@@ -76,13 +70,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateByteExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Byte.TYPE);
 	}
 
 	@Test
 	public void evaluateFloatExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 2.12f);
 		unit.addVariable("b", 3.5f);
 
@@ -91,13 +85,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateFloatExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Float.TYPE);
 	}
 
 	@Test
 	public void evaluateLongExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 2L);
 		unit.addVariable("b", 3L);
 
@@ -106,13 +100,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateLongExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Long.TYPE);
 	}
 
 	@Test
 	public void evaluateDoubleExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 3.512d);
 		unit.addVariable("b", 5.123d);
 
@@ -121,13 +115,13 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateDoubleExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Double.TYPE);
 	}
 
 	@Test
 	public void evaluateBooleanExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", true);
 		unit.addVariable("b", false);
 
@@ -140,19 +134,19 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateBooleanExprWithDiv0() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0", Boolean.TYPE);
 	}
 
 	@Test
 	public void evaluateDeterminesObject() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		assertThat(unit.evaluate("1 + 2"), instanceOf(Object.class));
 	}
 
 	@Test
 	public void evaluateStringExpr() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", "one");
 		unit.addVariable("b", "two");
 
@@ -161,13 +155,13 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void evaluateHexLiteralAsInteger() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		assertThat(unit.evaluate("0x04 + 0xFF", Integer.TYPE), equalTo(259));
 	}
 
 	@Test
 	public void expressionsAreCachedBasedOnString() throws ExecutionException {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		CompiledExpression c = unit.getCompiledExpression("1 + 2");
 
 		assertThat(c, is(sameInstance(unit.getCompiledExpression("1 + 2"))));
@@ -176,7 +170,7 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void typedExpressionsAreCachedBasedOnStringAndType() throws ExecutionException {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 2);
 		unit.addVariable("b", 3);
 
@@ -188,7 +182,7 @@ public class TestCaseEvaluator {
 
 	@Test
 	public void clearEvaluatorClearsExpressionsAndVariables() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.addVariable("a", 2);
 		int i = unit.evaluate("a + 3", Integer.TYPE);
 
@@ -204,31 +198,31 @@ public class TestCaseEvaluator {
 
 	@Test(expected=ExecutionException.class)
 	public void evaluateStringThrowsExceptionIfNotAString() throws ExecutionException {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1 + 2", String.class);
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void divisionByZero() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("1/0");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void unknownVarCausesException() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("unknown + missing");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void badExpressionThrowsException() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("a---");
 	}
 
 	@Test(expected=ExecutionException.class)
 	public void badTypedExpressionThrowsException() throws Exception {
-		Evaluator unit = new Evaluator();
+		JELEvaluator unit = new JELEvaluator();
 		unit.evaluate("a--", Boolean.TYPE);
 	}
 

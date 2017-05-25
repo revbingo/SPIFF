@@ -18,11 +18,11 @@
  */
 package com.revbingo.spiff.instructions;
 
-import java.nio.ByteBuffer;
-
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.datatypes.Datatype;
 import com.revbingo.spiff.evaluator.Evaluator;
+
+import java.nio.ByteBuffer;
 
 public class StringReversingInstruction extends Datatype {
 

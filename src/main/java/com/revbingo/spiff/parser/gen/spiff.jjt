@@ -31,7 +31,6 @@ package com.revbingo.spiff.parser.gen;
 import com.revbingo.spiff.AdfFormatException;
 import com.revbingo.spiff.instructions.*;
 import com.revbingo.spiff.datatypes.*;
-import com.revbingo.spiff.evaluator.Evaluator;
 import com.revbingo.spiff.parser.InstructionParser;
 import java.util.*;
 import java.nio.ByteOrder;

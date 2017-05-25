@@ -20,7 +20,7 @@
 package com.revbingo.spiff.vm
 
 import com.revbingo.spiff.datatypes.Datatype
-import com.revbingo.spiff.evaluator.Evaluator
+import com.revbingo.spiff.evaluator.JELEvaluator
 import com.revbingo.spiff.events.EventListener
 import com.revbingo.spiff.instructions.AdfInstruction
 import com.revbingo.spiff.instructions.Instruction
@@ -29,7 +29,7 @@ import java.nio.ByteBuffer
 class SpiffVm(private val instructions: List<Instruction>, private val buffer: ByteBuffer,
               private val eventListener: EventListener = NullEventListener()) {
 
-    private val evaluator = Evaluator()
+    private val evaluator = JELEvaluator()
     private val suspendedLock = Object()
 
     private var programCounter: Int = 0

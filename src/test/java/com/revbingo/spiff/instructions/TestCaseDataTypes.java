@@ -18,38 +18,23 @@
  */
 package com.revbingo.spiff.instructions;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
+import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.*;
+import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.evaluator.JELEvaluator;
+import com.revbingo.spiff.events.EventListener;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.datatypes.BitsInstruction;
-import com.revbingo.spiff.datatypes.ByteInstruction;
-import com.revbingo.spiff.datatypes.BytesInstruction;
-import com.revbingo.spiff.datatypes.Datatype;
-import com.revbingo.spiff.datatypes.DoubleInstruction;
-import com.revbingo.spiff.datatypes.FixedLengthString;
-import com.revbingo.spiff.datatypes.FloatInstruction;
-import com.revbingo.spiff.datatypes.IntegerInstruction;
-import com.revbingo.spiff.datatypes.LiteralStringInstruction;
-import com.revbingo.spiff.datatypes.LongInstruction;
-import com.revbingo.spiff.datatypes.ShortInstruction;
-import com.revbingo.spiff.datatypes.TerminatedString;
-import com.revbingo.spiff.datatypes.UnsignedByteInstruction;
-import com.revbingo.spiff.datatypes.UnsignedIntegerInstruction;
-import com.revbingo.spiff.datatypes.UnsignedShortInstruction;
-import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.events.EventListener;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class TestCaseDataTypes {
 	ByteBuffer testBuffer;
@@ -57,14 +42,14 @@ public class TestCaseDataTypes {
 
 	Mockery context = new Mockery();
 	EventListener ed;
-	Evaluator evaluator;
+	JELEvaluator evaluator;
 
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
 		ed = context.mock(EventListener.class);
-		evaluator = new Evaluator();
+		evaluator = new JELEvaluator();
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
 			ignoring(dispatcher).notifyData(with(any(Datatype.class)));

@@ -18,22 +18,22 @@
  */
 package com.revbingo.spiff.parser;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import com.revbingo.spiff.AdfFormatException;
+import com.revbingo.spiff.ExecutionException;
+import com.revbingo.spiff.datatypes.*;
+import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.instructions.*;
+import com.revbingo.spiff.parser.gen.ParseException;
+import org.junit.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.revbingo.spiff.AdfFormatException;
-import com.revbingo.spiff.ExecutionException;
-import com.revbingo.spiff.datatypes.*;
-import com.revbingo.spiff.instructions.*;
-import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.parser.gen.ParseException;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class TestCaseSpiffParser {
 

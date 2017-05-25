@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.revbingo.spiff.datatypes.ByteInstruction;
-import com.revbingo.spiff.evaluator.Evaluator;
+import com.revbingo.spiff.evaluator.JELEvaluator;
 import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.InstructionParser;
@@ -113,7 +113,7 @@ public class TestCaseBinaryParser {
 		final EventListener eventDispatcher = context.mock(EventListener.class);
 
 		context.checking(new Expectations() {{
-			exactly(3).of(mockInstruction).execute(with(aNonNull(ByteBuffer.class)), with(same(eventDispatcher)), with(any(Evaluator.class)));
+			exactly(3).of(mockInstruction).execute(with(aNonNull(ByteBuffer.class)), with(same(eventDispatcher)), with(any(JELEvaluator.class)));
 		}});
 
 		List<Instruction> instructions = Arrays.asList(mockInstruction, mockInstruction, mockInstruction);
