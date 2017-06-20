@@ -8,3 +8,4 @@ reports
 target
 src/main/java/com/revbingo/spiff/parser/gen/*.java
 .DS_Store
+out
