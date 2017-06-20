@@ -1,36 +1,4 @@
-/*
- * Copyright Mark Piper 2016
- *
- * This file is part of SPIFF.
- *
- * SPIFF is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * SPIFF is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SPIFF.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.revbingo.spiff.vm;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 import com.revbingo.spiff.datatypes.ByteInstruction;
 import com.revbingo.spiff.datatypes.Datatype;
@@ -38,6 +6,17 @@ import com.revbingo.spiff.events.EventListener;
 import com.revbingo.spiff.instructions.Instruction;
 import com.revbingo.spiff.parser.AdfFile;
 import com.revbingo.spiff.parser.SpiffParser;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class TestCaseSpiffVm {
 
