@@ -21,7 +21,7 @@ package com.revbingo.spiff.instructions;
 import com.revbingo.spiff.ExecutionException;
 import com.revbingo.spiff.datatypes.*;
 import com.revbingo.spiff.evaluator.Evaluator;
-import com.revbingo.spiff.evaluator.JELEvaluator;
+import com.revbingo.spiff.evaluator.EvalExEvaluator;
 import com.revbingo.spiff.events.EventListener;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -42,14 +42,14 @@ public class TestCaseDataTypes {
 
 	Mockery context = new Mockery();
 	EventListener ed;
-	JELEvaluator evaluator;
+	EvalExEvaluator evaluator;
 
 	@Before
 	public void setUp() {
 		testData = new byte[] { 0x54,0x65,0x73,0x74,0x44,0x61,0x74,0x61,0x21,0x00 };
 		testBuffer = ByteBuffer.wrap(testData);
 		ed = context.mock(EventListener.class);
-		evaluator = new JELEvaluator();
+		evaluator = new EvalExEvaluator();
 		final EventListener dispatcher = ed;
 		context.checking(new Expectations() {{
 			ignoring(dispatcher).notifyData(with(any(Datatype.class)));
@@ -406,7 +406,7 @@ public class TestCaseDataTypes {
 		ByteBuffer longerBuffer = ByteBuffer.wrap(testData);
 		
 		LongInstruction inst = new LongInstruction("aName");
-		inst.setLiteralExpr("0x5465737444617461L");
+		inst.setLiteralExpr("0x5465737444617461");
 		
 		try {
 			//first long should pass
